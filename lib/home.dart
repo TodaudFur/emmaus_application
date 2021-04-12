@@ -3,16 +3,19 @@ import 'package:flutter/rendering.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import 'constants.dart';
+import 'homebgcolor.dart';
 
-class Home extends StatelessWidget {
-  const Home({
-    Key key,
-  }) : super(key: key);
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
 
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
+        color: getColor(),
         padding: EdgeInsets.all(30.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +60,18 @@ class Home extends StatelessWidget {
                   ),
                 ),
                 Spacer(),
-                Icon(Icons.ac_unit),
+                FlatButton(
+                  onPressed: () {
+                    setState(() {
+                      if (getUser()) {
+                        trueUser();
+                      } else {
+                        falseUser();
+                      }
+                    });
+                  },
+                  child: Icon(Icons.ac_unit),
+                ),
               ],
             ),
             Expanded(
@@ -92,22 +106,34 @@ class Home extends StatelessWidget {
                 ),
                 child: Center(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 15.0, top: 15.0),
+                    padding: const EdgeInsets.all(15.0),
                     child: SfCalendar(
                       view: CalendarView.month,
+                      dataSource: MeetingDataSource(),
+                      headerStyle: CalendarHeaderStyle(
+                        textStyle: TextStyle(
+                            fontFamily: 'Noto', fontWeight: FontWeight.w900),
+                      ),
+                      viewHeaderStyle: ViewHeaderStyle(
+                          dayTextStyle: TextStyle(
+                        fontFamily: 'Noto',
+                        fontWeight: FontWeight.w900,
+                        color: Colors.black,
+                      )),
                       monthViewSettings: MonthViewSettings(
+                        showAgenda: false,
                         monthCellStyle: MonthCellStyle(
-                          textStyle: TextStyle(color: Color(0x15111111)),
+                          textStyle: TextStyle(color: Color(0xFF111111)),
                           leadingDatesTextStyle:
                               TextStyle(color: Color(0x15111111)),
                           trailingDatesTextStyle:
                               TextStyle(color: Color(0x15111111)),
                         ),
                       ),
-                      cellBorderColor: Color(0x15111111),
+                      cellBorderColor: Colors.white,
                       todayHighlightColor: kSelectColor,
                       selectionDecoration: BoxDecoration(
-                        border: Border.all(color: kSelectColor, width: 2),
+                        border: Border.all(color: kSelectColor, width: 1),
                         shape: BoxShape.rectangle,
                       ),
                     ),
@@ -122,8 +148,8 @@ class Home extends StatelessWidget {
   }
 }
 
-class calendarText extends StatelessWidget {
-  const calendarText({
+class CalendarText extends StatelessWidget {
+  const CalendarText({
     Key key,
     this.text,
   }) : super(key: key);
