@@ -17,12 +17,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>[
-    Home(),
     TodayVerse(),
+    Alarm(),
     Text(
       '',
     ),
-    Alarm(),
+    Home(),
     Settings(),
   ];
 
@@ -95,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.book_fill),
+                icon: Icon(CupertinoIcons.chat_bubble_2_fill),
                 label: '',
               ),
               BottomNavigationBarItem(
@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   label: ''),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.chat_bubble_2_fill),
+                icon: Icon(CupertinoIcons.calendar),
                 label: '',
               ),
               BottomNavigationBarItem(
