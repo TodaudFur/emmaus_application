@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'constants.dart';
 import 'myhomepage.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,7 +13,26 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Emmaus',
-      home: MyHomePage(),
+      theme: ThemeData(
+        primaryColor: kBodyColor,
+        scaffoldBackgroundColor: kBodyColor,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: AnimatedSplashScreen(
+        duration: 2000,
+        splash: Text(
+          'Emmaus',
+          style: TextStyle(
+            color: Color(0xFF16056b),
+            fontSize: 50.0,
+            fontFamily: 'Noto',
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        nextScreen: MyHomePage(),
+        splashTransition: SplashTransition.fadeTransition,
+        backgroundColor: Colors.white,
+      ),
     );
   }
 }
