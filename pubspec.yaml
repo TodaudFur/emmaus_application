@@ -31,6 +31,9 @@ dependencies:
   url_launcher: ^6.0.2
   animated_splash_screen: ^1.1.0
   syncfusion_flutter_calendar: ^19.1.55
+  screenshot: ^0.3.0
+  image_gallery_saver: ^1.6.9
+  permission_handler: ^7.0.0
 
 dev_dependencies:
   flutter_test:
