@@ -11,6 +11,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  DataSource calendarData = _getCalendarDataSource();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -83,7 +85,7 @@ class _HomeState extends State<Home> {
                 ),
                 child: Center(
                   child: Text(
-                    'Today: Friday Worship',
+                    calendarData.appointments.toString(),
                     style: TextStyle(
                       fontFamily: 'Noto',
                       fontWeight: FontWeight.w900,
@@ -109,7 +111,7 @@ class _HomeState extends State<Home> {
                     padding: const EdgeInsets.all(15.0),
                     child: SfCalendar(
                       view: CalendarView.month,
-                      //dataSource: MeetingDataSource(),
+                      dataSource: _getCalendarDataSource(),
                       headerStyle: CalendarHeaderStyle(
                         textStyle: TextStyle(
                             fontFamily: 'Noto', fontWeight: FontWeight.w900),
@@ -129,6 +131,8 @@ class _HomeState extends State<Home> {
                           trailingDatesTextStyle:
                               TextStyle(color: Color(0x15111111)),
                         ),
+                        appointmentDisplayMode:
+                            MonthAppointmentDisplayMode.appointment,
                       ),
                       cellBorderColor: Colors.white,
                       todayHighlightColor: kSelectColor,
@@ -146,6 +150,38 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+}
+
+class DataSource extends CalendarDataSource {
+  DataSource(List<Appointment> source) {
+    appointments = source;
+  }
+}
+
+DataSource _getCalendarDataSource() {
+  List<Appointment> appointments = <Appointment>[];
+  final DateTime day = DateTime(DateTime.now().year, 5, 20, 9);
+  appointments.add(Appointment(
+    startTime: day,
+    endTime: day.add(Duration(hours: 2)),
+    isAllDay: true,
+    subject: 'Meeting',
+    color: Colors.blue,
+    startTimeZone: '',
+    endTimeZone: '',
+  ));
+
+  return DataSource(appointments);
+}
+
+class Meeting {
+  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
+
+  String eventName;
+  DateTime from;
+  DateTime to;
+  Color background;
+  bool isAllDay;
 }
 
 class CalendarText extends StatelessWidget {

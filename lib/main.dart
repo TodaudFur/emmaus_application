@@ -20,14 +20,23 @@ class MyApp extends StatelessWidget {
       ),
       home: AnimatedSplashScreen(
         duration: 2000,
-        splash: Text(
-          'Emmaus',
-          style: TextStyle(
-            color: Color(0xFF16056b),
-            fontSize: 50.0,
-            fontFamily: 'Noto',
-            fontWeight: FontWeight.w900,
-          ),
+        splash: Column(
+          children: [
+            Image(
+              image: AssetImage('images/emmaus_logo.png'),
+              color: Color(0xFF16056b),
+              height: 65,
+            ),
+            Text(
+              'Emmaus',
+              style: TextStyle(
+                color: Color(0xFF16056b),
+                fontSize: 10.0,
+                fontFamily: 'Noto',
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ],
         ),
         nextScreen: MyHomePage(),
         splashTransition: SplashTransition.fadeTransition,

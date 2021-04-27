@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   label: ''),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.antenna_radiowaves_left_right),
+                icon: Icon(CupertinoIcons.flame),
                 label: '',
               ),
               BottomNavigationBarItem(
