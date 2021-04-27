@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   label: ''),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.flame),
+                icon: Icon(CupertinoIcons.flame_fill),
                 label: '',
               ),
               BottomNavigationBarItem(

@@ -85,7 +85,7 @@ class _HomeState extends State<Home> {
                 ),
                 child: Center(
                   child: Text(
-                    calendarData.appointments.toString(),
+                    calendarData.appointments[0].toString(),
                     style: TextStyle(
                       fontFamily: 'Noto',
                       fontWeight: FontWeight.w900,
@@ -164,6 +164,15 @@ DataSource _getCalendarDataSource() {
   appointments.add(Appointment(
     startTime: day,
     endTime: day.add(Duration(hours: 2)),
+    isAllDay: true,
+    subject: 'Meeting',
+    color: Colors.blue,
+    startTimeZone: '',
+    endTimeZone: '',
+  ));
+  appointments.add(Appointment(
+    startTime: DateTime(DateTime.now().year, 4, 28, 9),
+    endTime: DateTime(DateTime.now().year, 4, 28, 9).add(Duration(hours: 2)),
     isAllDay: true,
     subject: 'Meeting',
     color: Colors.blue,
