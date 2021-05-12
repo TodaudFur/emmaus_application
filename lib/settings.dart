@@ -144,11 +144,11 @@ class Settings extends StatelessWidget {
                       Column(
                         children: [
                           Icon(
-                            CupertinoIcons.calendar,
+                            CupertinoIcons.book,
                             size: 40.0,
                           ),
                           Text(
-                            '엠마오일정',
+                            '엠마오 주보',
                             style: TextStyle(
                               fontFamily: 'Noto',
                               fontWeight: FontWeight.w700,

@@ -34,6 +34,8 @@ dependencies:
   screenshot: ^0.3.0
   image_gallery_saver: ^1.6.9
   permission_handler: ^7.0.0
+  share: ^2.0.1
+  path_provider: ^2.0.1
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +70,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - images/emmaus_logo.png
+    - images/s_emmaus_logo.jpg
+    - images/blue_emmaus_logo.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

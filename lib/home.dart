@@ -12,6 +12,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   DataSource calendarData = _getCalendarDataSource();
+  String agendaText = "Emmaus Official News";
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +68,10 @@ class _HomeState extends State<Home> {
                     setState(() {
                       if (getUser()) {
                         trueUser();
+                        agendaText = "Emmaus Official News";
                       } else {
                         falseUser();
+                        agendaText = "Personal News";
                       }
                     });
                   },
@@ -85,7 +88,7 @@ class _HomeState extends State<Home> {
                 ),
                 child: Center(
                   child: Text(
-                    calendarData.appointments[0].toString(),
+                    agendaText,
                     style: TextStyle(
                       fontFamily: 'Noto',
                       fontWeight: FontWeight.w900,

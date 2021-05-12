@@ -1,3 +1,4 @@
+import 'package:emmaus/contents.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,11 +19,11 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>[
     Home(),
-    TodayVerse(),
+    Contents(),
     Text(
       '',
     ),
-    Alarm(),
+    TodayVerse(),
     Settings(),
   ];
 
@@ -95,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.book_fill),
+                icon: Icon(CupertinoIcons.flame_fill),
                 label: '',
               ),
               BottomNavigationBarItem(
@@ -104,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   label: ''),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.flame_fill),
+                icon: Icon(CupertinoIcons.book_fill),
                 label: '',
               ),
               BottomNavigationBarItem(

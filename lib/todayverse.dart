@@ -1,7 +1,12 @@
+import 'dart:io';
 import 'dart:typed_data';
-
+import 'dart:ui';
+import 'package:path_provider/path_provider.dart';
+import 'package:emmaus/image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:share/share.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -13,7 +18,7 @@ class TodayVerse extends StatefulWidget {
 
 class _TodayVerseState extends State<TodayVerse> {
   Uint8List _imageFile;
-  ScreenshotController screenshotController = ScreenshotController();
+  final _screenshotController = ScreenshotController();
 
   Future<bool> _requestPermission() async {
     if (await Permission.storage.request().isGranted) {
@@ -45,43 +50,14 @@ class _TodayVerseState extends State<TodayVerse> {
                   CupertinoIcons.square_arrow_down,
                   color: Colors.grey,
                 ),
-                onPressed: () {
-                  _requestPermission();
-                  _imageFile = null;
-                  screenshotController
-                      .capture(delay: Duration(milliseconds: 30))
-                      .then((Uint8List image) async {
-                    _imageFile = image;
-                    showDialog(
-                      context: context,
-                      builder: (context) => Scaffold(
-                        appBar: AppBar(
-                          title: Text("CAPURED SCREENSHOT"),
-                        ),
-                        body: Center(
-                            child: Column(
-                          children: [
-                            _imageFile != null
-                                ? Image.memory(_imageFile)
-                                : Container(),
-                          ],
-                        )),
-                      ),
-                    );
-                    final result = await ImageGallerySaver.saveImage(image,
-                        quality: 60, name: "hello");
-                    print(result);
-                  }).catchError((onError) {
-                    print(onError);
-                  });
-                },
+                onPressed: _takeScreenshot,
               ),
             ),
           ),
           Expanded(
             flex: 9,
             child: Screenshot(
-              controller: screenshotController,
+              controller: _screenshotController,
               child: Column(
                 children: [
                   Expanded(
@@ -125,4 +101,45 @@ class _TodayVerseState extends State<TodayVerse> {
       ),
     );
   }
+
+  void _takeScreenshot() async {
+    final uint8List = await _screenshotController.capture();
+    String tempPath = (await getTemporaryDirectory()).path;
+    File file = File('$tempPath/image.png');
+    await file.writeAsBytes(uint8List);
+    await Share.shareFiles([file.path]);
+    final result = await ImageGallerySaver.saveImage(
+        Uint8List.fromList(uint8List),
+        quality: 60,
+        name: "hello");
+    print(result);
+  }
 }
+/*_requestPermission();
+                  _imageFile = null;
+                  screenshotController
+                      .capture(delay: Duration(milliseconds: 30))
+                      .then((Uint8List image) async {
+                    _imageFile = image;
+                    showDialog(
+                      context: context,
+                      builder: (context) => Scaffold(
+                        appBar: AppBar(
+                          title: Text("CAPURED SCREENSHOT"),
+                        ),
+                        body: Center(
+                            child: Column(
+                          children: [
+                            _imageFile != null
+                                ? Image.memory(_imageFile)
+                                : Container(),
+                          ],
+                        )),
+                      ),
+                    );
+                    final result = await ImageGallerySaver.saveImage(image,
+                        quality: 60, name: "hello");
+                    print(result);
+                  }).catchError((onError) {
+                    print(onError);
+                  });*/
