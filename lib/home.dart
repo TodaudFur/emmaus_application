@@ -12,7 +12,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   DataSource calendarData = _getCalendarDataSource();
-  String agendaText = "Emmaus Official News";
+  String agendaText = "엠마오 일정";
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +54,33 @@ class _HomeState extends State<Home> {
             ),
             Row(
               children: [
-                Text(
-                  'Hi Kim',
-                  style: TextStyle(
-                    fontFamily: 'Noto',
-                    fontWeight: FontWeight.w900,
-                    fontSize: 20.0,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      '안녕하세요 ',
+                      style: TextStyle(
+                        fontFamily: 'Noto',
+                        fontWeight: FontWeight.w900,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                    Text(
+                      '김성수',
+                      style: TextStyle(
+                        fontFamily: 'Noto',
+                        fontWeight: FontWeight.w900,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                    Text(
+                      ' 님',
+                      style: TextStyle(
+                        fontFamily: 'Noto',
+                        fontWeight: FontWeight.w900,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                  ],
                 ),
                 Spacer(),
                 FlatButton(
@@ -68,10 +88,10 @@ class _HomeState extends State<Home> {
                     setState(() {
                       if (getUser()) {
                         trueUser();
-                        agendaText = "Emmaus Official News";
+                        agendaText = "엠마오 일정";
                       } else {
                         falseUser();
-                        agendaText = "Personal News";
+                        agendaText = "개인 일정";
                       }
                     });
                   },

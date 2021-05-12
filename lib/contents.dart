@@ -1,6 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'constants.dart';
 import 'homebgcolor.dart';
 
@@ -58,14 +59,15 @@ class _Contents extends State<Contents> {
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(30.0),
+                  padding: const EdgeInsets.only(
+                      left: 30.0, right: 30.0, bottom: 30.0, top: 20.0),
                   child: Column(
                     children: [
                       Expanded(
                         flex: 1,
                         child: Container(
                           alignment: Alignment.centerRight,
-                          padding: EdgeInsets.only(right: 20.0),
+                          padding: EdgeInsets.only(right: 15.0),
                           child: IconButton(
                               icon: Icon(
                                 CupertinoIcons.barcode_viewfinder,
@@ -80,7 +82,7 @@ class _Contents extends State<Contents> {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          "SHOW\nYOUR WORSHIP",
+                          "SHOW\nYOUR WORSHIP!",
                           style: TextStyle(
                             fontFamily: 'Noto',
                             fontWeight: FontWeight.w900,
@@ -102,7 +104,13 @@ class _Contents extends State<Contents> {
                             physics: NeverScrollableScrollPhysics(),
                             children: [
                               Icon(
-                                CupertinoIcons.flame,
+                                CupertinoIcons.flame_fill,
+                                color: Colors.red,
+                                size: 40.0,
+                              ),
+                              Icon(
+                                CupertinoIcons.flame_fill,
+                                color: Colors.red,
                                 size: 40.0,
                               ),
                               Icon(
@@ -110,19 +118,18 @@ class _Contents extends State<Contents> {
                                 size: 40.0,
                               ),
                               Icon(
-                                CupertinoIcons.flame,
-                                size: 40.0,
-                              ),
-                              Icon(
-                                CupertinoIcons.book,
+                                CupertinoIcons.book_fill,
+                                color: Colors.blue[700],
                                 size: 50.0,
                               ),
                               Icon(
-                                CupertinoIcons.book,
+                                CupertinoIcons.book_fill,
+                                color: Colors.blue[700],
                                 size: 50.0,
                               ),
                               Icon(
-                                CupertinoIcons.book,
+                                CupertinoIcons.book_fill,
+                                color: Colors.blue[700],
                                 size: 50.0,
                               ),
                               Icon(

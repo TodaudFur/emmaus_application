@@ -88,7 +88,22 @@ class Settings extends StatelessWidget {
                 child: Container(
                   height: 200.0,
                   alignment: Alignment.center,
-                  child: GridView.count(
+                  child: Container(
+                    child: Text(
+                      '그 날에 그들 중 둘이 예루살렘에서 이십오 리 되는\n엠마오라 하는 마을로 가면서\n이 모든 된 일을 서로 이야기하더라\n눅 24:13~14',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+/*GridView.count(
                     crossAxisCount: 3,
                     mainAxisSpacing: 10.0,
                     physics: NeverScrollableScrollPhysics(),
@@ -190,13 +205,4 @@ class Settings extends StatelessWidget {
                         ],
                       ),
                     ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+                  )*/
