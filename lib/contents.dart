@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
+import 'package:flutter/services.dart';
+import 'vardata.dart';
 import 'constants.dart';
 import 'homebgcolor.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Contents extends StatefulWidget {
   @override
@@ -11,6 +13,103 @@ class Contents extends StatefulWidget {
 }
 
 class _Contents extends State<Contents> {
+  final textController = TextEditingController();
+
+  void _checkAnswer(String s) {
+    if (VarData().setIcon(s)) {
+      Fluttertoast.showToast(
+          msg: "정답입니다.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          fontSize: 16.0);
+      SystemChrome.setEnabledSystemUIOverlays([]);
+      Navigator.of(context).pop();
+    } else {
+      print("else");
+      Fluttertoast.showToast(
+          msg: "오답입니다!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          fontSize: 16.0);
+    }
+  }
+
+  void _check() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => GestureDetector(
+              onTap: () {
+                FocusScope.of(context).unfocus();
+                SystemChrome.setEnabledSystemUIOverlays([]);
+              },
+              child: new AlertDialog(
+                title: new Text(
+                  "정답",
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w900,
+                    fontFamily: 'Noto',
+                  ),
+                ),
+                content: Container(
+                  height: 110,
+                  child: Column(
+                    children: [
+                      Text(
+                        '정답은 소문자',
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
+                          fontFamily: 'Noto',
+                        ),
+                      ),
+                      Divider(),
+                      TextField(
+                          onSubmitted: (String s) {
+                            setState(() {
+                              textController.text = "";
+                              _checkAnswer(s);
+                            });
+                          },
+                          controller: textController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Hint',
+                          )),
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  Row(
+                    children: [
+                      FlatButton(
+                        child: Text('확인'),
+                        onPressed: () {
+                          setState(() {
+                            textController.text = "";
+                            _checkAnswer(textController.text);
+                          });
+                        },
+                      ),
+                      FlatButton(
+                        child: Text('취소'),
+                        onPressed: () {
+                          textController.text = "";
+                          SystemChrome.setEnabledSystemUIOverlays([]);
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -69,11 +168,12 @@ class _Contents extends State<Contents> {
                           alignment: Alignment.centerRight,
                           padding: EdgeInsets.only(right: 15.0),
                           child: IconButton(
-                              icon: Icon(
-                                CupertinoIcons.barcode_viewfinder,
-                                size: 45,
-                              ),
-                              onPressed: () {}),
+                            icon: Icon(
+                              CupertinoIcons.checkmark_rectangle,
+                              size: 40,
+                            ),
+                            onPressed: _check,
+                          ),
                         ),
                       ),
                       Divider(
@@ -103,47 +203,15 @@ class _Contents extends State<Contents> {
                             mainAxisSpacing: 5.0,
                             physics: NeverScrollableScrollPhysics(),
                             children: [
-                              Icon(
-                                CupertinoIcons.flame_fill,
-                                color: Colors.red,
-                                size: 40.0,
-                              ),
-                              Icon(
-                                CupertinoIcons.flame_fill,
-                                color: Colors.red,
-                                size: 40.0,
-                              ),
-                              Icon(
-                                CupertinoIcons.flame,
-                                size: 40.0,
-                              ),
-                              Icon(
-                                CupertinoIcons.book_fill,
-                                color: Colors.blue[700],
-                                size: 50.0,
-                              ),
-                              Icon(
-                                CupertinoIcons.book_fill,
-                                color: Colors.blue[700],
-                                size: 50.0,
-                              ),
-                              Icon(
-                                CupertinoIcons.book_fill,
-                                color: Colors.blue[700],
-                                size: 50.0,
-                              ),
-                              Icon(
-                                CupertinoIcons.book,
-                                size: 50.0,
-                              ),
-                              Icon(
-                                CupertinoIcons.book,
-                                size: 50.0,
-                              ),
-                              Icon(
-                                CupertinoIcons.book,
-                                size: 50.0,
-                              ),
+                              VarData().getData(0),
+                              VarData().getData(1),
+                              VarData().getData(2),
+                              VarData().getData(3),
+                              VarData().getData(4),
+                              VarData().getData(5),
+                              VarData().getData(6),
+                              VarData().getData(7),
+                              VarData().getData(8),
                             ],
                           ),
                         ),

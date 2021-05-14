@@ -39,83 +39,89 @@ class _MyHomePageState extends State<MyHomePage> {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: kBodyColor),
     );
-    return Scaffold(
-      backgroundColor: kBodyColor,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(top: 20),
-        child: SizedBox(
-          height: 70,
-          width: 70,
-          child: FloatingActionButton(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            onPressed: _launchURL,
-            child: Container(
-              height: 75,
-              width: 75,
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 0.0,
-                  ),
-                  shape: BoxShape.circle,
-                  color: kSelectColor),
-              child: Icon(CupertinoIcons.arrowtriangle_right_fill, size: 30),
+    return GestureDetector(
+      onTap: () {
+        SystemChrome.setEnabledSystemUIOverlays([]);
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: kBodyColor,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Padding(
+          padding: EdgeInsets.only(top: 20),
+          child: SizedBox(
+            height: 70,
+            width: 70,
+            child: FloatingActionButton(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              onPressed: _launchURL,
+              child: Container(
+                height: 75,
+                width: 75,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 0.0,
+                    ),
+                    shape: BoxShape.circle,
+                    color: kSelectColor),
+                child: Icon(CupertinoIcons.arrowtriangle_right_fill, size: 30),
+              ),
             ),
           ),
         ),
-      ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: Container(
-        height: 80.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              spreadRadius: 0,
-              blurRadius: 10,
-            ),
-          ],
+        body: Center(
+          child: _widgetOptions.elementAt(_selectedIndex),
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
-          ),
-          child: BottomNavigationBar(
-            iconSize: 30.0,
-            type: BottomNavigationBarType.fixed,
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.flame_fill),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.bookmark_border,
-                  ),
-                  label: ''),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.book_fill),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: '',
+        bottomNavigationBar: Container(
+          height: 80.0,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                spreadRadius: 0,
+                blurRadius: 10,
               ),
             ],
-            currentIndex: _selectedIndex,
-            selectedItemColor: kSelectColor,
-            onTap: _onItemTapped,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.0),
+              topRight: Radius.circular(30.0),
+            ),
+            child: BottomNavigationBar(
+              iconSize: 30.0,
+              type: BottomNavigationBarType.fixed,
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.flame_fill),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.bookmark_border,
+                    ),
+                    label: ''),
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.book_fill),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings),
+                  label: '',
+                ),
+              ],
+              currentIndex: _selectedIndex,
+              selectedItemColor: kSelectColor,
+              onTap: _onItemTapped,
+            ),
           ),
         ),
       ),
