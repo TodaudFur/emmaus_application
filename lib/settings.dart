@@ -1,4 +1,5 @@
 import 'package:emmaus/constants.dart';
+import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -36,19 +37,21 @@ class Settings extends StatelessWidget {
                         fontWeight: FontWeight.w900,
                       ),
                     ),
-                    Text(
-                      '엠마오셀\n엠마오팀\n40기',
-                      style: TextStyle(
-                        fontFamily: 'Noto',
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                    VarData().getSetting(),
                     Divider(
                       color: kBodyColor,
                       height: 30.0,
                     ),
-                    Row(
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
+                      child: Center(
+                        child: Image.asset(
+                          "images/blue_emmaus_logo.jpg",
+                          height: 70.0,
+                        ),
+                      ),
+                    ),
+                    /*Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Text(
@@ -73,7 +76,7 @@ class Settings extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                       ],
-                    )
+                    )*/
                   ],
                 ),
               ),

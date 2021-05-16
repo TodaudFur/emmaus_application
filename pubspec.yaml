@@ -37,6 +37,8 @@ dependencies:
   share: ^2.0.1
   path_provider: ^2.0.1
   fluttertoast: ^8.0.6
+  mysql1: ^0.19.2
+  http: ^0.13.3
 
 dev_dependencies:
   flutter_test:

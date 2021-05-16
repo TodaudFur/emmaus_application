@@ -1,3 +1,4 @@
+import 'package:emmaus/vardata.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -55,6 +56,8 @@ class _HomeState extends State<Home> {
             Row(
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
                   children: [
                     Text(
                       '안녕하세요 ',
@@ -65,7 +68,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     Text(
-                      '김성수',
+                      VarData().getName(),
                       style: TextStyle(
                         fontFamily: 'Noto',
                         fontWeight: FontWeight.w900,
@@ -82,7 +85,7 @@ class _HomeState extends State<Home> {
                     ),
                   ],
                 ),
-                Spacer(),
+                /*Spacer(),
                 FlatButton(
                   onPressed: () {
                     setState(() {
@@ -96,7 +99,7 @@ class _HomeState extends State<Home> {
                     });
                   },
                   child: Icon(Icons.ac_unit),
-                ),
+                ),*/
               ],
             ),
             Expanded(
@@ -107,14 +110,7 @@ class _HomeState extends State<Home> {
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 child: Center(
-                  child: Text(
-                    agendaText,
-                    style: TextStyle(
-                      fontFamily: 'Noto',
-                      fontWeight: FontWeight.w900,
-                      fontSize: 20.0,
-                    ),
-                  ),
+                  child: VarData().getContent(),
                 ),
               ),
             ),
