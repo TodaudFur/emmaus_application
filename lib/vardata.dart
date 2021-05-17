@@ -11,7 +11,7 @@ import 'package:mysql1/mysql1.dart';
 bool _isLogin = false;
 
 String _name = "엠마오";
-String _cell = "엠마오";
+String _cell;
 String _team = "엠마오";
 String _term = "1";
 
@@ -61,6 +61,10 @@ class VarData {
     }
   }
 
+  void logOut() {
+    _isLogin = false;
+  }
+
   Widget getData(int i) {
     return _iconList[i];
   }
@@ -74,14 +78,21 @@ class VarData {
 
   Widget getContent() {
     if (_isLogin) {
-      return Text(
-        "오늘은 " +
-            DateFormat("yyyy년MM월dd일").format(DateTime.now()).toString() +
-            "입니다!",
+      return /*Text(
+        DateFormat("yyyy년MM월dd일").format(DateTime.now()).toString(),
         style: TextStyle(
           fontFamily: 'Noto',
           fontWeight: FontWeight.w900,
           fontSize: 20.0,
+        ),
+      );*/
+          Padding(
+        padding: const EdgeInsets.only(top: 15.0),
+        child: Center(
+          child: Image.asset(
+            "images/blue_emmaus_logo.jpg",
+            height: 70.0,
+          ),
         ),
       );
     } else {
@@ -89,15 +100,40 @@ class VarData {
     }
   }
 
-  Widget getSetting() {
+  Widget getSetting(Function onpress) {
     if (_isLogin) {
-      return Text(
-        '$_cell셀\n$_team팀\n$_term기',
-        style: TextStyle(
-          fontFamily: 'Noto',
-          fontSize: 15.0,
-          fontWeight: FontWeight.w700,
-        ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$_cell셀 / $_team팀 / $_term기',
+            style: TextStyle(
+              fontFamily: 'Noto',
+              fontSize: 15.0,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          Divider(
+            color: Colors.white,
+          ),
+          Center(
+            child: RaisedButton(
+              padding: EdgeInsets.all(5.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              color: kBodyColor,
+              onPressed: onpress,
+              child: Text(
+                "로그아웃",
+                style: TextStyle(
+                  fontFamily: 'Noto',
+                  fontWeight: FontWeight.w900,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
       );
     } else {
       return Padding(
@@ -109,18 +145,27 @@ class VarData {
     }
   }
 
-  void post(String id, String password) async {
+  Future<bool> post(String id, String password) async {
     var url =
         Uri.parse('https://www.official-emmaus.com/g5/bbs/app_login_check.php');
     var result =
         await http.post(url, body: {"mb_id": id, "mb_password": password});
-    print(result.body);
+    //print(result.body);
     //0 : name / 1 : isFirst / 2 : cell / 3 : team / 4 : term / 5 : special / 6 : normal
-    _name = result.body[0];
-    _cell = result.body[2];
-    _team = result.body[3];
-    _term = result.body[4];
-    _isLogin = true;
+
+    Map<String, dynamic> body = json.decode(result.body);
+    _name = body["name"];
+    _cell = body["cell"];
+    _team = body["team"];
+    _term = body["term"];
+    if (_cell != null) _isLogin = true;
+
+    //print(result.isRedirect);
+
+    if (_isLogin)
+      return true;
+    else
+      return false;
   }
 
 /*

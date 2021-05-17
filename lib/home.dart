@@ -14,9 +14,15 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   DataSource calendarData = _getCalendarDataSource();
   String agendaText = "엠마오 일정";
+  String name = "엠마오";
+  Widget content = Container();
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      name = VarData().getName();
+      content = VarData().getContent();
+    });
     return SafeArea(
       child: Container(
         color: getColor(),
@@ -68,7 +74,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     Text(
-                      VarData().getName(),
+                      name,
                       style: TextStyle(
                         fontFamily: 'Noto',
                         fontWeight: FontWeight.w900,
@@ -110,7 +116,7 @@ class _HomeState extends State<Home> {
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 child: Center(
-                  child: VarData().getContent(),
+                  child: content,
                 ),
               ),
             ),

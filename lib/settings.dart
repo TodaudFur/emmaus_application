@@ -4,11 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
-class Settings extends StatelessWidget {
-  const Settings({
-    Key key,
-  }) : super(key: key);
+class Settings extends StatefulWidget {
+  @override
+  _SettingsState createState() => _SettingsState();
+}
 
+class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,10 +38,13 @@ class Settings extends StatelessWidget {
                         fontWeight: FontWeight.w900,
                       ),
                     ),
-                    VarData().getSetting(),
+                    VarData().getSetting(() {
+                      setState(() {
+                        VarData().logOut();
+                      });
+                    }),
                     Divider(
                       color: kBodyColor,
-                      height: 30.0,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 15.0),
@@ -106,6 +110,7 @@ class Settings extends StatelessWidget {
     );
   }
 }
+
 /*GridView.count(
                     crossAxisCount: 3,
                     mainAxisSpacing: 10.0,

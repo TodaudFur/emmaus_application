@@ -39,6 +39,8 @@ dependencies:
   fluttertoast: ^8.0.6
   mysql1: ^0.19.2
   http: ^0.13.3
+  flutter_local_notifications: ^5.0.0+4
+  flutter_native_timezone: ^1.0.10
 
 dev_dependencies:
   flutter_test:
