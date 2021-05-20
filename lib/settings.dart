@@ -30,31 +30,39 @@ class _SettingsState extends State<Settings> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '안녕하세요 엠마오님',
-                      style: TextStyle(
-                        fontFamily: 'Noto',
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w900,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          '안녕하세요 ',
+                          style: TextStyle(
+                            fontFamily: 'Noto',
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        Text(
+                          VarData().getName(),
+                          style: TextStyle(
+                            fontFamily: 'Noto',
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        Text(
+                          '님',
+                          style: TextStyle(
+                            fontFamily: 'Noto',
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ],
                     ),
                     VarData().getSetting(() {
                       setState(() {
                         VarData().logOut();
                       });
                     }),
-                    Divider(
-                      color: kBodyColor,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15.0),
-                      child: Center(
-                        child: Image.asset(
-                          "images/blue_emmaus_logo.jpg",
-                          height: 70.0,
-                        ),
-                      ),
-                    ),
                     /*Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [

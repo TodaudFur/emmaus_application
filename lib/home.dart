@@ -37,16 +37,7 @@ class _HomeState extends State<Home> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'e',
-                    style: TextStyle(
-                      fontSize: 34.0,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.yellow[700],
-                      fontFamily: 'Noto',
-                    ),
-                  ),
-                  Text(
-                    'MMAUS',
+                    'EMMAUS',
                     style: TextStyle(
                       fontSize: 28.0,
                       fontWeight: FontWeight.w900,
@@ -70,7 +61,7 @@ class _HomeState extends State<Home> {
                       style: TextStyle(
                         fontFamily: 'Noto',
                         fontWeight: FontWeight.w900,
-                        fontSize: 14.0,
+                        fontSize: 12.0,
                       ),
                     ),
                     Text(
@@ -78,7 +69,7 @@ class _HomeState extends State<Home> {
                       style: TextStyle(
                         fontFamily: 'Noto',
                         fontWeight: FontWeight.w900,
-                        fontSize: 20.0,
+                        fontSize: 18.0,
                       ),
                     ),
                     Text(
@@ -86,7 +77,7 @@ class _HomeState extends State<Home> {
                       style: TextStyle(
                         fontFamily: 'Noto',
                         fontWeight: FontWeight.w900,
-                        fontSize: 14.0,
+                        fontSize: 12.0,
                       ),
                     ),
                   ],

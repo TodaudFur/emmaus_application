@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:emmaus/constants.dart';
+import 'package:emmaus/versedata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -11,6 +12,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
+import 'firstlogin.dart';
+
 class TodayVerse extends StatefulWidget {
   @override
   _TodayVerseState createState() => _TodayVerseState();
@@ -19,6 +22,7 @@ class TodayVerse extends StatefulWidget {
 class _TodayVerseState extends State<TodayVerse> {
   Uint8List _imageFile;
   final _screenshotController = ScreenshotController();
+  String english = "";
 
   Future<bool> _requestPermission() async {
     if (await Permission.storage.request().isGranted) {
@@ -37,6 +41,7 @@ class _TodayVerseState extends State<TodayVerse> {
 
   @override
   Widget build(BuildContext context) {
+    english = VerseData().getEnglish();
     return SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -50,7 +55,12 @@ class _TodayVerseState extends State<TodayVerse> {
                   CupertinoIcons.square_arrow_down,
                   color: Colors.grey,
                 ),
-                onPressed: _takeScreenshot,
+                onPressed: () {
+                  setState(() {
+                    english = VerseData().getEnglish();
+                  });
+                },
+                //_takeScreenshot,
               ),
             ),
           ),
@@ -68,10 +78,7 @@ class _TodayVerseState extends State<TodayVerse> {
                         padding: EdgeInsets.only(
                             bottom: 80.0, right: 30.0, top: 40.0, left: 30.0),
                         child: Text(
-                          'For this is the reason\nthe gospel was preached even to\nthose who are now dead,\n'
-                          'so that they might be judged\naccording to men in regard to the body,\n'
-                          'but live according to God\nin regard to the spirit.\n\n'
-                          '1 Peter 4:6',
+                          english,
                           style: TextStyle(
                             fontFamily: 'Mapo',
                             fontSize: 12.0,

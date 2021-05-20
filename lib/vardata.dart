@@ -7,6 +7,7 @@ import 'constants.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:mysql1/mysql1.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 bool _isLogin = false;
 
@@ -14,6 +15,7 @@ String _name = "엠마오";
 String _cell;
 String _team = "엠마오";
 String _term = "1";
+String _first = "False";
 
 int specialNum = 0;
 int normalNum = 3;
@@ -45,19 +47,87 @@ List<String> _answerNormalList = [
 ];
 
 class VarData {
-  bool setIcon(String s) {
-    if (s == _answerNormalList[normalNum - 3]) {
-      _iconList[normalNum] = kTrueNormal;
-      if (normalNum < 8) normalNum++;
+  void reLogin() {
+    _first = "True";
+  }
+
+  bool getFirst() {
+    if (_first == "False")
       return true;
-    } else {
-      if (s == _answerSpecialList[specialNum]) {
+    else
+      return false;
+  }
+
+  firstChange(String password, String email) async {
+    print(_name);
+    print(password);
+    print(email);
+    var url = Uri.parse(
+        'https://www.official-emmaus.com/g5/bbs/emmaus_password_process.php');
+    var result = await http.post(url,
+        body: {"mb_name": _name, "password": password, "email": email});
+
+    print(result.body);
+  }
+
+  bool isLogin() {
+    if (_isLogin)
+      return true;
+    else
+      return false;
+  }
+
+  void setNormal() {
+    if (normalNum < 9) {
+      _iconList[normalNum] = kTrueNormal;
+      normalNum++;
+
+      Fluttertoast.showToast(
+          msg: "예배 출석 완료!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          fontSize: 16.0);
+    }
+  }
+
+  insertFre() async {
+    var url = Uri.parse(
+        'https://www.official-emmaus.com/g5/bbs/emmaus_fre_process.php');
+    var result = await http.post(url, body: {
+      "mb_name": _name,
+      "special": specialNum.toString(),
+      "normal": (normalNum - 3).toString()
+    });
+
+    Map<String, dynamic> body = json.decode(result.body);
+  }
+
+  Future<bool> check(String answer) async {
+    String date = DateFormat("MMdd").format(DateTime.now()).toString();
+    print("result");
+    print(answer);
+    print(date);
+    var url = Uri.parse(
+        'https://www.official-emmaus.com/g5/bbs/emmaus_answer_json.php');
+    var result = await http.post(url, body: {"answer": answer, "date": date});
+
+    print(result.body);
+
+    Map<String, dynamic> body = json.decode(result.body);
+
+    print(body);
+
+    print(body["result"]);
+    if (body["result"] == "true") {
+      if (specialNum < 3) {
         _iconList[specialNum] = kTrueSpecial;
-        if (specialNum < 2) specialNum++;
-        return true;
-      } else {
-        return false;
+        specialNum++;
       }
+      insertFre();
+      return Future<bool>.value(true);
+    } else {
+      return Future<bool>.value(false);
     }
   }
 
@@ -78,20 +148,107 @@ class VarData {
 
   Widget getContent() {
     if (_isLogin) {
-      return /*Text(
-        DateFormat("yyyy년MM월dd일").format(DateTime.now()).toString(),
-        style: TextStyle(
-          fontFamily: 'Noto',
-          fontWeight: FontWeight.w900,
-          fontSize: 20.0,
-        ),
-      );*/
-          Padding(
+      return Padding(
         padding: const EdgeInsets.only(top: 15.0),
         child: Center(
-          child: Image.asset(
-            "images/blue_emmaus_logo.jpg",
-            height: 70.0,
+          child: Column(
+            children: [
+              Text(
+                "e-프리퀀시",
+                style: TextStyle(
+                  fontFamily: 'Noto',
+                  fontWeight: FontWeight.w900,
+                  fontSize: 12.0,
+                ),
+              ),
+              Divider(
+                color: Colors.white,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        CupertinoIcons.flame_fill,
+                        color: Colors.red,
+                        size: 30.0,
+                      ),
+                      VerticalDivider(
+                        color: Colors.white,
+                        width: 8.0,
+                      ),
+                      Text(
+                        specialNum.toString(),
+                        style: TextStyle(
+                          fontFamily: 'Noto',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "+",
+                    style: TextStyle(
+                      fontFamily: 'Noto',
+                      fontWeight: FontWeight.w900,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        CupertinoIcons.book_fill,
+                        color: Colors.blue[700],
+                        size: 30.0,
+                      ),
+                      VerticalDivider(
+                        color: Colors.white,
+                        width: 8.0,
+                      ),
+                      Text(
+                        (normalNum - 3).toString(),
+                        style: TextStyle(
+                          fontFamily: 'Noto',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "=",
+                    style: TextStyle(
+                      fontFamily: 'Noto',
+                      fontWeight: FontWeight.w900,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        CupertinoIcons.gift,
+                        color: Colors.green[700],
+                        size: 30.0,
+                      ),
+                      VerticalDivider(
+                        color: Colors.white,
+                        width: 8.0,
+                      ),
+                      Text(
+                        (specialNum + (normalNum - 3)).toString(),
+                        style: TextStyle(
+                          fontFamily: 'Noto',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       );
@@ -158,7 +315,22 @@ class VarData {
     _cell = body["cell"];
     _team = body["team"];
     _term = body["term"];
+    specialNum = int.parse(body["special"]);
+    normalNum = (int.parse(body["normal"]) + 3);
     if (_cell != null) _isLogin = true;
+
+    for (int i = 0; i < 3; i++) {
+      if (i < specialNum)
+        _iconList[i] = kTrueSpecial;
+      else
+        _iconList[i] = kFalseSpecial;
+    }
+    for (int i = 3; i < 9; i++) {
+      if (i < normalNum)
+        _iconList[i] = kTrueNormal;
+      else
+        _iconList[i] = kFalseNormal;
+    }
 
     //print(result.isRedirect);
 
@@ -167,29 +339,6 @@ class VarData {
     else
       return false;
   }
-
-/*
-  void connectSQL() async {
-    settings = new ConnectionSettings(
-        host: 'box5380.bluehost.com',
-        user: 'offickt2_app',
-        port: 3306,
-        password: 'Cjswosla!2',
-        db: 'offickt2_emmaus');
-    print("settings : ");
-    print(settings);
-    conn = await MySqlConnection.connect(settings);
-    print("conn : ");
-    print(conn);
-  }
-
-  Future<bool> loginCheck(String id, String pass) async {
-    connectSQL();
-    var results = await conn.query(
-        "SELECT mb_name FROM em_member WHERE mb_id = ? and mb_password = PASSWORD('?')",
-        [id, pass]);
-    print(results);
-  }*/
 }
 
 class LoginWidget extends StatelessWidget {

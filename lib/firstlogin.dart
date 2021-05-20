@@ -1,21 +1,22 @@
-import 'package:emmaus/constants.dart';
-import 'package:emmaus/firstlogin.dart';
-import 'package:emmaus/home.dart';
-import 'package:emmaus/myhomepage.dart';
+import 'package:emmaus/login.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class LoginPage extends StatefulWidget {
+import 'constants.dart';
+import 'myhomepage.dart';
+
+class FirstLogin extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _FirstLoginState createState() => _FirstLoginState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  final idController = TextEditingController();
+class _FirstLoginState extends State<FirstLogin> {
+  final emController = TextEditingController();
   final psController = TextEditingController();
+  final cpsController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,12 @@ class _LoginPageState extends State<LoginPage> {
                       child: IconButton(
                         icon: Icon(CupertinoIcons.arrow_left),
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context)
+                              .pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) => MyHomePage()),
+                                  (route) => false)
+                              .then((value) => setState(() {}));
                         },
                       ),
                     )),
@@ -63,15 +69,34 @@ class _LoginPageState extends State<LoginPage> {
                             color: Colors.white,
                             height: 40.0,
                           ),
+                          Text(
+                            "초기 회원정보 변경",
+                            style: TextStyle(
+                                fontFamily: 'Noto',
+                                fontWeight: FontWeight.w900,
+                                fontSize: 18.0,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            "안전한 사용을 위하여, 회원정보를 변경하여 주시기 바랍니다!\n" +
+                                "아래에 비밀번호와 이메일을 입력해주시기 바랍니다.\n",
+                            style: TextStyle(
+                                fontFamily: 'Noto',
+                                fontWeight: FontWeight.w900,
+                                fontSize: 10.0,
+                                color: Colors.grey),
+                            textAlign: TextAlign.center,
+                          ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TextField(
                                 onSubmitted: (String s) {},
-                                controller: idController,
+                                controller: psController,
+                                obscureText: true,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(),
-                                  labelText: 'ID',
+                                  labelText: '새 비밀번호',
                                 ),
                               ),
                               Divider(
@@ -79,11 +104,22 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               TextField(
                                 onSubmitted: (String s) {},
-                                controller: psController,
+                                controller: cpsController,
                                 obscureText: true,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(),
-                                  labelText: 'Password',
+                                  labelText: '비밀번호 확인',
+                                ),
+                              ),
+                              Divider(
+                                color: Colors.white,
+                              ),
+                              TextField(
+                                onSubmitted: (String s) {},
+                                controller: emController,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'E-Mail',
                                 ),
                               ),
                             ],
@@ -99,45 +135,47 @@ class _LoginPageState extends State<LoginPage> {
                                 borderRadius: BorderRadius.circular(10.0)),
                             onPressed: () {
                               setState(() {
-                                VarData()
-                                    .post(idController.text, psController.text)
-                                    .then((value) {
-                                  if (VarData().getFirst()) {
-                                    Navigator.of(context)
-                                        .pushAndRemoveUntil(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    FirstLogin()),
-                                            (route) => false)
-                                        .then((value) => setState(() {}));
-                                  } else {
+                                if (psController.text == cpsController.text) {
+                                  VarData()
+                                      .firstChange(
+                                          psController.text, emController.text)
+                                      .then((value) {
                                     Fluttertoast.showToast(
-                                        msg: "로그인 성공!",
+                                        msg: "회원정보가 변경되었습니다. 다시 로그인해주세요!",
                                         toastLength: Toast.LENGTH_SHORT,
                                         gravity: ToastGravity.BOTTOM,
                                         timeInSecForIosWeb: 1,
                                         fontSize: 16.0);
+                                    VarData().reLogin();
                                     Navigator.of(context)
                                         .pushAndRemoveUntil(
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    MyHomePage()),
+                                                    LoginPage()),
                                             (route) => false)
                                         .then((value) => setState(() {}));
-                                  }
-                                }).catchError((onError) {
+                                  }).catchError((onError) {
+                                    print(onError);
+                                    Fluttertoast.showToast(
+                                        msg: "회원정보가 변경이 실패하였습니다! 다시 입력해주세요!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 1,
+                                        fontSize: 16.0);
+                                  });
+                                } else {
                                   Fluttertoast.showToast(
-                                      msg: "로그인 실패! : 아이디 또는 비밀번호를 확인해주세요.",
+                                      msg: "비밀번호가 서로 다릅니다.\n다시 입력해주세요",
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 1,
                                       fontSize: 16.0);
-                                });
+                                }
                                 SystemChrome.setEnabledSystemUIOverlays([]);
                               });
                             },
                             child: Text(
-                              "로그인",
+                              "변경",
                               style: TextStyle(
                                   fontFamily: 'Noto',
                                   fontWeight: FontWeight.w900,
