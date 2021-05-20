@@ -89,6 +89,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     _scheduleWeeklyMondayTenAMNotification();
+    _scheduleWeeklyFridayTenAMNotification();
     return MaterialApp(
         title: 'Emmaus',
         theme: ThemeData(
@@ -99,7 +100,7 @@ class _MyAppState extends State<MyApp> {
         home: AnimatedSplashScreen(
           duration: 2000,
           splash: Image(
-            image: AssetImage('images/blue_emmaus_logo.jpg'),
+            image: AssetImage('images/logo_em2_txt.png'),
           ),
           nextScreen: MyHomePage(),
           splashTransition: SplashTransition.fadeTransition,
@@ -125,7 +126,7 @@ class _MyAppState extends State<MyApp> {
     await flutterLocalNotificationsPlugin.zonedSchedule(
         0,
         '주일 예배',
-        '예배 10분전입니다.',
+        '예배 15분전입니다.',
         _nextInstanceOfMondayTenAM(),
         const NotificationDetails(
           android: AndroidNotificationDetails(
@@ -148,7 +149,41 @@ class _MyAppState extends State<MyApp> {
   tz.TZDateTime _nextInstanceOfTenAM() {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, 13, 20);
+        tz.TZDateTime(tz.local, now.year, now.month, now.day, 13, 15);
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+    return scheduledDate;
+  }
+
+  Future<void> _scheduleWeeklyFridayTenAMNotification() async {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+        0,
+        '워라벨 성령대망회',
+        '예배 15분전입니다.',
+        _nextInstanceOfFridayTenAM(),
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+              'fw', 'fridayWorship', 'fridayWorship'),
+        ),
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
+  }
+
+  tz.TZDateTime _nextInstanceOfFridayTenAM() {
+    tz.TZDateTime scheduledDate = _nextInstanceOfNinePM();
+    while (scheduledDate.weekday != DateTime.friday) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+    return scheduledDate;
+  }
+
+  tz.TZDateTime _nextInstanceOfNinePM() {
+    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.TZDateTime scheduledDate =
+        tz.TZDateTime(tz.local, now.year, now.month, now.day, 20, 45);
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }

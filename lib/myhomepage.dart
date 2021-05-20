@@ -66,7 +66,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     shape: BoxShape.circle,
                     color: kSelectColor),
-                child: Icon(CupertinoIcons.arrowtriangle_right_fill, size: 30),
+                child: Center(
+                  child: new Tab(
+                      icon: new Image.asset(
+                    "images/logo_em_3.png",
+                    scale: 4.0,
+                  )),
+                ),
               ),
             ),
           ),

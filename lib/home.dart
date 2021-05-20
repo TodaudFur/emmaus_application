@@ -177,7 +177,7 @@ class DataSource extends CalendarDataSource {
 DataSource _getCalendarDataSource() {
   List<Appointment> appointments = <Appointment>[];
   final DateTime day = DateTime(DateTime.now().year, 5, 20, 9);
-  appointments.add(Appointment(
+  /*appointments.add(Appointment(
     startTime: day,
     endTime: day.add(Duration(hours: 2)),
     isAllDay: true,
@@ -194,7 +194,7 @@ DataSource _getCalendarDataSource() {
     color: Colors.blue,
     startTimeZone: '',
     endTimeZone: '',
-  ));
+  ));*/
 
   return DataSource(appointments);
 }

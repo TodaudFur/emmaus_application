@@ -5,14 +5,12 @@ import 'package:emmaus/versedata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:share/share.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-
-import 'firstlogin.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TodayVerse extends StatefulWidget {
   @override
@@ -23,6 +21,7 @@ class _TodayVerseState extends State<TodayVerse> {
   Uint8List _imageFile;
   final _screenshotController = ScreenshotController();
   String english = "";
+  String korean = "";
 
   Future<bool> _requestPermission() async {
     if (await Permission.storage.request().isGranted) {
@@ -41,7 +40,9 @@ class _TodayVerseState extends State<TodayVerse> {
 
   @override
   Widget build(BuildContext context) {
+    _reloadVerse();
     english = VerseData().getEnglish();
+    korean = VerseData().getKorean();
     return SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -55,12 +56,7 @@ class _TodayVerseState extends State<TodayVerse> {
                   CupertinoIcons.square_arrow_down,
                   color: Colors.grey,
                 ),
-                onPressed: () {
-                  setState(() {
-                    english = VerseData().getEnglish();
-                  });
-                },
-                //_takeScreenshot,
+                onPressed: _takeScreenshot,
               ),
             ),
           ),
@@ -92,11 +88,10 @@ class _TodayVerseState extends State<TodayVerse> {
                         alignment: Alignment.bottomRight,
                         padding: EdgeInsets.only(bottom: 80.0, right: 30.0),
                         child: Text(
-                          '이를 위하여\n죽은 자들에게도\n복음이 전파되었으니\n이는 육체로는\n사람으로 심판을 받으나\n영으로는 하나님을 따라\n살게 하려 함이라\n\n'
-                          '베드로전서 4장 6절',
+                          korean,
                           style: TextStyle(
                             fontFamily: 'Mapo',
-                            fontSize: 20.0,
+                            fontSize: 18.0,
                           ),
                           textAlign: TextAlign.right,
                         ),
@@ -112,6 +107,18 @@ class _TodayVerseState extends State<TodayVerse> {
     );
   }
 
+  _reloadVerse() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String lastVisitDate = prefs.get("verseDateKey");
+
+    String toDayDate = DateFormat('MMdd').format(DateTime.now());
+
+    if (lastVisitDate != toDayDate) {
+      VerseData().renew();
+      await prefs.setString('verseDateKey', toDayDate);
+    } else {}
+  }
+
   void _takeScreenshot() async {
     _requestPermission();
     _imageFile = null;
@@ -119,25 +126,11 @@ class _TodayVerseState extends State<TodayVerse> {
         .capture(delay: Duration(milliseconds: 30))
         .then((Uint8List image) async {
       _imageFile = image;
-      /*showDialog(
-        context: context,
-        builder: (context) => Scaffold(
-          appBar: AppBar(
-            title: Text("CAPURED SCREENSHOT"),
-          ),
-          body: Center(
-              child: Column(
-                children: [
-                  _imageFile != null
-                      ? Image.memory(_imageFile)
-                      : Container(),
-                ],
-              )),
-        ),
-      );*/
       final result = await ImageGallerySaver.saveImage(image,
-          quality: 60,
-          name: DateFormat("yyyy_MM_dd").format(DateTime.now()).toString());
+              quality: 60,
+              name:
+                  DateFormat("yyyy_MM_dd").format(DateTime.now()).toString()) +
+          "Emmaus";
       print(result);
     }).catchError((onError) {
       print(onError);

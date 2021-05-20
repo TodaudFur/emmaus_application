@@ -61,7 +61,7 @@ class _FirstLoginState extends State<FirstLogin> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Image.asset(
-                            "images/emmaus_logo.png",
+                            "images/logo_em_3.png",
                             height: 70.0,
                             color: kSelectColor,
                           ),
