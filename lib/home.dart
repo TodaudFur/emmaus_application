@@ -28,23 +28,22 @@ class _HomeState extends State<Home> {
         color: getColor(),
         padding: EdgeInsets.all(30.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FittedBox(
+                  child: Text(
                     'EMMAUS',
                     style: TextStyle(
-                      fontSize: 28.0,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Noto',
                     ),
                   ),
-                ],
+                  fit: BoxFit.fitHeight,
+                ),
               ),
             ),
             Divider(
@@ -52,36 +51,63 @@ class _HomeState extends State<Home> {
             ),
             Row(
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text(
-                      '안녕하세요 ',
-                      style: TextStyle(
-                        fontFamily: 'Noto',
-                        fontWeight: FontWeight.w900,
-                        fontSize: 12.0,
+                Expanded(
+                  flex: 4,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 2.0),
+                          child: FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text(
+                              '안녕하세요 ',
+                              style: TextStyle(
+                                fontFamily: 'Noto',
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    Text(
-                      name,
-                      style: TextStyle(
-                        fontFamily: 'Noto',
-                        fontWeight: FontWeight.w900,
-                        fontSize: 18.0,
+                      Expanded(
+                        flex: 5,
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(
+                            name,
+                            style: TextStyle(
+                              fontFamily: 'Noto',
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    Text(
-                      ' 님',
-                      style: TextStyle(
-                        fontFamily: 'Noto',
-                        fontWeight: FontWeight.w900,
-                        fontSize: 12.0,
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 2.0),
+                          child: FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text(
+                              '님',
+                              style: TextStyle(
+                                fontFamily: 'Noto',
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
+                Expanded(
+                  flex: 6,
+                  child: Container(),
+                )
                 /*Spacer(),
                 FlatButton(
                   onPressed: () {
@@ -105,6 +131,13 @@ class _HomeState extends State<Home> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      spreadRadius: 0,
+                      blurRadius: 10,
+                    ),
+                  ],
                 ),
                 child: Center(
                   child: content,
@@ -121,6 +154,13 @@ class _HomeState extends State<Home> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      spreadRadius: 0,
+                      blurRadius: 10,
+                    ),
+                  ],
                 ),
                 child: Center(
                   child: Padding(

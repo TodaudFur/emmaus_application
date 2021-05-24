@@ -3,6 +3,7 @@ import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -32,35 +33,122 @@ class _SettingsState extends State<Settings> {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          '안녕하세요 ',
-                          style: TextStyle(
-                            fontFamily: 'Noto',
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w900,
+                        Expanded(
+                          flex: 6,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Expanded(
+                                flex: 5,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 2.0),
+                                  child: FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Text(
+                                      '안녕하세요 ',
+                                      style: TextStyle(
+                                        fontFamily: 'Noto',
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 5,
+                                child: FittedBox(
+                                  fit: BoxFit.fitWidth,
+                                  child: Text(
+                                    VarData().getName(),
+                                    style: TextStyle(
+                                      fontFamily: 'Noto',
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 2.0),
+                                  child: FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Text(
+                                      '님',
+                                      style: TextStyle(
+                                        fontFamily: 'Noto',
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Text(
-                          VarData().getName(),
-                          style: TextStyle(
-                            fontFamily: 'Noto',
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                        Text(
-                          '님',
-                          style: TextStyle(
-                            fontFamily: 'Noto',
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w900,
-                          ),
+                        Expanded(
+                          flex: 4,
+                          child: Container(),
                         ),
                       ],
                     ),
                     VarData().getSetting(() {
                       setState(() {
-                        VarData().logOut();
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (_) => GestureDetector(
+                                  onTap: () {
+                                    FocusScope.of(context).unfocus();
+                                    SystemChrome.setEnabledSystemUIOverlays([]);
+                                  },
+                                  child: new AlertDialog(
+                                    title: new Text(
+                                      "로그아웃",
+                                      style: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w900,
+                                        fontFamily: 'Noto',
+                                      ),
+                                    ),
+                                    content: Text(
+                                      '로그아웃을 하시겠습니까?',
+                                      style: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                        fontFamily: 'Noto',
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      Row(
+                                        children: [
+                                          FlatButton(
+                                            child: Text('예'),
+                                            onPressed: () {
+                                              setState(() {
+                                                VarData().logOut();
+                                                SystemChrome
+                                                    .setEnabledSystemUIOverlays(
+                                                        []);
+                                                Navigator.of(context).pop();
+                                              });
+                                            },
+                                          ),
+                                          FlatButton(
+                                            child: Text('아니오'),
+                                            onPressed: () {
+                                              SystemChrome
+                                                  .setEnabledSystemUIOverlays(
+                                                      []);
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ));
                       });
                     }),
                     /*Row(
@@ -99,17 +187,26 @@ class _SettingsState extends State<Settings> {
             ),
             Expanded(
               flex: 7,
-              child: SingleChildScrollView(
-                child: Container(
-                  height: 200.0,
-                  alignment: Alignment.center,
-                  child: Container(
-                    child: Text(
-                      '그 날에 그들 중 둘이 예루살렘에서 이십오 리 되는\n엠마오라 하는 마을로 가면서\n이 모든 된 일을 서로 이야기하더라\n눅 24:13~14',
-                      textAlign: TextAlign.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(flex: 4, child: Container()),
+                  Expanded(
+                    flex: 3,
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        '그 날에 그들 중 둘이 예루살렘에서 이십오 리 되는\n엠마오라 하는 마을로 가면서\n이 모든 된 일을 서로 이야기하더라\n눅 24:13~14',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Noto',
+                            color: Colors.grey),
+                      ),
                     ),
                   ),
-                ),
+                  Expanded(flex: 5, child: Container()),
+                ],
               ),
             ),
           ],

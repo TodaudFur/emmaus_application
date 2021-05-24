@@ -315,6 +315,7 @@ class VarData {
     _cell = body["cell"];
     _team = body["team"];
     _term = body["term"];
+    _first = body["isFirst"];
     specialNum = int.parse(body["special"]);
     normalNum = (int.parse(body["normal"]) + 3);
     if (_cell != null) _isLogin = true;

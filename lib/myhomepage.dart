@@ -57,8 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
               elevation: 0,
               onPressed: _launchURL,
               child: Container(
-                height: 75,
-                width: 75,
+                height: 70,
+                width: 70,
                 decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.white,
@@ -81,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: _widgetOptions.elementAt(_selectedIndex),
         ),
         bottomNavigationBar: Container(
-          height: 80.0,
+          height: MediaQuery.of(context).size.height / 10,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(30), topLeft: Radius.circular(30)),
@@ -99,32 +99,40 @@ class _MyHomePageState extends State<MyHomePage> {
               topRight: Radius.circular(30.0),
             ),
             child: BottomNavigationBar(
-              iconSize: 30.0,
+              iconSize: MediaQuery.of(context).size.height / 30,
               type: BottomNavigationBarType.fixed,
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home),
-                  label: '',
+                  label: '홈',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(CupertinoIcons.flame_fill),
-                  label: '',
+                  label: 'e-프리퀀시',
                 ),
                 BottomNavigationBarItem(
                     icon: Icon(
-                      Icons.bookmark_border,
+                      Icons.password,
                     ),
                     label: ''),
                 BottomNavigationBarItem(
                   icon: Icon(CupertinoIcons.book_fill),
-                  label: '',
+                  label: '오늘의 말씀',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.settings),
-                  label: '',
+                  label: '설정',
                 ),
               ],
               currentIndex: _selectedIndex,
+              unselectedLabelStyle: TextStyle(
+                  fontFamily: 'Noto',
+                  fontWeight: FontWeight.w500,
+                  fontSize: 10.0),
+              selectedLabelStyle: TextStyle(
+                  fontFamily: 'Noto',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 10.0),
               selectedItemColor: kSelectColor,
               onTap: _onItemTapped,
             ),

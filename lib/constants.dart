@@ -8,22 +8,22 @@ const kSelectColor = Color(0xFF16056b);
 
 const kTrueSpecial = Icon(
   CupertinoIcons.flame_fill,
-  color: Colors.red,
-  size: 40.0,
+  color: Color(0xFFC62828),
+  //size: 40.0,
 );
 
 const kFalseSpecial = Icon(
   CupertinoIcons.flame,
-  size: 40.0,
+  //size: 40.0,
 );
 
 const kTrueNormal = Icon(
   CupertinoIcons.book_fill,
-  color: Color(0xFF1976D2),
-  size: 50.0,
+  color: Color(0xFF16056b),
+  //size: 50.0,
 );
 
 const kFalseNormal = Icon(
   CupertinoIcons.book,
-  size: 50.0,
+  //size: 50.0,
 );

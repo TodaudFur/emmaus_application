@@ -207,129 +207,225 @@ class _Contents extends State<Contents> {
         padding:
             EdgeInsets.only(top: 25.0, left: 30.0, right: 30.0, bottom: 30.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 14.0, bottom: 16.0),
+                child: FittedBox(
+                  fit: BoxFit.fitHeight,
+                  child: Text(
                     'EMMAUS',
                     style: TextStyle(
-                      fontSize: 28.0,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Noto',
                     ),
                   ),
-                ],
+                ),
               ),
             ),
-            Divider(
-              color: kBodyColor,
-              height: 50.0,
-            ),
+            Expanded(flex: 1, child: Container()),
             Expanded(
-              flex: 9,
+              flex: 8,
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      spreadRadius: 0,
+                      blurRadius: 10,
+                    ),
+                  ],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 30.0, right: 30.0, bottom: 30.0, top: 20.0),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          alignment: Alignment.centerRight,
-                          padding: EdgeInsets.only(right: 15.0),
-                          child: Row(
-                            children: [
-                              FlatButton(
-                                shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                        color: Colors.black,
-                                        width: 2,
-                                        style: BorderStyle.solid),
-                                    borderRadius: BorderRadius.circular(10)),
-                                onPressed: _check,
-                                child: Text(
-                                  "미션 출석",
-                                  style: TextStyle(
-                                    fontFamily: 'Noto',
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 12.0,
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 4,
+                              child: Center(
+                                child: FlatButton(
+                                  shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                          color: Colors.black,
+                                          width: 2,
+                                          style: BorderStyle.solid),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  onPressed: _check,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitHeight,
+                                    child: Text(
+                                      "미션 출석",
+                                      style: TextStyle(
+                                        fontFamily: 'Noto',
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                              Spacer(),
-                              FlatButton(
-                                shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                        color: Colors.black,
-                                        width: 2,
-                                        style: BorderStyle.solid),
-                                    borderRadius: BorderRadius.circular(10)),
-                                onPressed: _worshipCheck,
-                                child: Text(
-                                  "예배 출석",
-                                  style: TextStyle(
-                                    fontFamily: 'Noto',
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 12.0,
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Container(),
+                            ),
+                            Expanded(
+                              flex: 4,
+                              child: Center(
+                                child: FlatButton(
+                                  shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                          color: Colors.black,
+                                          width: 2,
+                                          style: BorderStyle.solid),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  onPressed: _worshipCheck,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitHeight,
+                                    child: Text(
+                                      "예배 출석",
+                                      style: TextStyle(
+                                        fontFamily: 'Noto',
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                      Divider(
-                        color: Colors.white,
-                      ),
-                      Expanded(
-                        flex: 2,
+                    ),
+                    Divider(
+                      color: Colors.white,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: FittedBox(
+                        fit: BoxFit.fitHeight,
                         child: Text(
                           "SHOW\nYOUR WORSHIP!",
                           style: TextStyle(
                             fontFamily: 'Noto',
                             fontWeight: FontWeight.w900,
-                            fontSize: 22.0,
                           ),
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      Divider(
-                        color: Colors.white,
-                      ),
-                      Expanded(
-                        flex: 7,
-                        child: Container(
-                          alignment: Alignment.bottomCenter,
-                          child: GridView.count(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 5.0,
-                            physics: NeverScrollableScrollPhysics(),
-                            children: [
-                              VarData().getData(0),
-                              VarData().getData(1),
-                              VarData().getData(2),
-                              VarData().getData(3),
-                              VarData().getData(4),
-                              VarData().getData(5),
-                              VarData().getData(6),
-                              VarData().getData(7),
-                              VarData().getData(8),
-                            ],
+                    ),
+                    Divider(
+                      color: Colors.white,
+                    ),
+                    Expanded(
+                      flex: 7,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(),
+                                ),
+                                Expanded(
+                                    flex: 3,
+                                    child: FittedBox(
+                                        fit: BoxFit.fitWidth,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: VarData().getData(0),
+                                        ))),
+                                Expanded(
+                                    flex: 3,
+                                    child: FittedBox(
+                                        fit: BoxFit.fitHeight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: VarData().getData(1),
+                                        ))),
+                                Expanded(
+                                    flex: 3,
+                                    child: FittedBox(
+                                        fit: BoxFit.fitHeight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: VarData().getData(2),
+                                        ))),
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: FittedBox(
+                                      fit: BoxFit.fitHeight,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: VarData().getData(3),
+                                      )),
+                                ),
+                                Expanded(
+                                    child: FittedBox(
+                                        fit: BoxFit.fitHeight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: VarData().getData(4),
+                                        ))),
+                                Expanded(
+                                    child: FittedBox(
+                                        fit: BoxFit.fitHeight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: VarData().getData(5),
+                                        ))),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: FittedBox(
+                                        fit: BoxFit.fitHeight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: VarData().getData(6),
+                                        ))),
+                                Expanded(
+                                    child: FittedBox(
+                                        fit: BoxFit.fitHeight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: VarData().getData(7),
+                                        ))),
+                                Expanded(
+                                    child: FittedBox(
+                                  fit: BoxFit.fitHeight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: VarData().getData(8),
+                                  ),
+                                )),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

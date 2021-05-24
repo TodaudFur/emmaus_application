@@ -45,19 +45,25 @@ class _TodayVerseState extends State<TodayVerse> {
     korean = VerseData().getKorean();
     return SafeArea(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Expanded(
             flex: 1,
-            child: Padding(
-              padding: EdgeInsets.only(top: 40.0, right: 40),
-              child: IconButton(
-                icon: Icon(
-                  CupertinoIcons.square_arrow_down,
-                  color: Colors.grey,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(flex: 8, child: Container()),
+                Expanded(
+                  flex: 2,
+                  child: IconButton(
+                    icon: Icon(
+                      CupertinoIcons.square_arrow_down,
+                      color: Colors.grey,
+                    ),
+                    onPressed: _takeScreenshot,
+                  ),
                 ),
-                onPressed: _takeScreenshot,
-              ),
+              ],
             ),
           ),
           Expanded(
@@ -69,34 +75,64 @@ class _TodayVerseState extends State<TodayVerse> {
                 child: Column(
                   children: [
                     Expanded(
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        padding: EdgeInsets.only(
-                            bottom: 80.0, right: 30.0, top: 40.0, left: 30.0),
-                        child: Text(
-                          english,
-                          style: TextStyle(
-                            fontFamily: 'Mapo',
-                            fontSize: 12.0,
+                      flex: 1,
+                      child: Container(),
+                    ),
+                    Expanded(
+                      flex: 7,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: Container(),
+                            flex: 1,
                           ),
-                          textAlign: TextAlign.left,
-                        ),
+                          Expanded(
+                            flex: 3,
+                            child: FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Text(
+                                english,
+                                style: TextStyle(
+                                  fontFamily: 'Mapo',
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ),
+                          Expanded(flex: 6, child: Container()),
+                        ],
                       ),
                     ),
                     Expanded(
-                      child: Container(
-                        alignment: Alignment.bottomRight,
-                        padding: EdgeInsets.only(bottom: 80.0, right: 30.0),
-                        child: Text(
-                          korean,
-                          style: TextStyle(
-                            fontFamily: 'Mapo',
-                            fontSize: 18.0,
+                      flex: 7,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: Container(),
+                            flex: 5,
                           ),
-                          textAlign: TextAlign.right,
-                        ),
+                          Expanded(
+                            flex: 4,
+                            child: FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Text(
+                                korean,
+                                style: TextStyle(
+                                  fontFamily: 'Mapo',
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          ),
+                          Expanded(flex: 1, child: Container()),
+                        ],
                       ),
                     ),
+                    Expanded(flex: 2, child: Container()),
                   ],
                 ),
               ),

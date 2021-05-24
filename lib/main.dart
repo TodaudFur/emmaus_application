@@ -108,20 +108,6 @@ class _MyAppState extends State<MyApp> {
         ));
   }
 
-  Future<void> _showNotification() async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails('noti 1', 'basic noti', 'basic noti',
-            importance: Importance.max,
-            priority: Priority.high,
-            ticker: 'ticker');
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    await flutterLocalNotificationsPlugin.show(
-        0, 'basic noti', 'basic noti', platformChannelSpecifics,
-        payload: 'youtube');
-  }
-
   Future<void> _scheduleWeeklyMondayTenAMNotification() async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
         0,
@@ -149,7 +135,7 @@ class _MyAppState extends State<MyApp> {
   tz.TZDateTime _nextInstanceOfTenAM() {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, 13, 15);
+        tz.TZDateTime(tz.local, now.year, now.month, now.day, 13, 45);
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
@@ -158,7 +144,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _scheduleWeeklyFridayTenAMNotification() async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
-        0,
+        1,
         '워라벨 성령대망회',
         '예배 15분전입니다.',
         _nextInstanceOfFridayTenAM(),
