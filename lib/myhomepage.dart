@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 BottomNavigationBarItem(
                     icon: Icon(
-                      Icons.password,
+                      null,
                     ),
                     label: ''),
                 BottomNavigationBarItem(

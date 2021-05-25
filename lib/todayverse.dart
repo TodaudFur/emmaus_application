@@ -89,7 +89,7 @@ class _TodayVerseState extends State<TodayVerse> {
                             flex: 1,
                           ),
                           Expanded(
-                            flex: 3,
+                            flex: 6,
                             child: FittedBox(
                               fit: BoxFit.fitWidth,
                               child: Text(
@@ -101,7 +101,7 @@ class _TodayVerseState extends State<TodayVerse> {
                               ),
                             ),
                           ),
-                          Expanded(flex: 6, child: Container()),
+                          Expanded(flex: 5, child: Container()),
                         ],
                       ),
                     ),
@@ -113,10 +113,10 @@ class _TodayVerseState extends State<TodayVerse> {
                         children: [
                           Expanded(
                             child: Container(),
-                            flex: 5,
+                            flex: 4,
                           ),
                           Expanded(
-                            flex: 4,
+                            flex: 5,
                             child: FittedBox(
                               fit: BoxFit.fitWidth,
                               child: Text(

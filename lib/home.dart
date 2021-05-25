@@ -73,7 +73,7 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       Expanded(
-                        flex: 5,
+                        flex: 4,
                         child: FittedBox(
                           fit: BoxFit.fitWidth,
                           child: Text(

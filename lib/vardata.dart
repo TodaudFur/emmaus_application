@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:mysql1/mysql1.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 bool _isLogin = false;
@@ -35,20 +34,17 @@ List<Widget> _iconList = [
   kFalseNormal,
 ];
 
-List<String> _answerSpecialList = ["special1", "special2", "special3"];
-
-List<String> _answerNormalList = [
-  "normal1",
-  "normal2",
-  "normal3",
-  "normal4",
-  "normal5",
-  "normal6"
-];
-
 class VarData {
   void reLogin() {
     _first = "True";
+  }
+
+  int getSpecial() {
+    return specialNum;
+  }
+
+  int getNormal() {
+    return normalNum - 3;
   }
 
   bool getFirst() {
