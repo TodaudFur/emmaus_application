@@ -165,101 +165,159 @@ class VarData {
         child: Center(
           child: Column(
             children: [
-              Text(
-                "e-프리퀀시",
-                style: TextStyle(
-                  fontFamily: 'Noto',
-                  fontWeight: FontWeight.w900,
-                  fontSize: 12.0,
+              Expanded(
+                flex: 2,
+                child: FittedBox(
+                  fit: BoxFit.fitHeight,
+                  child: Text(
+                    "e-프리퀀시",
+                    style: TextStyle(
+                      fontFamily: 'Noto',
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
                 ),
               ),
-              Divider(
-                color: Colors.white,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        CupertinoIcons.flame_fill,
-                        color: Colors.red,
-                        size: 30.0,
+              Expanded(
+                flex: 5,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Row(
+                        children: [
+                          Expanded(flex: 4, child: Container()),
+                          Expanded(
+                            flex: 4,
+                            child: FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Icon(
+                                CupertinoIcons.flame_fill,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                          Expanded(flex: 1, child: Container()),
+                          Expanded(
+                            flex: 2,
+                            child: FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Text(
+                                specialNum.toString(),
+                                style: TextStyle(
+                                  fontFamily: 'Noto',
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(flex: 3, child: Container()),
+                        ],
                       ),
-                      VerticalDivider(
-                        color: Colors.white,
-                        width: 8.0,
-                      ),
-                      Text(
-                        specialNum.toString(),
-                        style: TextStyle(
-                          fontFamily: 'Noto',
-                          fontWeight: FontWeight.w900,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    "+",
-                    style: TextStyle(
-                      fontFamily: 'Noto',
-                      fontWeight: FontWeight.w900,
-                      fontSize: 18.0,
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        CupertinoIcons.book_fill,
-                        color: Colors.blue[700],
-                        size: 30.0,
-                      ),
-                      VerticalDivider(
-                        color: Colors.white,
-                        width: 8.0,
-                      ),
-                      Text(
-                        (normalNum - 3).toString(),
-                        style: TextStyle(
-                          fontFamily: 'Noto',
-                          fontWeight: FontWeight.w900,
-                          fontSize: 18.0,
+                    Expanded(
+                      flex: 1,
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Text(
+                            "+",
+                            style: TextStyle(
+                              fontFamily: 'Noto',
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
                         ),
                       ),
-                    ],
-                  ),
-                  Text(
-                    "=",
-                    style: TextStyle(
-                      fontFamily: 'Noto',
-                      fontWeight: FontWeight.w900,
-                      fontSize: 18.0,
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        CupertinoIcons.gift,
-                        color: Colors.green[700],
-                        size: 30.0,
+                    Expanded(
+                      flex: 3,
+                      child: Row(
+                        children: [
+                          Expanded(flex: 3, child: Container()),
+                          Expanded(
+                            flex: 4,
+                            child: FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Icon(
+                                CupertinoIcons.book_fill,
+                                color: Colors.blue[700],
+                              ),
+                            ),
+                          ),
+                          Expanded(flex: 1, child: Container()),
+                          Expanded(
+                            flex: 2,
+                            child: FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Text(
+                                (normalNum - 3).toString(),
+                                style: TextStyle(
+                                  fontFamily: 'Noto',
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(flex: 3, child: Container()),
+                        ],
                       ),
-                      VerticalDivider(
-                        color: Colors.white,
-                        width: 8.0,
-                      ),
-                      Text(
-                        (specialNum + (normalNum - 3)).toString(),
-                        style: TextStyle(
-                          fontFamily: 'Noto',
-                          fontWeight: FontWeight.w900,
-                          fontSize: 18.0,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Text(
+                            "=",
+                            style: TextStyle(
+                              fontFamily: 'Noto',
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
                         ),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Row(
+                        children: [
+                          Expanded(flex: 3, child: Container()),
+                          Expanded(
+                            flex: 4,
+                            child: FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Icon(
+                                CupertinoIcons.gift,
+                                color: Colors.green[700],
+                              ),
+                            ),
+                          ),
+                          Expanded(flex: 1, child: Container()),
+                          Expanded(
+                            flex: 2,
+                            child: FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Text(
+                                (specialNum + (normalNum - 3)).toString(),
+                                style: TextStyle(
+                                  fontFamily: 'Noto',
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(flex: 4, child: Container()),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              Expanded(flex: 2, child: Container()),
             ],
           ),
         ),
