@@ -16,6 +16,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final idController = TextEditingController();
   final psController = TextEditingController();
+  bool autoLogin = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +33,8 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               children: [
                 Expanded(
-                    flex: 5,
+                    flex: 1,
                     child: Container(
-                      padding: EdgeInsets.only(left: 15.0, top: 10.0),
-                      color: Colors.white,
                       alignment: Alignment.centerLeft,
                       child: IconButton(
                         icon: Icon(CupertinoIcons.arrow_left),
@@ -45,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     )),
                 Expanded(
-                  flex: 95,
+                  flex: 9,
                   child: SingleChildScrollView(
                     child: Container(
                       padding: EdgeInsets.all(30.0),
@@ -90,7 +89,24 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           Divider(
                             color: Colors.white,
-                            height: 40.0,
+                          ),
+                          Row(
+                            children: [
+                              Switch(
+                                  value: autoLogin,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      autoLogin = value;
+                                    });
+                                  }),
+                              Text(
+                                "자동로그인",
+                                style: TextStyle(
+                                  fontFamily: 'Noto',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
                           RaisedButton(
                             color: kSelectColor,
@@ -111,6 +127,9 @@ class _LoginPageState extends State<LoginPage> {
                                             (route) => false)
                                         .then((value) => setState(() {}));
                                   } else {
+                                    if (autoLogin)
+                                      VarData().trueAutoLogin(
+                                          idController.text, psController.text);
                                     Fluttertoast.showToast(
                                         msg: "로그인 성공!",
                                         toastLength: Toast.LENGTH_SHORT,

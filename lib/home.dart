@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
             Expanded(
               flex: 1,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(2.0),
                 child: FittedBox(
                   child: Text(
                     'EMMAUS',

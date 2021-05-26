@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'package:emmaus/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'constants.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
 bool _isLogin = false;
+bool _autoLogin = false;
 
 String _name = "엠마오";
 String _cell;
@@ -35,6 +37,18 @@ List<Widget> _iconList = [
 ];
 
 class VarData {
+  bool getLogin() {
+    return _isLogin;
+  }
+
+  void trueAutoLogin(String id, String pwd) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("autologin", true);
+    await prefs.setString("autoid", id);
+    await prefs.setString("autopwd", pwd);
+    _autoLogin = true;
+  }
+
   void reLogin() {
     _first = "True";
   }
@@ -127,7 +141,9 @@ class VarData {
     }
   }
 
-  void logOut() {
+  void logOut() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("autologin", false);
     _isLogin = false;
   }
 

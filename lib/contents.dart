@@ -228,7 +228,7 @@ class _Contents extends State<Contents> {
             Expanded(
               flex: 1,
               child: Padding(
-                padding: const EdgeInsets.only(top: 14.0, bottom: 16.0),
+                padding: const EdgeInsets.all(9),
                 child: FittedBox(
                   fit: BoxFit.fitHeight,
                   child: Text(
