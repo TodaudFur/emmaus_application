@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:emmaus/vardata.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-
+import 'package:image_picker/image_picker.dart';
 import 'constants.dart';
 import 'homebgcolor.dart';
 
@@ -16,6 +21,8 @@ class _HomeState extends State<Home> {
   String agendaText = "엠마오 일정";
   String name = "엠마오";
   Widget content = Container();
+  File _image;
+  final picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -106,11 +113,29 @@ class _HomeState extends State<Home> {
                 ),
                 Expanded(
                   flex: 6,
-                  child: Container(),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        flex: 7,
+                        child: Container(),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: IconButton(
+                          onPressed: () {
+                            getImage();
+                          },
+                          icon: Icon(CupertinoIcons.qrcode),
+                        ),
+                      ),
+                    ],
+                  ),
                 )
                 /*Spacer(),
                 FlatButton(
                   onPressed: () {
+
                     setState(() {
                       if (getUser()) {
                         trueUser();
@@ -205,6 +230,71 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  Future getImage() async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String path = appDocDir.path;
+
+    if (await File('$path/qrcode.png').exists()) {
+      showDialog(
+        context: context,
+        builder: (context) => Scaffold(
+          backgroundColor: Colors.white,
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.file(File('$path/qrcode.png')),
+                Divider(
+                  color: Colors.white,
+                ),
+                RaisedButton(
+                  padding: EdgeInsets.all(5.0),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0)),
+                  color: kBodyColor,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    "돌아가기",
+                    style: TextStyle(
+                      fontFamily: 'Noto',
+                      fontWeight: FontWeight.w900,
+                      fontSize: 15.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    } else {
+      final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+// getting a directory path for saving
+
+// copy the file to a new path
+
+      setState(() {
+        if (pickedFile != null) {
+          _image = File(pickedFile.path);
+        } else {
+          print('No image selected.');
+        }
+      });
+
+      final File newImage = await _image.copy('$path/qrcode.png');
+
+      Fluttertoast.showToast(
+          msg: "QR코드가 저장이 되었습니다!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          fontSize: 16.0);
+    }
   }
 }
 

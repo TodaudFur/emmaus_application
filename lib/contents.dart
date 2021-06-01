@@ -278,7 +278,7 @@ class _Contents extends State<Contents> {
                                   child: FittedBox(
                                     fit: BoxFit.fitHeight,
                                     child: Text(
-                                      "미션 출석",
+                                      "스페셜미션",
                                       style: TextStyle(
                                         fontFamily: 'Noto',
                                         fontWeight: FontWeight.w900,
@@ -324,16 +324,19 @@ class _Contents extends State<Contents> {
                       color: Colors.white,
                     ),
                     Expanded(
-                      flex: 1,
-                      child: FittedBox(
-                        fit: BoxFit.fitHeight,
-                        child: Text(
-                          "SHOW\nYOUR WORSHIP!",
-                          style: TextStyle(
-                            fontFamily: 'Noto',
-                            fontWeight: FontWeight.w900,
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: FittedBox(
+                          fit: BoxFit.fitHeight,
+                          child: Text(
+                            "SHOW\nYOUR WORSHIP!",
+                            style: TextStyle(
+                              fontFamily: 'Noto',
+                              fontWeight: FontWeight.w900,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),

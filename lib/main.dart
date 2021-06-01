@@ -88,8 +88,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    _scheduleWeeklyMondayTenAMNotification();
-    _scheduleWeeklyFridayTenAMNotification();
+    //_scheduleWeeklyMondayTenAMNotification();
+    //_scheduleWeeklyFridayTenAMNotification();
     return MaterialApp(
         title: 'Emmaus',
         theme: ThemeData(
@@ -122,6 +122,7 @@ class _MyAppState extends State<MyApp> {
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
+    print("주일예배 알림");
   }
 
   tz.TZDateTime _nextInstanceOfMondayTenAM() {
@@ -129,6 +130,7 @@ class _MyAppState extends State<MyApp> {
     while (scheduledDate.weekday != DateTime.sunday) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
+    print("next sunday");
     return scheduledDate;
   }
 
@@ -139,6 +141,7 @@ class _MyAppState extends State<MyApp> {
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
+    print("next time");
     return scheduledDate;
   }
 
