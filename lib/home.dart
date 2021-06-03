@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:emmaus/main.dart';
+import 'package:emmaus/myhomepage.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -235,6 +237,7 @@ class _HomeState extends State<Home> {
   Future getImage() async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String path = appDocDir.path;
+    File mainImage = File('$path/qrcode.png');
 
     if (await File('$path/qrcode.png').exists()) {
       showDialog(
@@ -242,42 +245,88 @@ class _HomeState extends State<Home> {
         builder: (context) => Scaffold(
           backgroundColor: Colors.white,
           body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.file(File('$path/qrcode.png')),
-                Divider(
-                  color: Colors.white,
-                ),
-                RaisedButton(
-                  padding: EdgeInsets.all(5.0),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  color: kBodyColor,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "돌아가기",
-                    style: TextStyle(
-                      fontFamily: 'Noto',
-                      fontWeight: FontWeight.w900,
-                      fontSize: 15.0,
-                    ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.file(mainImage),
+                  Divider(
+                    color: Colors.white,
                   ),
-                ),
-              ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RaisedButton(
+                        padding: EdgeInsets.all(5.0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        color: kBodyColor,
+                        onPressed: () async {
+                          final pickedFile = await picker.getImage(
+                              source: ImageSource.gallery);
+                          setState(() {
+                            if (pickedFile != null) {
+                              _image = File(pickedFile.path);
+                            } else {
+                              print('No image selected.');
+                            }
+                          });
+
+                          imageCache.clear();
+                          final File newImage =
+                              await _image.copy('$path/qrcode.png');
+
+                          setState(() {
+                            mainImage = newImage;
+                          });
+
+                          Fluttertoast.showToast(
+                              msg: "QR코드가 저장이 되었습니다!",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              fontSize: 16.0);
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          "수정",
+                          style: TextStyle(
+                            fontFamily: 'Noto',
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                      VerticalDivider(
+                        color: Colors.white,
+                      ),
+                      RaisedButton(
+                        padding: EdgeInsets.all(5.0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        color: kBodyColor,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          "돌아가기",
+                          style: TextStyle(
+                            fontFamily: 'Noto',
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       );
     } else {
       final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
-// getting a directory path for saving
-
-// copy the file to a new path
-
       setState(() {
         if (pickedFile != null) {
           _image = File(pickedFile.path);
