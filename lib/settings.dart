@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -183,14 +184,95 @@ class _SettingsState extends State<Settings> {
             ),
             Divider(
               color: kBodyColor,
-              height: 80.0,
+              height: 40.0,
             ),
             Expanded(
-              flex: 7,
+              flex: 8,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(flex: 4, child: Container()),
+                  Expanded(
+                    flex: 4,
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: FlatButton(
+                              onPressed: () {},
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(
+                                      CupertinoIcons.book,
+                                      size: 40.0,
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                  Text(
+                                    '주보',
+                                    style: TextStyle(
+                                      fontFamily: 'Noto',
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 15.0,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: FlatButton(
+                              onPressed: _launchHomepage,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    CupertinoIcons.book,
+                                    size: 40.0,
+                                  ),
+                                  Text(
+                                    '홈페이지',
+                                    style: TextStyle(
+                                      fontFamily: 'Noto',
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 15.0,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: FlatButton(
+                              onPressed: _launchInstagram,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    CupertinoIcons.book,
+                                    size: 40.0,
+                                  ),
+                                  Text(
+                                    '인스타그램',
+                                    style: TextStyle(
+                                      fontFamily: 'Noto',
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 15.0,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    color: kBodyColor,
+                    height: 40.0,
+                  ),
                   Expanded(
                     flex: 3,
                     child: FittedBox(
@@ -205,7 +287,7 @@ class _SettingsState extends State<Settings> {
                       ),
                     ),
                   ),
-                  Expanded(flex: 5, child: Container()),
+                  Expanded(flex: 4, child: Container()),
                 ],
               ),
             ),
@@ -213,6 +295,40 @@ class _SettingsState extends State<Settings> {
         ),
       ),
     );
+  }
+
+  _launchHomepage() async {
+    const url = 'https://official-emmaus.com';
+    await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
+  }
+
+  _launchInstagram() async {
+    const url = 'https://instagram.com/emmaus_worship?utm_medium=copy_link';
+    await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
+  }
+
+  _showBulletin() {
+    VarData().pullBulletin().then((value) {
+      String date = value[0];
+      String count = value[1];
+      List<Widget> image;
+
+      for (int i = 0; i < int.parse(count); i++) {
+        image.add(Image.network(
+            "https://www.official-emmaus.com/g5/bbs/bulletin/$date" +
+                "_$i.png"));
+      }
+
+      showDialog(
+          context: context,
+          builder: (context) => Scaffold(
+                body: Center(
+                  child: Row(
+                    children: image,
+                  ),
+                ),
+              ));
+    }).catchError((onError) {});
   }
 }
 

@@ -185,10 +185,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _launchURL() async {
     const url = 'https://youtube.com/channel/UChKWnwNuFsgzZ1pIwVnPCvA';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+    await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
   }
 }

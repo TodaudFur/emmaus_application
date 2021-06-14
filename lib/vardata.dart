@@ -113,6 +113,20 @@ class VarData {
     Map<String, dynamic> body = json.decode(result.body);
   }
 
+  Future<List<String>> pullBulletin() async {
+    List<String> res;
+    var url = Uri.parse(
+        'https://www.official-emmaus.com/g5/bbs/emmaus_bulletin_json.php');
+    var result = await http.post(url);
+
+    Map<String, dynamic> body = json.decode(result.body);
+
+    res.add(body['date']);
+    res.add(body['count']);
+
+    return res;
+  }
+
   Future<bool> check(String answer) async {
     String date = DateFormat("MMdd").format(DateTime.now()).toString();
     print("result");

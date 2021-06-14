@@ -88,8 +88,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    //_scheduleWeeklyMondayTenAMNotification();
-    //_scheduleWeeklyFridayTenAMNotification();
+    _scheduleWeeklyMondayTenAMNotification();
+    _scheduleWeeklyFridayTenAMNotification();
     return MaterialApp(
         title: 'Emmaus',
         theme: ThemeData(
@@ -112,7 +112,7 @@ class _MyAppState extends State<MyApp> {
     await flutterLocalNotificationsPlugin.zonedSchedule(
         0,
         '주일 예배',
-        '예배 15분전입니다.',
+        '예배 10분전입니다.',
         _nextInstanceOfMondayTenAM(),
         const NotificationDetails(
           android: AndroidNotificationDetails(
@@ -130,17 +130,22 @@ class _MyAppState extends State<MyApp> {
     while (scheduledDate.weekday != DateTime.sunday) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
+    print(scheduledDate);
     print("next sunday");
     return scheduledDate;
   }
 
   tz.TZDateTime _nextInstanceOfTenAM() {
-    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.initializeTimeZones();
+    final seoul = tz.getLocation('Asia/Seoul');
+    final tz.TZDateTime now = tz.TZDateTime.now(seoul);
+    print(now);
     tz.TZDateTime scheduledDate =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, 13, 45);
+        tz.TZDateTime(seoul, now.year, now.month, now.day, 13, 50);
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
+    print(scheduledDate);
     print("next time");
     return scheduledDate;
   }
@@ -159,6 +164,7 @@ class _MyAppState extends State<MyApp> {
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
+    print("금요철야 알림");
   }
 
   tz.TZDateTime _nextInstanceOfFridayTenAM() {
@@ -166,16 +172,20 @@ class _MyAppState extends State<MyApp> {
     while (scheduledDate.weekday != DateTime.friday) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
+    print(scheduledDate);
     return scheduledDate;
   }
 
   tz.TZDateTime _nextInstanceOfNinePM() {
-    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.initializeTimeZones();
+    final seoul = tz.getLocation('Asia/Seoul');
+    final tz.TZDateTime now = tz.TZDateTime.now(seoul);
     tz.TZDateTime scheduledDate =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, 20, 45);
+        tz.TZDateTime(seoul, now.year, now.month, now.day, 20, 50);
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
+    print(scheduledDate);
     return scheduledDate;
   }
 }
