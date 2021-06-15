@@ -403,10 +403,33 @@ List<String> _koreanVerse = [
   "평강의 주께서\n친히 때마다 일마다\n너희에게 평강을 주시고\n주께서 너희 모든 사람과\n함께 하시기를 원하노라\n\n데살로니가후서 3:16",
 ];
 
+List<String> qtList = [
+  "잠언 25:1~14",
+  "잠언 25:1~14",
+  "잠언 25:1~14",
+  "잠언 25:15~28",
+  "잠언 26:1~16",
+  "잠언 26:17~28",
+  "잠언 27:1~13",
+  "잠언 27:14~27",
+  "잠언 28:1~18",
+  "잠언 28:19~28",
+  "잠언 29:1~14",
+  "잠언 29:15~27",
+  "잠언 30:1~17",
+  "잠언 30:18~33",
+  "잠언 31:1~9",
+  "잠언 31:10~31",
+];
+
 int verseNum = 0;
 
 class VerseData {
   var rng = new Random();
+
+  String getQt(int num) {
+    return qtList[num];
+  }
 
   String getEnglish() {
     return _englishVerse[verseNum];

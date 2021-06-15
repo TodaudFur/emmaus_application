@@ -310,21 +310,7 @@ class VarData {
                               ),
                             ),
                           ),
-                          Expanded(flex: 1, child: Container()),
-                          Expanded(
-                            flex: 2,
-                            child: FittedBox(
-                              fit: BoxFit.fitWidth,
-                              child: Text(
-                                (specialNum + (normalNum - 3)).toString(),
-                                style: TextStyle(
-                                  fontFamily: 'Noto',
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(flex: 4, child: Container()),
+                          Expanded(flex: 5, child: Container()),
                         ],
                       ),
                     ),

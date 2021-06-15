@@ -40,6 +40,8 @@ dependencies:
   flutter_native_timezone: ^1.0.10
   shared_preferences: ^2.0.5
   image_picker: ^0.7.5+3
+  font_awesome_flutter: ^9.1.0
+  confetti: ^0.5.5
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +75,7 @@ flutter:
         - asset: fonts/MapoGoldenPier.ttf
   # To add assets to your application, add an assets section, like this:
   assets:
+    - images/
     - images/emmaus_logo.png
     - images/s_emmaus_logo.jpg
     - images/blue_emmaus_logo.jpg

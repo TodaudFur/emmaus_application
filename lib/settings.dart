@@ -1,10 +1,15 @@
 import 'package:emmaus/constants.dart';
+import 'package:emmaus/game.dart';
 import 'package:emmaus/vardata.dart';
+import 'package:emmaus/versedata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -12,6 +17,7 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  final textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -198,19 +204,22 @@ class _SettingsState extends State<Settings> {
                         children: [
                           Expanded(
                             child: FlatButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Game()),
+                                );
+                              },
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  IconButton(
-                                    icon: Icon(
-                                      CupertinoIcons.book,
-                                      size: 40.0,
-                                    ),
-                                    onPressed: () {},
+                                  Icon(
+                                    CupertinoIcons.gamecontroller,
+                                    size: 40.0,
                                   ),
                                   Text(
-                                    '주보',
+                                    '게임',
                                     style: TextStyle(
                                       fontFamily: 'Noto',
                                       fontWeight: FontWeight.w700,
@@ -223,20 +232,126 @@ class _SettingsState extends State<Settings> {
                           ),
                           Expanded(
                             child: FlatButton(
-                              onPressed: _launchHomepage,
+                              onPressed: () {
+                                String toDayDate =
+                                    DateFormat('dd').format(DateTime.now());
+                                int num = int.parse(toDayDate);
+                                showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (_) => GestureDetector(
+                                          onTap: () {
+                                            FocusScope.of(context).unfocus();
+                                            SystemChrome
+                                                .setEnabledSystemUIOverlays([]);
+                                          },
+                                          child: new AlertDialog(
+                                            title: new Text(
+                                              "오늘의 큐티",
+                                              style: TextStyle(
+                                                fontSize: 15.0,
+                                                fontWeight: FontWeight.w900,
+                                                fontFamily: 'Noto',
+                                              ),
+                                            ),
+                                            content: Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  2,
+                                              child: Column(
+                                                children: [
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: Text(
+                                                      VerseData()
+                                                          .getQt(num - 15),
+                                                      style: TextStyle(
+                                                        fontSize: 15.0,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Colors.grey[800],
+                                                        fontFamily: 'Noto',
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Divider(),
+                                                  Expanded(
+                                                    flex: 9,
+                                                    child: Container(
+                                                      child: TextField(
+                                                          maxLines: null,
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .multiline,
+                                                          controller:
+                                                              textController,
+                                                          decoration:
+                                                              InputDecoration(
+                                                            border:
+                                                                OutlineInputBorder(),
+                                                            labelText: '큐티',
+                                                          )),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              Row(
+                                                children: [
+                                                  FlatButton(
+                                                    child: Text('확인'),
+                                                    onPressed: () {
+                                                      Clipboard.setData(
+                                                          ClipboardData(
+                                                              text:
+                                                                  textController
+                                                                      .text));
+                                                      textController.text = "";
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "큐티가 클립보드에 복사되었습니다.",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT,
+                                                          gravity: ToastGravity
+                                                              .BOTTOM,
+                                                          timeInSecForIosWeb: 1,
+                                                          fontSize: 16.0);
+                                                    },
+                                                  ),
+                                                  FlatButton(
+                                                    child: Text('취소'),
+                                                    onPressed: () {
+                                                      textController.text = "";
+                                                      SystemChrome
+                                                          .setEnabledSystemUIOverlays(
+                                                              []);
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ));
+                              },
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    CupertinoIcons.book,
+                                    CupertinoIcons.doc_text,
                                     size: 40.0,
                                   ),
                                   Text(
-                                    '홈페이지',
+                                    '오늘의 큐티',
                                     style: TextStyle(
                                       fontFamily: 'Noto',
                                       fontWeight: FontWeight.w700,
-                                      fontSize: 15.0,
+                                      fontSize: 14.0,
                                     ),
                                   )
                                 ],
@@ -250,7 +365,7 @@ class _SettingsState extends State<Settings> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    CupertinoIcons.book,
+                                    FontAwesomeIcons.instagram,
                                     size: 40.0,
                                   ),
                                   Text(

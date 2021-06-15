@@ -174,7 +174,7 @@ class _Contents extends State<Contents> {
                               controller: textController,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
-                                labelText: 'Hint',
+                                labelText: '정답',
                               )),
                         ],
                       ),
@@ -325,19 +325,37 @@ class _Contents extends State<Contents> {
                     ),
                     Expanded(
                       flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: FittedBox(
-                          fit: BoxFit.fitHeight,
-                          child: Text(
-                            "SHOW\nYOUR WORSHIP!",
-                            style: TextStyle(
-                              fontFamily: 'Noto',
-                              fontWeight: FontWeight.w900,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: FittedBox(
+                              fit: BoxFit.fitHeight,
+                              child: Text(
+                                "SHOW\nYOUR WORSHIP!",
+                                style: TextStyle(
+                                  fontFamily: 'Noto',
+                                  fontWeight: FontWeight.w900,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                            textAlign: TextAlign.center,
                           ),
-                        ),
+                          Expanded(
+                            flex: 1,
+                            child: FittedBox(
+                              fit: BoxFit.fitHeight,
+                              child: Text(
+                                "6/13 ~ 7/9",
+                                style: TextStyle(
+                                  fontFamily: 'Noto',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     Divider(
