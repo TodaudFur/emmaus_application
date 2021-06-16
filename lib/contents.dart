@@ -16,6 +16,25 @@ class Contents extends StatefulWidget {
 
 class _Contents extends State<Contents> {
   final textController = TextEditingController();
+  int tryTime = 2;
+
+  _getTryTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String toDayDate = DateFormat('MMdd').format(DateTime.now());
+    String lastVisitDate = prefs.get("tryTimeDate");
+
+    if (toDayDate != lastVisitDate) {
+      await prefs.setString('tryTimeDate', toDayDate);
+      tryTime = 2;
+    } else {
+      if (tryTime != prefs.getInt("tryTime")) {
+        setState(() {
+          tryTime = prefs.getInt("tryTime");
+          if (tryTime == null) tryTime = 2;
+        });
+      }
+    }
+  }
 
   void _checkAnswer(String s) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -37,13 +56,25 @@ class _Contents extends State<Contents> {
             Navigator.of(context).pop();
           });
         } else {
-          print("else");
-          Fluttertoast.showToast(
-              msg: "오답입니다!",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              fontSize: 16.0);
+          if (tryTime == 0) {
+            Fluttertoast.showToast(
+                msg: "정답 입력 기회를 다 사용했습니다!",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                fontSize: 16.0);
+          } else {
+            setState(() {
+              tryTime--;
+            });
+            await prefs.setInt('tryTime', tryTime);
+            Fluttertoast.showToast(
+                msg: "오답입니다!",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                fontSize: 16.0);
+          }
         }
       }).catchError((onError) {
         print("Error");
@@ -136,74 +167,76 @@ class _Contents extends State<Contents> {
         showDialog(
             barrierDismissible: false,
             context: context,
-            builder: (_) => GestureDetector(
-                  onTap: () {
-                    FocusScope.of(context).unfocus();
-                    SystemChrome.setEnabledSystemUIOverlays([]);
-                  },
-                  child: new AlertDialog(
-                    title: new Text(
-                      "정답",
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w900,
-                        fontFamily: 'Noto',
+            builder: (_) => StatefulBuilder(builder: (context, setState) {
+                  return GestureDetector(
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                      SystemChrome.setEnabledSystemUIOverlays([]);
+                    },
+                    child: new AlertDialog(
+                      title: new Text(
+                        "정답",
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w900,
+                          fontFamily: 'Noto',
+                        ),
                       ),
-                    ),
-                    content: Container(
-                      height: 110,
-                      child: Column(
-                        children: [
-                          Text(
-                            '아래에 정답을 입력해주세요.',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                              fontFamily: 'Noto',
+                      content: Container(
+                        height: 130,
+                        child: Column(
+                          children: [
+                            Text(
+                              '아래에 정답을 입력해주세요.\n(입력 기회 : $tryTime/2)',
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey,
+                                fontFamily: 'Noto',
+                              ),
                             ),
-                          ),
-                          Divider(),
-                          TextField(
-                              onSubmitted: (String s) {
+                            Divider(),
+                            TextField(
+                                onSubmitted: (String s) {
+                                  setState(() {
+                                    _checkAnswer(s);
+                                    textController.text = "";
+                                  });
+                                },
+                                controller: textController,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: '정답',
+                                )),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        Row(
+                          children: [
+                            FlatButton(
+                              child: Text('확인'),
+                              onPressed: () {
                                 setState(() {
-                                  _checkAnswer(s);
+                                  _checkAnswer(textController.text);
                                   textController.text = "";
                                 });
                               },
-                              controller: textController,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: '정답',
-                              )),
-                        ],
-                      ),
-                    ),
-                    actions: <Widget>[
-                      Row(
-                        children: [
-                          FlatButton(
-                            child: Text('확인'),
-                            onPressed: () {
-                              setState(() {
-                                _checkAnswer(textController.text);
+                            ),
+                            FlatButton(
+                              child: Text('취소'),
+                              onPressed: () {
                                 textController.text = "";
-                              });
-                            },
-                          ),
-                          FlatButton(
-                            child: Text('취소'),
-                            onPressed: () {
-                              textController.text = "";
-                              SystemChrome.setEnabledSystemUIOverlays([]);
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ));
+                                SystemChrome.setEnabledSystemUIOverlays([]);
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                }));
       }
     } else {
       Fluttertoast.showToast(
@@ -217,6 +250,7 @@ class _Contents extends State<Contents> {
 
   @override
   Widget build(BuildContext context) {
+    _getTryTime();
     return SafeArea(
       child: Container(
         color: getColor(),
