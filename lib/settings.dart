@@ -346,12 +346,14 @@ class _SettingsState extends State<Settings> {
                                     CupertinoIcons.doc_text,
                                     size: 40.0,
                                   ),
-                                  Text(
-                                    '오늘의 큐티',
-                                    style: TextStyle(
-                                      fontFamily: 'Noto',
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14.0,
+                                  FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Text(
+                                      '오늘의 큐티',
+                                      style: TextStyle(
+                                        fontFamily: 'Noto',
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                   )
                                 ],
@@ -368,12 +370,14 @@ class _SettingsState extends State<Settings> {
                                     FontAwesomeIcons.instagram,
                                     size: 40.0,
                                   ),
-                                  Text(
-                                    '인스타그램',
-                                    style: TextStyle(
-                                      fontFamily: 'Noto',
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 15.0,
+                                  FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Text(
+                                      '인스타그램',
+                                      style: TextStyle(
+                                        fontFamily: 'Noto',
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                   )
                                 ],

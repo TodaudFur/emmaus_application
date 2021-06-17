@@ -110,7 +110,7 @@ class _Contents extends State<Contents> {
       } else {
         if (lastVisitDate != toDayDate) {
           if (nowDay == "Sunday") {
-            if (nowTime <= 1600 && nowTime >= 1300) {
+            if (nowTime <= 1700 && nowTime >= 1400) {
               setState(() {
                 check = true;
                 VarData().setNormal();
