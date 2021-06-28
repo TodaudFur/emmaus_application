@@ -7,6 +7,9 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 Future onSelectNotification(String payload) async {
   const url = 'https://youtube.com/channel/UChKWnwNuFsgzZ1pIwVnPCvA';
@@ -153,8 +156,8 @@ class _MyAppState extends State<MyApp> {
   Future<void> _scheduleWeeklyFridayTenAMNotification() async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
         1,
-        '워라벨 성령대망회',
-        '예배 15분전입니다.',
+        '워라밸 성령대망회',
+        '예배 10분전입니다.',
         _nextInstanceOfFridayTenAM(),
         const NotificationDetails(
           android: AndroidNotificationDetails(
