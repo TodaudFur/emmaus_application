@@ -427,6 +427,10 @@ int verseNum = 0;
 class VerseData {
   var rng = new Random();
 
+  int getNum() {
+    return verseNum;
+  }
+
   String getQt(int num) {
     return qtList[num];
   }
@@ -441,5 +445,9 @@ class VerseData {
 
   void renew() {
     verseNum = rng.nextInt(_englishVerse.length);
+  }
+
+  void putNum(int num) {
+    verseNum = num;
   }
 }

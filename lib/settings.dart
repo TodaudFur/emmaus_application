@@ -1,3 +1,4 @@
+import 'package:emmaus/bulletin.dart';
 import 'package:emmaus/constants.dart';
 import 'package:emmaus/game.dart';
 import 'package:emmaus/vardata.dart';
@@ -20,6 +21,7 @@ class _SettingsState extends State<Settings> {
   final textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    VarData().getBulletin();
     return SafeArea(
       child: Container(
         padding: EdgeInsets.only(top: 50.0, left: 40.0, right: 40.0),
@@ -233,123 +235,23 @@ class _SettingsState extends State<Settings> {
                           Expanded(
                             child: FlatButton(
                               onPressed: () {
-                                String toDayDate =
-                                    DateFormat('dd').format(DateTime.now());
-                                int num = int.parse(toDayDate);
-                                showDialog(
-                                    barrierDismissible: false,
-                                    context: context,
-                                    builder: (_) => GestureDetector(
-                                          onTap: () {
-                                            FocusScope.of(context).unfocus();
-                                            SystemChrome
-                                                .setEnabledSystemUIOverlays([]);
-                                          },
-                                          child: new AlertDialog(
-                                            title: new Text(
-                                              "오늘의 큐티",
-                                              style: TextStyle(
-                                                fontSize: 15.0,
-                                                fontWeight: FontWeight.w900,
-                                                fontFamily: 'Noto',
-                                              ),
-                                            ),
-                                            content: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  2,
-                                              child: Column(
-                                                children: [
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Text(
-                                                      VerseData()
-                                                          .getQt(num - 15),
-                                                      style: TextStyle(
-                                                        fontSize: 15.0,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: Colors.grey[800],
-                                                        fontFamily: 'Noto',
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Divider(),
-                                                  Expanded(
-                                                    flex: 9,
-                                                    child: Container(
-                                                      child: TextField(
-                                                          maxLines: null,
-                                                          keyboardType:
-                                                              TextInputType
-                                                                  .multiline,
-                                                          controller:
-                                                              textController,
-                                                          decoration:
-                                                              InputDecoration(
-                                                            border:
-                                                                OutlineInputBorder(),
-                                                            labelText: '큐티',
-                                                          )),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            actions: <Widget>[
-                                              Row(
-                                                children: [
-                                                  FlatButton(
-                                                    child: Text('확인'),
-                                                    onPressed: () {
-                                                      Clipboard.setData(
-                                                          ClipboardData(
-                                                              text:
-                                                                  textController
-                                                                      .text));
-                                                      textController.text = "";
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      Fluttertoast.showToast(
-                                                          msg:
-                                                              "큐티가 클립보드에 복사되었습니다.",
-                                                          toastLength: Toast
-                                                              .LENGTH_SHORT,
-                                                          gravity: ToastGravity
-                                                              .BOTTOM,
-                                                          timeInSecForIosWeb: 1,
-                                                          fontSize: 16.0);
-                                                    },
-                                                  ),
-                                                  FlatButton(
-                                                    child: Text('취소'),
-                                                    onPressed: () {
-                                                      textController.text = "";
-                                                      SystemChrome
-                                                          .setEnabledSystemUIOverlays(
-                                                              []);
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                  ),
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        ));
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Bulletin()),
+                                );
                               },
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    CupertinoIcons.doc_text,
+                                    CupertinoIcons.doc_plaintext,
                                     size: 40.0,
                                   ),
                                   FittedBox(
                                     fit: BoxFit.fitWidth,
                                     child: Text(
-                                      '오늘의 큐티',
+                                      '주보',
                                       style: TextStyle(
                                         fontFamily: 'Noto',
                                         fontWeight: FontWeight.w700,
@@ -424,30 +326,6 @@ class _SettingsState extends State<Settings> {
   _launchInstagram() async {
     const url = 'https://instagram.com/emmaus_worship?utm_medium=copy_link';
     await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
-  }
-
-  _showBulletin() {
-    VarData().pullBulletin().then((value) {
-      String date = value[0];
-      String count = value[1];
-      List<Widget> image;
-
-      for (int i = 0; i < int.parse(count); i++) {
-        image.add(Image.network(
-            "https://www.official-emmaus.com/g5/bbs/bulletin/$date" +
-                "_$i.png"));
-      }
-
-      showDialog(
-          context: context,
-          builder: (context) => Scaffold(
-                body: Center(
-                  child: Row(
-                    children: image,
-                  ),
-                ),
-              ));
-    }).catchError((onError) {});
   }
 }
 

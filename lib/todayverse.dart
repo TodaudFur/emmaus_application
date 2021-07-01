@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:emmaus/constants.dart';
+import 'package:emmaus/vardata.dart';
 import 'package:emmaus/versedata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +21,6 @@ class TodayVerse extends StatefulWidget {
 class _TodayVerseState extends State<TodayVerse> {
   Uint8List _imageFile;
   final _screenshotController = ScreenshotController();
-  String english = "";
-  String korean = "";
 
   Future<bool> _requestPermission() async {
     if (await Permission.storage.request().isGranted) {
@@ -40,9 +39,9 @@ class _TodayVerseState extends State<TodayVerse> {
 
   @override
   Widget build(BuildContext context) {
-    _reloadVerse();
-    english = VerseData().getEnglish();
-    korean = VerseData().getKorean();
+    setState(() {
+      _reloadVerse();
+    });
     return SafeArea(
       child: Column(
         children: [
@@ -93,7 +92,7 @@ class _TodayVerseState extends State<TodayVerse> {
                             child: FittedBox(
                               fit: BoxFit.fitWidth,
                               child: Text(
-                                english,
+                                VerseData().getEnglish(),
                                 style: TextStyle(
                                   fontFamily: 'Mapo',
                                 ),
@@ -120,7 +119,7 @@ class _TodayVerseState extends State<TodayVerse> {
                             child: FittedBox(
                               fit: BoxFit.fitWidth,
                               child: Text(
-                                korean,
+                                VerseData().getKorean(),
                                 style: TextStyle(
                                   fontFamily: 'Mapo',
                                 ),
@@ -152,7 +151,10 @@ class _TodayVerseState extends State<TodayVerse> {
     if (lastVisitDate != toDayDate) {
       VerseData().renew();
       await prefs.setString('verseDateKey', toDayDate);
-    } else {}
+      await prefs.setInt('verseNum', VerseData().getNum());
+    } else {
+      VerseData().putNum(prefs.getInt('verseNum'));
+    }
   }
 
   void _takeScreenshot() async {

@@ -18,6 +18,9 @@ String _team = "엠마오";
 String _term = "1";
 String _first = "False";
 
+String bulletinDate;
+int bulletinNum;
+
 int specialNum = 0;
 int normalNum = 3;
 
@@ -37,6 +40,108 @@ List<Widget> _iconList = [
 ];
 
 class VarData {
+  String getBulletinDate() {
+    return bulletinDate;
+  }
+
+  int getBulletinNum() {
+    return bulletinNum;
+  }
+
+  getBulletin() async {
+    var url = Uri.parse(
+        'https://www.official-emmaus.com/g5/bbs/emmaus_bulletin_json.php');
+    var result = await http.post(url);
+
+    Map<String, dynamic> body = json.decode(result.body);
+
+    bulletinDate = body['date'];
+    bulletinNum = int.parse(body['count']);
+
+    print(bulletinDate);
+    print(bulletinNum);
+  }
+
+  Future<String> compVersion() async {
+    String res;
+    var url = Uri.parse(
+        'https://www.official-emmaus.com/g5/bbs/emmaus_version_android_json.php');
+    var result = await http.post(url);
+
+    Map<String, dynamic> body = json.decode(result.body);
+
+    res = body['android'];
+
+    return res;
+  }
+
+  Widget checkESuccess() {
+    if (specialNum == 3 && normalNum == 9) {
+      return FittedBox(
+        fit: BoxFit.fitHeight,
+        child: FlatButton(
+          shape: RoundedRectangleBorder(
+              side: BorderSide(
+                  color: Colors.black, width: 1, style: BorderStyle.solid),
+              borderRadius: BorderRadius.circular(10)),
+          onPressed: () {},
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Icon(
+                  CupertinoIcons.gift_fill,
+                  color: Colors.green[700],
+                ),
+                Text(
+                  "경품선택",
+                  style: TextStyle(
+                    fontFamily: 'Noto',
+                    fontWeight: FontWeight.w700,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: FittedBox(
+              fit: BoxFit.fitHeight,
+              child: Text(
+                "SHOW\nYOUR WORSHIP!",
+                style: TextStyle(
+                  fontFamily: 'Noto',
+                  fontWeight: FontWeight.w900,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: FittedBox(
+              fit: BoxFit.fitHeight,
+              child: Text(
+                "6/13 ~ 7/9",
+                style: TextStyle(
+                  fontFamily: 'Noto',
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+  }
+
   bool getLogin() {
     return _isLogin;
   }
@@ -113,20 +218,6 @@ class VarData {
     Map<String, dynamic> body = json.decode(result.body);
   }
 
-  Future<List<String>> pullBulletin() async {
-    List<String> res;
-    var url = Uri.parse(
-        'https://www.official-emmaus.com/g5/bbs/emmaus_bulletin_json.php');
-    var result = await http.post(url);
-
-    Map<String, dynamic> body = json.decode(result.body);
-
-    res.add(body['date']);
-    res.add(body['count']);
-
-    return res;
-  }
-
   Future<bool> check(String answer) async {
     String date = DateFormat("MMdd").format(DateTime.now()).toString();
     print("result");
@@ -174,154 +265,305 @@ class VarData {
 
   Widget getContent() {
     if (_isLogin) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 15.0),
-        child: Center(
-          child: Column(
-            children: [
-              Expanded(
-                flex: 2,
-                child: FittedBox(
-                  fit: BoxFit.fitHeight,
-                  child: Text(
-                    "e-프리퀀시",
-                    style: TextStyle(
-                      fontFamily: 'Noto',
-                      fontWeight: FontWeight.w900,
+      if (specialNum == 3 && normalNum == 9) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: Center(
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: FittedBox(
+                    fit: BoxFit.fitHeight,
+                    child: Text(
+                      "e-프리퀀시",
+                      style: TextStyle(
+                        fontFamily: 'Noto',
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Expanded(
-                flex: 5,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Row(
-                        children: [
-                          Expanded(flex: 4, child: Container()),
-                          Expanded(
-                            flex: 4,
-                            child: FittedBox(
-                              fit: BoxFit.fitWidth,
-                              child: Icon(
-                                CupertinoIcons.flame_fill,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ),
-                          Expanded(flex: 1, child: Container()),
-                          Expanded(
-                            flex: 2,
-                            child: FittedBox(
-                              fit: BoxFit.fitWidth,
-                              child: Text(
-                                specialNum.toString(),
-                                style: TextStyle(
-                                  fontFamily: 'Noto',
-                                  fontWeight: FontWeight.w900,
+                Expanded(
+                  flex: 5,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Row(
+                          children: [
+                            Expanded(flex: 4, child: Container()),
+                            Expanded(
+                              flex: 4,
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Icon(
+                                  CupertinoIcons.flame_fill,
+                                  color: Colors.red,
                                 ),
                               ),
                             ),
-                          ),
-                          Expanded(flex: 3, child: Container()),
-                        ],
+                            Expanded(flex: 1, child: Container()),
+                            Expanded(
+                              flex: 2,
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Text(
+                                  specialNum.toString(),
+                                  style: TextStyle(
+                                    fontFamily: 'Noto',
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(flex: 3, child: Container()),
+                          ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Text(
-                            "+",
-                            style: TextStyle(
-                              fontFamily: 'Noto',
-                              fontWeight: FontWeight.w900,
+                      Expanded(
+                        flex: 1,
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              "+",
+                              style: TextStyle(
+                                fontFamily: 'Noto',
+                                fontWeight: FontWeight.w900,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Row(
-                        children: [
-                          Expanded(flex: 3, child: Container()),
-                          Expanded(
-                            flex: 4,
-                            child: FittedBox(
-                              fit: BoxFit.fitWidth,
-                              child: Icon(
-                                CupertinoIcons.book_fill,
-                                color: Colors.blue[700],
-                              ),
-                            ),
-                          ),
-                          Expanded(flex: 1, child: Container()),
-                          Expanded(
-                            flex: 2,
-                            child: FittedBox(
-                              fit: BoxFit.fitWidth,
-                              child: Text(
-                                (normalNum - 3).toString(),
-                                style: TextStyle(
-                                  fontFamily: 'Noto',
-                                  fontWeight: FontWeight.w900,
+                      Expanded(
+                        flex: 3,
+                        child: Row(
+                          children: [
+                            Expanded(flex: 3, child: Container()),
+                            Expanded(
+                              flex: 4,
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Icon(
+                                  CupertinoIcons.book_fill,
+                                  color: Colors.blue[700],
                                 ),
                               ),
                             ),
-                          ),
-                          Expanded(flex: 3, child: Container()),
-                        ],
+                            Expanded(flex: 1, child: Container()),
+                            Expanded(
+                              flex: 2,
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Text(
+                                  (normalNum - 3).toString(),
+                                  style: TextStyle(
+                                    fontFamily: 'Noto',
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(flex: 3, child: Container()),
+                          ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Text(
-                            "=",
-                            style: TextStyle(
-                              fontFamily: 'Noto',
-                              fontWeight: FontWeight.w900,
+                      Expanded(
+                        flex: 1,
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              "=",
+                              style: TextStyle(
+                                fontFamily: 'Noto',
+                                fontWeight: FontWeight.w900,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Row(
-                        children: [
-                          Expanded(flex: 3, child: Container()),
-                          Expanded(
-                            flex: 4,
-                            child: FittedBox(
-                              fit: BoxFit.fitWidth,
-                              child: Icon(
-                                CupertinoIcons.gift,
-                                color: Colors.green[700],
+                      Expanded(
+                        flex: 3,
+                        child: Row(
+                          children: [
+                            Expanded(flex: 3, child: Container()),
+                            Expanded(
+                              flex: 4,
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Icon(
+                                  CupertinoIcons.gift_fill,
+                                  color: Colors.green[700],
+                                ),
                               ),
                             ),
-                          ),
-                          Expanded(flex: 5, child: Container()),
-                        ],
+                            Expanded(flex: 5, child: Container()),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(flex: 2, child: Container()),
-            ],
+                Expanded(flex: 2, child: Container()),
+              ],
+            ),
           ),
-        ),
-      );
+        );
+      } else {
+        return Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: Center(
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: FittedBox(
+                    fit: BoxFit.fitHeight,
+                    child: Text(
+                      "e-프리퀀시",
+                      style: TextStyle(
+                        fontFamily: 'Noto',
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Row(
+                          children: [
+                            Expanded(flex: 4, child: Container()),
+                            Expanded(
+                              flex: 4,
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Icon(
+                                  CupertinoIcons.flame_fill,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                            Expanded(flex: 1, child: Container()),
+                            Expanded(
+                              flex: 2,
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Text(
+                                  specialNum.toString(),
+                                  style: TextStyle(
+                                    fontFamily: 'Noto',
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(flex: 3, child: Container()),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              "+",
+                              style: TextStyle(
+                                fontFamily: 'Noto',
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Row(
+                          children: [
+                            Expanded(flex: 3, child: Container()),
+                            Expanded(
+                              flex: 4,
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Icon(
+                                  CupertinoIcons.book_fill,
+                                  color: Colors.blue[700],
+                                ),
+                              ),
+                            ),
+                            Expanded(flex: 1, child: Container()),
+                            Expanded(
+                              flex: 2,
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Text(
+                                  (normalNum - 3).toString(),
+                                  style: TextStyle(
+                                    fontFamily: 'Noto',
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(flex: 3, child: Container()),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              "=",
+                              style: TextStyle(
+                                fontFamily: 'Noto',
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Row(
+                          children: [
+                            Expanded(flex: 3, child: Container()),
+                            Expanded(
+                              flex: 4,
+                              child: FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Icon(
+                                  CupertinoIcons.gift,
+                                  color: Colors.green[700],
+                                ),
+                              ),
+                            ),
+                            Expanded(flex: 5, child: Container()),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(flex: 2, child: Container()),
+              ],
+            ),
+          ),
+        );
+      }
     } else {
       return LoginWidget();
     }

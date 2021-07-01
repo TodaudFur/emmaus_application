@@ -6,10 +6,13 @@ import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'constants.dart';
 import 'homebgcolor.dart';
 
@@ -28,6 +31,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    _checkVersion();
     setState(() {
       name = VarData().getName();
       content = VarData().getContent();
@@ -232,6 +236,65 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  _checkVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String version = packageInfo.version;
+    print("version : $version");
+    VarData().compVersion().then((value) {
+      if (version != value) {
+        print('version not correct!');
+        showDialog(
+            context: context,
+            builder: (_) => GestureDetector(
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+                    SystemChrome.setEnabledSystemUIOverlays([]);
+                  },
+                  child: new AlertDialog(
+                    title: new Text(
+                      "업데이트",
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: 'Noto',
+                      ),
+                    ),
+                    content: Text(
+                      '새로운 업데이트가 있습니다.',
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                        fontFamily: 'Noto',
+                      ),
+                    ),
+                    actions: <Widget>[
+                      Row(
+                        children: [
+                          FlatButton(
+                            child: Text('업데이트'),
+                            onPressed: () {
+                              setState(() {
+                                _launchURL(
+                                    'https://play.google.com/store/apps/details?id=com.songpa.emmaus');
+                                SystemChrome.setEnabledSystemUIOverlays([]);
+                                Navigator.of(context).pop();
+                              });
+                            },
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ));
+      }
+    }).catchError((onError) {});
+  }
+
+  _launchURL(String url) async {
+    await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
   }
 
   Future getImage() async {

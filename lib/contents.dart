@@ -359,38 +359,7 @@ class _Contents extends State<Contents> {
                     ),
                     Expanded(
                       flex: 2,
-                      child: Column(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: FittedBox(
-                              fit: BoxFit.fitHeight,
-                              child: Text(
-                                "SHOW\nYOUR WORSHIP!",
-                                style: TextStyle(
-                                  fontFamily: 'Noto',
-                                  fontWeight: FontWeight.w900,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: FittedBox(
-                              fit: BoxFit.fitHeight,
-                              child: Text(
-                                "6/13 ~ 7/9",
-                                style: TextStyle(
-                                  fontFamily: 'Noto',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      child: VarData().checkESuccess(),
                     ),
                     Divider(
                       color: Colors.white,
