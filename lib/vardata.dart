@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:emmaus/ereward.dart';
 import 'package:emmaus/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -79,32 +80,7 @@ class VarData {
     if (specialNum == 3 && normalNum == 9) {
       return FittedBox(
         fit: BoxFit.fitHeight,
-        child: FlatButton(
-          shape: RoundedRectangleBorder(
-              side: BorderSide(
-                  color: Colors.black, width: 1, style: BorderStyle.solid),
-              borderRadius: BorderRadius.circular(10)),
-          onPressed: () {},
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Icon(
-                  CupertinoIcons.gift_fill,
-                  color: Colors.green[700],
-                ),
-                Text(
-                  "경품선택",
-                  style: TextStyle(
-                    fontFamily: 'Noto',
-                    fontWeight: FontWeight.w700,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
+        child: ChooseReward(),
       );
     } else {
       return Column(
@@ -204,6 +180,17 @@ class VarData {
           timeInSecForIosWeb: 1,
           fontSize: 16.0);
     }
+  }
+
+  insertFreReward(String s) async {
+    var url = Uri.parse(
+        'https://www.official-emmaus.com/g5/bbs/emmaus_frereward_process.php');
+    var result = await http.post(url, body: {
+      "mb_name": _name,
+      "reward": s,
+    });
+
+    Map<String, dynamic> body = json.decode(result.body);
   }
 
   insertFre() async {
@@ -651,6 +638,47 @@ class VarData {
       return true;
     else
       return false;
+  }
+}
+
+class ChooseReward extends StatelessWidget {
+  const ChooseReward({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+      shape: RoundedRectangleBorder(
+          side: BorderSide(
+              color: Colors.black, width: 1, style: BorderStyle.solid),
+          borderRadius: BorderRadius.circular(10)),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => EReward()),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Icon(
+              CupertinoIcons.gift_fill,
+              color: Colors.green[700],
+            ),
+            Text(
+              "경품선택",
+              style: TextStyle(
+                fontFamily: 'Noto',
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
