@@ -12,6 +12,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
+import 'emmaus.dart';
+
 class Settings extends StatefulWidget {
   @override
   _SettingsState createState() => _SettingsState();
@@ -200,7 +202,7 @@ class _SettingsState extends State<Settings> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    flex: 4,
+                    flex: 3,
                     child: Container(
                       child: Row(
                         children: [
@@ -210,18 +212,18 @@ class _SettingsState extends State<Settings> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Game()),
+                                      builder: (context) => Emmaus()),
                                 );
                               },
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    CupertinoIcons.gamecontroller,
+                                    CupertinoIcons.person_2,
                                     size: 40.0,
                                   ),
                                   Text(
-                                    '게임',
+                                    '엠마오',
                                     style: TextStyle(
                                       fontFamily: 'Noto',
                                       fontWeight: FontWeight.w700,
@@ -290,12 +292,51 @@ class _SettingsState extends State<Settings> {
                       ),
                     ),
                   ),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: FlatButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Game()),
+                                );
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    CupertinoIcons.gamecontroller,
+                                    size: 40.0,
+                                  ),
+                                  Text(
+                                    '게임',
+                                    style: TextStyle(
+                                      fontFamily: 'Noto',
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 15.0,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(child: Container()),
+                          Expanded(child: Container()),
+                        ],
+                      ),
+                    ),
+                  ),
                   Divider(
                     color: kBodyColor,
                     height: 40.0,
                   ),
                   Expanded(
-                    flex: 3,
+                    flex: 2,
                     child: FittedBox(
                       fit: BoxFit.fitWidth,
                       child: Text(
@@ -308,7 +349,7 @@ class _SettingsState extends State<Settings> {
                       ),
                     ),
                   ),
-                  Expanded(flex: 4, child: Container()),
+                  Expanded(flex: 2, child: Container()),
                 ],
               ),
             ),

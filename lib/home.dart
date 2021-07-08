@@ -48,13 +48,7 @@ class _HomeState extends State<Home> {
               child: Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: FittedBox(
-                  child: Text(
-                    'EMMAUS',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontFamily: 'Noto',
-                    ),
-                  ),
+                  child: Image.asset("images/logo_ema.png"),
                   fit: BoxFit.fitHeight,
                 ),
               ),

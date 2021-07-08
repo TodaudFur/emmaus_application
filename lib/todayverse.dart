@@ -39,9 +39,7 @@ class _TodayVerseState extends State<TodayVerse> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      _reloadVerse();
-    });
+    _reloadVerse();
     return SafeArea(
       child: Column(
         children: [
@@ -142,18 +140,22 @@ class _TodayVerseState extends State<TodayVerse> {
     );
   }
 
-  _reloadVerse() async {
+  Future _reloadVerse() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String lastVisitDate = prefs.get("verseDateKey");
 
     String toDayDate = DateFormat('MMdd').format(DateTime.now());
 
     if (lastVisitDate != toDayDate) {
-      VerseData().renew();
+      setState(() {
+        VerseData().renew();
+      });
       await prefs.setString('verseDateKey', toDayDate);
       await prefs.setInt('verseNum', VerseData().getNum());
     } else {
-      VerseData().putNum(prefs.getInt('verseNum'));
+      setState(() {
+        VerseData().putNum(prefs.getInt('verseNum'));
+      });
     }
   }
 

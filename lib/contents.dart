@@ -41,6 +41,7 @@ class _Contents extends State<Contents> {
     String lastVisitDate = prefs.get("specialDateKey");
 
     String toDayDate = DateFormat('MMdd').format(DateTime.now());
+
     if (lastVisitDate != toDayDate) {
       VarData().check(s).then((value) async {
         if (value) {
@@ -99,152 +100,176 @@ class _Contents extends State<Contents> {
 
     String toDayDate = DateFormat('MMdd').format(DateTime.now());
 
-    if (VarData().isLogin()) {
-      if (VarData().getNormal() == 6) {
-        Fluttertoast.showToast(
-            msg: "예배 출석을 모두 성공하셨습니다!",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            fontSize: 16.0);
-      } else {
-        if (lastVisitDate != toDayDate) {
-          if (nowDay == "Sunday") {
-            if (nowTime <= 1700 && nowTime >= 1400) {
-              setState(() {
-                check = true;
-                VarData().setNormal();
-                VarData().insertFre();
-              });
+    int endDate = int.parse(DateFormat('yyyyMMdd').format(DateTime.now()));
+    print(endDate);
+
+    if (endDate > 20210709) {
+      Fluttertoast.showToast(
+          msg: "21 서머 e-프리퀀시 기간이 끝났습니다.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          fontSize: 16.0);
+    } else {
+      if (VarData().isLogin()) {
+        if (VarData().getNormal() == 6) {
+          Fluttertoast.showToast(
+              msg: "예배 출석을 모두 성공하셨습니다!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              fontSize: 16.0);
+        } else {
+          if (lastVisitDate != toDayDate) {
+            if (nowDay == "Sunday") {
+              if (nowTime <= 1700 && nowTime >= 1400) {
+                setState(() {
+                  check = true;
+                  VarData().setNormal();
+                  VarData().insertFre();
+                });
+              }
+              if (check) await prefs.setString('mDateKey', toDayDate);
+            } else if (nowDay == "Friday") {
+              if (nowTime <= 2359 && nowTime >= 2100) {
+                setState(() {
+                  check = true;
+                  VarData().setNormal();
+                  VarData().insertFre();
+                });
+              }
+              if (check) await prefs.setString('mDateKey', toDayDate);
+            } else {
+              Fluttertoast.showToast(
+                  msg: "예배 출석 시간이 아닙니다!",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  fontSize: 16.0);
             }
-            if (check) await prefs.setString('mDateKey', toDayDate);
-          } else if (nowDay == "Friday") {
-            if (nowTime <= 2359 && nowTime >= 2100) {
-              setState(() {
-                check = true;
-                VarData().setNormal();
-                VarData().insertFre();
-              });
-            }
-            if (check) await prefs.setString('mDateKey', toDayDate);
           } else {
             Fluttertoast.showToast(
-                msg: "예배 출석 시간이 아닙니다!",
+                msg: "오늘은 이미 출석하셨습니다!",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIosWeb: 1,
                 fontSize: 16.0);
           }
-        } else {
-          Fluttertoast.showToast(
-              msg: "오늘은 이미 출석하셨습니다!",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              fontSize: 16.0);
         }
-      }
-    } else {
-      Fluttertoast.showToast(
-          msg: "로그인 후 이용 가능합니다!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          fontSize: 16.0);
-    }
-  }
-
-  void _check() {
-    if (VarData().isLogin()) {
-      if (VarData().getSpecial() == 3) {
+      } else {
         Fluttertoast.showToast(
-            msg: "미션을 모두 성공하셨습니다!",
+            msg: "로그인 후 이용 가능합니다!",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
             fontSize: 16.0);
-      } else {
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (_) => StatefulBuilder(builder: (context, setState) {
-                  return GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                      SystemChrome.setEnabledSystemUIOverlays([]);
-                    },
-                    child: new AlertDialog(
-                      title: new Text(
-                        "정답",
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: 'Noto',
-                        ),
-                      ),
-                      content: Container(
-                        height: 130,
-                        child: Column(
-                          children: [
-                            Text(
-                              '아래에 정답을 입력해주세요.\n(입력 기회 : $tryTime/2)',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey,
-                                fontFamily: 'Noto',
-                              ),
-                            ),
-                            Divider(),
-                            TextField(
-                                onSubmitted: (String s) {
-                                  setState(() {
-                                    _checkAnswer(s);
-                                    textController.text = "";
-                                  });
-                                },
-                                controller: textController,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: '정답',
-                                )),
-                          ],
-                        ),
-                      ),
-                      actions: <Widget>[
-                        Row(
-                          children: [
-                            FlatButton(
-                              child: Text('확인'),
-                              onPressed: () {
-                                setState(() {
-                                  _checkAnswer(textController.text);
-                                  textController.text = "";
-                                });
-                              },
-                            ),
-                            FlatButton(
-                              child: Text('취소'),
-                              onPressed: () {
-                                textController.text = "";
-                                SystemChrome.setEnabledSystemUIOverlays([]);
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  );
-                }));
       }
-    } else {
+    }
+  }
+
+  void _check() {
+    int endDate = int.parse(DateFormat('yyyyMMdd').format(DateTime.now()));
+    print(endDate);
+
+    if (endDate > 20210709) {
       Fluttertoast.showToast(
-          msg: "로그인 후 이용 가능합니다!",
+          msg: "21 서머 e-프리퀀시 기간이 끝났습니다.",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
           fontSize: 16.0);
+    } else {
+      if (VarData().isLogin()) {
+        if (VarData().getSpecial() == 3) {
+          Fluttertoast.showToast(
+              msg: "미션을 모두 성공하셨습니다!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              fontSize: 16.0);
+        } else {
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (_) => StatefulBuilder(builder: (context, setState) {
+                    return GestureDetector(
+                      onTap: () {
+                        FocusScope.of(context).unfocus();
+                        SystemChrome.setEnabledSystemUIOverlays([]);
+                      },
+                      child: new AlertDialog(
+                        title: new Text(
+                          "정답",
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: 'Noto',
+                          ),
+                        ),
+                        content: Container(
+                          height: 130,
+                          child: Column(
+                            children: [
+                              Text(
+                                '아래에 정답을 입력해주세요.\n(입력 기회 : $tryTime/2)',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey,
+                                  fontFamily: 'Noto',
+                                ),
+                              ),
+                              Divider(),
+                              TextField(
+                                  onSubmitted: (String s) {
+                                    setState(() {
+                                      _checkAnswer(s);
+                                      textController.text = "";
+                                    });
+                                  },
+                                  controller: textController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: '정답',
+                                  )),
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          Row(
+                            children: [
+                              FlatButton(
+                                child: Text('확인'),
+                                onPressed: () {
+                                  setState(() {
+                                    _checkAnswer(textController.text);
+                                    textController.text = "";
+                                  });
+                                },
+                              ),
+                              FlatButton(
+                                child: Text('취소'),
+                                onPressed: () {
+                                  textController.text = "";
+                                  SystemChrome.setEnabledSystemUIOverlays([]);
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    );
+                  }));
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: "로그인 후 이용 가능합니다!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            fontSize: 16.0);
+      }
     }
   }
 
@@ -262,16 +287,11 @@ class _Contents extends State<Contents> {
             Expanded(
               flex: 1,
               child: Padding(
-                padding: const EdgeInsets.all(9),
+                padding: const EdgeInsets.only(
+                    top: 7.0, bottom: 12.0, left: 9.0, right: 9.0),
                 child: FittedBox(
                   fit: BoxFit.fitHeight,
-                  child: Text(
-                    'EMMAUS',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontFamily: 'Noto',
-                    ),
-                  ),
+                  child: Image.asset("images/logo_ema.png"),
                 ),
               ),
             ),
