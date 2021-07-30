@@ -1,5 +1,6 @@
 import 'package:emmaus/bulletin.dart';
 import 'package:emmaus/constants.dart';
+import 'package:emmaus/contents.dart';
 import 'package:emmaus/game.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:emmaus/versedata.dart';
@@ -23,7 +24,6 @@ class _SettingsState extends State<Settings> {
   final textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    VarData().getBulletin();
     return SafeArea(
       child: Container(
         padding: EdgeInsets.only(top: 50.0, left: 40.0, right: 40.0),
@@ -240,20 +240,20 @@ class _SettingsState extends State<Settings> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Bulletin()),
+                                      builder: (context) => Contents()),
                                 );
                               },
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    CupertinoIcons.doc_plaintext,
+                                    CupertinoIcons.flame,
                                     size: 40.0,
                                   ),
                                   FittedBox(
                                     fit: BoxFit.fitWidth,
                                     child: Text(
-                                      '주보',
+                                      'e-프리퀀시',
                                       style: TextStyle(
                                         fontFamily: 'Noto',
                                         fontWeight: FontWeight.w700,

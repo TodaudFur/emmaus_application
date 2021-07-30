@@ -35,7 +35,7 @@ class Emmaus extends StatelessWidget {
               child: Container(
                 color: getColor(),
                 padding: EdgeInsets.only(
-                    top: 70.0, left: 30.0, right: 30.0, bottom: 100.0),
+                    top: 30.0, left: 30.0, right: 30.0, bottom: 100.0),
                 child: Container(
                   padding: EdgeInsets.only(
                       top: 15.0, bottom: 15.0, left: 10.0, right: 10.0),

@@ -1,7 +1,4 @@
 import 'dart:io';
-
-import 'package:emmaus/main.dart';
-import 'package:emmaus/myhomepage.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'constants.dart';
 import 'homebgcolor.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -29,15 +27,50 @@ class _HomeState extends State<Home> {
   File _image;
   final picker = ImagePicker();
 
+  int _current = 0;
+  final CarouselController _controller = CarouselController();
+
+  final List<Widget> newsSliders = VarData()
+      .getNewsContents()
+      .map((item) => Container(
+            child: Stack(
+              children: <Widget>[
+                Text(
+                  item,
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontFamily: 'Noto',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ))
+      .toList();
+
   @override
   Widget build(BuildContext context) {
     _checkVersion();
     setState(() {
       name = VarData().getName();
-      content = VarData().getContent();
+      content = CarouselSlider(
+        items: newsSliders,
+        carouselController: _controller,
+        options: CarouselOptions(
+            height: MediaQuery.of(context).size.height / 35,
+            autoPlay: true,
+            enlargeCenterPage: true,
+            aspectRatio: 2.0,
+            onPageChanged: (index, reason) {
+              setState(() {
+                _current = index;
+              });
+            }),
+      );
     });
     return SafeArea(
       child: Container(
+        height: MediaQuery.of(context).size.height,
         color: getColor(),
         padding: EdgeInsets.all(30.0),
         child: Column(
@@ -132,22 +165,6 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                 )
-                /*Spacer(),
-                FlatButton(
-                  onPressed: () {
-
-                    setState(() {
-                      if (getUser()) {
-                        trueUser();
-                        agendaText = "엠마오 일정";
-                      } else {
-                        falseUser();
-                        agendaText = "개인 일정";
-                      }
-                    });
-                  },
-                  child: Icon(Icons.ac_unit),
-                ),*/
               ],
             ),
             Expanded(
@@ -235,7 +252,7 @@ class _HomeState extends State<Home> {
   _checkVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String version = packageInfo.version;
-    print("version : $version");
+    //print("version : $version");
     VarData().compVersion().then((value) {
       if (version != value) {
         print('version not correct!');
@@ -465,144 +482,3 @@ class CalendarText extends StatelessWidget {
     );
   }
 }
-/*Expanded(
-              flex: 9,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '공지사항',
-                        style: TextStyle(
-                          fontFamily: 'Noto',
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      color: kBodyColor,
-                    ),
-                    Container(
-                      height: 170.0,
-                      child: ListView(
-                        padding: EdgeInsets.only(right: 20.0),
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              color: Colors.white,
-                            ),
-                            height: 170.0,
-                            width: 120.0,
-                          ),
-                          VerticalDivider(
-                            color: kBodyColor,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              color: Colors.white,
-                            ),
-                            height: 170.0,
-                            width: 120.0,
-                          ),
-                          VerticalDivider(
-                            color: kBodyColor,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              color: Colors.white,
-                            ),
-                            height: 170.0,
-                            width: 120.0,
-                          ),
-                          VerticalDivider(
-                            color: kBodyColor,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              color: Colors.white,
-                            ),
-                            height: 170.0,
-                            width: 120.0,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      height: 50.0,
-                      color: kBodyColor,
-                    ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '예배 소식',
-                        style: TextStyle(
-                          fontFamily: 'Noto',
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      color: kBodyColor,
-                    ),
-                    Container(
-                      height: 170.0,
-                      child: ListView(
-                        padding: EdgeInsets.only(right: 20.0),
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              color: Colors.white,
-                            ),
-                            height: 170.0,
-                            width: 120.0,
-                          ),
-                          VerticalDivider(
-                            color: kBodyColor,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              color: Colors.white,
-                            ),
-                            height: 170.0,
-                            width: 120.0,
-                          ),
-                          VerticalDivider(
-                            color: kBodyColor,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              color: Colors.white,
-                            ),
-                            height: 170.0,
-                            width: 120.0,
-                          ),
-                          VerticalDivider(
-                            color: kBodyColor,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              color: Colors.white,
-                            ),
-                            height: 170.0,
-                            width: 120.0,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),*/

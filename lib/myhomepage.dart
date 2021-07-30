@@ -1,3 +1,4 @@
+import 'package:emmaus/bulletin.dart';
 import 'package:emmaus/contents.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,7 +21,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>[
     Home(),
-    Contents(),
+    Bulletin(),
     Text(
       '',
     ),
@@ -34,52 +35,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  autoLogin() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool al = prefs.get("autologin");
-    print(al);
-    if (al && VarData().getLogin() == false) {
-      String id = prefs.get("autoid");
-      String pwd = prefs.get("autopwd");
-      VarData().post(id, pwd).then((value) {
-        if (value) {
-          Fluttertoast.showToast(
-              msg: "자동 로그인 성공!",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              fontSize: 16.0);
-          Navigator.of(context)
-              .pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => MyHomePage()),
-                  (route) => false)
-              .then((value) => setState(() {}));
-        } else {
-          Fluttertoast.showToast(
-              msg: "자동 로그인 실패!",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              fontSize: 16.0);
-        }
-      }).catchError((onError) {
-        Fluttertoast.showToast(
-            msg: "자동 로그인 실패!",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            fontSize: 16.0);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: kBodyColor),
     );
-    autoLogin();
     return GestureDetector(
       onTap: () {
         SystemChrome.setEnabledSystemUIOverlays([]);
@@ -148,8 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   label: '홈',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.flame_fill),
-                  label: 'e-프리퀀시',
+                  icon: Icon(CupertinoIcons.doc_text_fill),
+                  label: '주보',
                 ),
                 BottomNavigationBarItem(
                     icon: Icon(

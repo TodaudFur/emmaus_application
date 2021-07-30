@@ -4,6 +4,8 @@ import 'package:emmaus/myhomepage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'btb.dart';
+
 class Game extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -72,10 +74,45 @@ class Game extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Expanded(
+                  /*Expanded(
                     flex: 5,
-                    child: Container(),
-                  ),
+                    child: FlatButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => BTB()),
+                        );
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: Image.asset(
+                              'images/Break_The_Babel.png',
+                              height: 100,
+                            ),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    spreadRadius: 0,
+                                    blurRadius: 5,
+                                  )
+                                ]),
+                          ),
+                          Text(
+                            'Break The Babel',
+                            style: TextStyle(
+                              fontFamily: 'Noto',
+                              fontWeight: FontWeight.w700,
+                              fontSize: 15.0,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),*/
                 ],
               ),
             ],

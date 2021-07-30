@@ -1,7 +1,7 @@
 import 'package:emmaus/vardata.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'constants.dart';
 import 'myhomepage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -11,7 +11,6 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:package_info/package_info.dart';
 
 Future onSelectNotification(String payload) async {
   const url = 'https://youtube.com/channel/UChKWnwNuFsgzZ1pIwVnPCvA';
@@ -73,6 +72,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  String routeFromMessage = "";
+
   @override
   void initState() {
     _requestPermissions();
@@ -92,9 +93,9 @@ class _MyAppState extends State<MyApp> {
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      final routeFromMessage = message.data["route"];
-      print("onMessageOpenedApp");
-      print(routeFromMessage);
+      routeFromMessage = message.data["route"];
+      //print("onMessageOpenedApp");
+      //print(routeFromMessage);
       _launchURL(routeFromMessage);
     });
   }
@@ -118,6 +119,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    autoLogin();
+    VarData().getBulletin();
+    VarData().getNews();
+    if (routeFromMessage != "") {}
     return MaterialApp(
         title: 'Emmaus',
         theme: ThemeData(
@@ -126,7 +131,7 @@ class _MyAppState extends State<MyApp> {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: AnimatedSplashScreen(
-          duration: 2000,
+          duration: 1000,
           splash: Image(
             image: AssetImage('images/logo_em2_txt.png'),
           ),
@@ -150,7 +155,7 @@ class _MyAppState extends State<MyApp> {
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
-    print("주일예배 알림");
+    //print("주일예배 알림");
   }
 
   tz.TZDateTime _nextInstanceOfMondayTenAM() {
@@ -158,8 +163,8 @@ class _MyAppState extends State<MyApp> {
     while (scheduledDate.weekday != DateTime.sunday) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
-    print(scheduledDate);
-    print("next sunday");
+    //print(scheduledDate);
+    //print("next sunday");
     return scheduledDate;
   }
 
@@ -168,7 +173,7 @@ class _MyAppState extends State<MyApp> {
     //final seoul = tz.getLocation('Asia/Seoul');
     //final tz.TZDateTime now = tz.TZDateTime.now(seoul);
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-    print(now);
+    //print(now);
     //tz.TZDateTime scheduledDate =
     //    tz.TZDateTime(seoul, now.year, now.month, now.day, 13, 50);
     tz.TZDateTime scheduledDate =
@@ -176,8 +181,8 @@ class _MyAppState extends State<MyApp> {
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
-    print(scheduledDate);
-    print("next time");
+    //print(scheduledDate);
+    //print("next time");
     return scheduledDate;
   }
 
@@ -195,7 +200,7 @@ class _MyAppState extends State<MyApp> {
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
-    print("금요철야 알림");
+    //print("금요철야 알림");
   }
 
   tz.TZDateTime _nextInstanceOfFridayTenAM() {
@@ -203,7 +208,7 @@ class _MyAppState extends State<MyApp> {
     while (scheduledDate.weekday != DateTime.friday) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
-    print(scheduledDate);
+    //print(scheduledDate);
     return scheduledDate;
   }
 
@@ -219,11 +224,30 @@ class _MyAppState extends State<MyApp> {
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
-    print(scheduledDate);
+    //print(scheduledDate);
     return scheduledDate;
   }
 
   _launchURL(String url) async {
     await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
+  }
+
+  autoLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool al = prefs.get("autologin");
+    print(al);
+    if (al && VarData().getLogin() == false) {
+      String id = prefs.get("autoid");
+      String pwd = prefs.get("autopwd");
+      VarData().post(id, pwd).then((value) {
+        if (value) {
+          Navigator.of(context)
+              .pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                  (route) => false)
+              .then((value) => setState(() {}));
+        } else {}
+      }).catchError((onError) {});
+    }
   }
 }
