@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emmaus/ereward.dart';
 import 'package:emmaus/login.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +10,8 @@ import 'constants.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
+
+List<String> imgList = [];
 
 bool _isLogin = false;
 bool _autoLogin = false;
@@ -23,8 +25,8 @@ String _first = "False";
 List<dynamic> news = [""];
 int newsNum = 0;
 
-String bulletinDate;
-int bulletinNum;
+String bulletinDate = "";
+int bulletinNum = 0;
 
 int specialNum = 0;
 int normalNum = 3;
@@ -45,6 +47,30 @@ List<Widget> _iconList = [
 ];
 
 class VarData {
+  List<Widget> newsSliders = imgList
+      .map(
+        (item) => CachedNetworkImage(
+          imageUrl: item,
+          placeholder: (context, url) => CircularProgressIndicator(),
+          errorWidget: (context, url, error) => Icon(Icons.error),
+        ),
+      )
+      .toList();
+
+  showBulletin() {
+    getBulletin().then((value) {
+      String date = bulletinDate;
+      int count = bulletinNum;
+
+      for (int i = 0; i < count; i++) {
+        String url =
+            "https://www.official-emmaus.com/g5/bbs/bulletin/$date" + "_$i.png";
+
+        imgList.add(url);
+      }
+    });
+  }
+
   List<dynamic> getNewsContents() {
     return news;
   }
@@ -57,7 +83,7 @@ class VarData {
     return bulletinNum;
   }
 
-  getBulletin() async {
+  Future getBulletin() async {
     var url = Uri.parse(
         'https://www.official-emmaus.com/g5/bbs/emmaus_bulletin_json.php');
     var result = await http.post(url);

@@ -120,8 +120,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     autoLogin();
-    VarData().getBulletin();
     VarData().getNews();
+    VarData().showBulletin();
     if (routeFromMessage != "") {}
     return MaterialApp(
         title: 'Emmaus',

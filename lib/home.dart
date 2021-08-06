@@ -295,6 +295,14 @@ class _HomeState extends State<Home> {
                               });
                             },
                           ),
+                          FlatButton(
+                            child: Text('닫기'),
+                            onPressed: () {
+                              setState(() {
+                                Navigator.of(context).pop();
+                              });
+                            },
+                          ),
                         ],
                       )
                     ],

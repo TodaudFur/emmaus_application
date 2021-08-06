@@ -5,8 +5,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'constants.dart';
 import 'homebgcolor.dart';
 
-final List<String> imgList = [];
-
 class Bulletin extends StatefulWidget {
   @override
   _BulletinState createState() => _BulletinState();
@@ -16,16 +14,8 @@ class _BulletinState extends State<Bulletin> {
   int _current = 0;
   final CarouselController _controller = CarouselController();
 
-  final List<Widget> newsSliders = imgList
-      .map(
-        (item) => Image.network(item),
-      )
-      .toList();
-
   @override
   Widget build(BuildContext context) {
-    _showBulletin();
-
     return SafeArea(
       child: Container(
         color: getColor(),
@@ -61,7 +51,7 @@ class _BulletinState extends State<Bulletin> {
                   ],
                 ),
                 child: CarouselSlider(
-                  items: newsSliders,
+                  items: VarData().newsSliders,
                   carouselController: _controller,
                   options: CarouselOptions(
                       height: MediaQuery.of(context).size.height,
@@ -97,17 +87,5 @@ class _BulletinState extends State<Bulletin> {
         fontSize: 15.0,
       ),
     );
-  }
-
-  _showBulletin() {
-    String date = VarData().getBulletinDate();
-    int count = VarData().getBulletinNum();
-
-    for (int i = 0; i < count; i++) {
-      String url =
-          "https://www.official-emmaus.com/g5/bbs/bulletin/$date" + "_$i.png";
-
-      imgList.add(url);
-    }
   }
 }
