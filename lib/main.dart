@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:emmaus/vardata.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'constants.dart';
 import 'myhomepage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -80,6 +83,7 @@ class _MyAppState extends State<MyApp> {
     _configureLocalTimeZone();
 
     super.initState();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     _scheduleWeeklyMondayTenAMNotification();
     _scheduleWeeklyFridayTenAMNotification();
 

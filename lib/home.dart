@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'constants.dart';
 import 'homebgcolor.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -206,40 +207,42 @@ class _HomeState extends State<Home> {
                 ),
                 child: Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: SfCalendar(
-                      view: CalendarView.month,
-                      dataSource: _getCalendarDataSource(),
-                      headerStyle: CalendarHeaderStyle(
-                        textStyle: TextStyle(
-                            fontFamily: 'Noto', fontWeight: FontWeight.w900),
-                      ),
-                      viewHeaderStyle: ViewHeaderStyle(
-                          dayTextStyle: TextStyle(
-                        fontFamily: 'Noto',
-                        fontWeight: FontWeight.w900,
-                        color: Colors.black,
+                      padding: const EdgeInsets.all(15.0),
+                      // child: SfCalendar(
+                      //   view: CalendarView.month,
+                      //   dataSource: _getCalendarDataSource(),
+                      //   headerStyle: CalendarHeaderStyle(
+                      //     textStyle: TextStyle(
+                      //         fontFamily: 'Noto', fontWeight: FontWeight.w900),
+                      //   ),
+                      //   viewHeaderStyle: ViewHeaderStyle(
+                      //       dayTextStyle: TextStyle(
+                      //     fontFamily: 'Noto',
+                      //     fontWeight: FontWeight.w900,
+                      //     color: Colors.black,
+                      //   )),
+                      //   monthViewSettings: MonthViewSettings(
+                      //     showAgenda: false,
+                      //     monthCellStyle: MonthCellStyle(
+                      //       textStyle: TextStyle(color: Color(0xFF111111)),
+                      //       leadingDatesTextStyle:
+                      //           TextStyle(color: Color(0x15111111)),
+                      //       trailingDatesTextStyle:
+                      //           TextStyle(color: Color(0x15111111)),
+                      //     ),
+                      //     appointmentDisplayMode:
+                      //         MonthAppointmentDisplayMode.appointment,
+                      //   ),
+                      //   cellBorderColor: Colors.white,
+                      //   todayHighlightColor: kSelectColor,
+                      //   selectionDecoration: BoxDecoration(
+                      //     border: Border.all(color: kSelectColor, width: 1),
+                      //     shape: BoxShape.rectangle,
+                      //   ),
+                      // ),
+                      child: WebView(
+                        initialUrl: 'https://official-emmaus.com/loveis.php',
                       )),
-                      monthViewSettings: MonthViewSettings(
-                        showAgenda: false,
-                        monthCellStyle: MonthCellStyle(
-                          textStyle: TextStyle(color: Color(0xFF111111)),
-                          leadingDatesTextStyle:
-                              TextStyle(color: Color(0x15111111)),
-                          trailingDatesTextStyle:
-                              TextStyle(color: Color(0x15111111)),
-                        ),
-                        appointmentDisplayMode:
-                            MonthAppointmentDisplayMode.appointment,
-                      ),
-                      cellBorderColor: Colors.white,
-                      todayHighlightColor: kSelectColor,
-                      selectionDecoration: BoxDecoration(
-                        border: Border.all(color: kSelectColor, width: 1),
-                        shape: BoxShape.rectangle,
-                      ),
-                    ),
-                  ),
                 ),
               ),
             ),

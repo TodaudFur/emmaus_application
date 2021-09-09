@@ -47,16 +47,6 @@ List<Widget> _iconList = [
 ];
 
 class VarData {
-  List<Widget> newsSliders = imgList
-      .map(
-        (item) => CachedNetworkImage(
-          imageUrl: item,
-          placeholder: (context, url) => CircularProgressIndicator(),
-          errorWidget: (context, url, error) => Icon(Icons.error),
-        ),
-      )
-      .toList();
-
   showBulletin() {
     getBulletin().then((value) {
       String date = bulletinDate;

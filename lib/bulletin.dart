@@ -1,9 +1,63 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'constants.dart';
 import 'homebgcolor.dart';
+
+class DetailScreen extends StatefulWidget {
+  final item;
+  DetailScreen(this.item);
+  @override
+  _DetailScreenState createState() => _DetailScreenState(item);
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  _DetailScreenState(this.item);
+
+  final item;
+
+  double _scaleFactor = 1.0;
+  double _baseScaleFactor = 1.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(CupertinoIcons.arrow_left)),
+          ),
+          Expanded(
+            child: Hero(
+              tag: item,
+              child: InteractiveViewer(
+                panEnabled: false,
+                boundaryMargin: EdgeInsets.all(0),
+                minScale: 1,
+                maxScale: 3,
+                child: CachedNetworkImage(
+                  imageUrl: item,
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  width: MediaQuery.of(context).size.width + _scaleFactor,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class Bulletin extends StatefulWidget {
   @override
@@ -16,6 +70,25 @@ class _BulletinState extends State<Bulletin> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> newsSliders = imgList
+        .map(
+          (item) => GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return DetailScreen(item);
+              }));
+            },
+            child: Hero(
+              tag: item,
+              child: CachedNetworkImage(
+                imageUrl: item,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
+            ),
+          ),
+        )
+        .toList();
     return SafeArea(
       child: Container(
         color: getColor(),
@@ -51,7 +124,7 @@ class _BulletinState extends State<Bulletin> {
                   ],
                 ),
                 child: CarouselSlider(
-                  items: VarData().newsSliders,
+                  items: newsSliders,
                   carouselController: _controller,
                   options: CarouselOptions(
                       height: MediaQuery.of(context).size.height,
