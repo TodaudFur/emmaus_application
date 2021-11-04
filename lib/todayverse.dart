@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+// import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -160,27 +160,27 @@ class _TodayVerseState extends State<TodayVerse> {
   }
 
   void _takeScreenshot() async {
-    _requestPermission();
-    _imageFile = null;
-    _screenshotController
-        .capture(delay: Duration(milliseconds: 30))
-        .then((Uint8List image) async {
-      _imageFile = image;
-      final result = await ImageGallerySaver.saveImage(image,
-              quality: 60,
-              name:
-                  DateFormat("yyyy_MM_dd").format(DateTime.now()).toString()) +
-          "Emmaus";
-      print(result);
-    }).catchError((onError) {
-      print(onError);
-    });
-    Fluttertoast.showToast(
-        msg: "사진이 저장되었습니다!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        fontSize: 16.0);
+    // _requestPermission();
+    // _imageFile = null;
+    // _screenshotController
+    //     .capture(delay: Duration(milliseconds: 30))
+    //     .then((Uint8List image) async {
+    //   _imageFile = image;
+    //   final result = await ImageGallerySaver.saveImage(image,
+    //           quality: 60,
+    //           name:
+    //               DateFormat("yyyy_MM_dd").format(DateTime.now()).toString()) +
+    //       "Emmaus";
+    //   print(result);
+    // }).catchError((onError) {
+    //   print(onError);
+    // });
+    // Fluttertoast.showToast(
+    //     msg: "사진이 저장되었습니다!",
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: ToastGravity.BOTTOM,
+    //     timeInSecForIosWeb: 1,
+    //     fontSize: 16.0);
   }
 }
 /*final uint8List = await _screenshotController.capture();

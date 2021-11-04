@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:emmaus/bulletin.dart';
 import 'package:emmaus/contents.dart';
 import 'package:emmaus/vardata.dart';
@@ -5,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shake/shake.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'constants.dart';
@@ -123,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.settings),
-                  label: '설정',
+                  label: '더보기',
                 ),
               ],
               currentIndex: _selectedIndex,

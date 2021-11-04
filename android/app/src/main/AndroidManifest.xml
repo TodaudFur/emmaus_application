@@ -2,7 +2,8 @@
     package="com.songpa.emmaus">
    <application
         android:label="EMMAUS"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+       android:requestLegacyExternalStorage="true">
         <activity
            android:showWhenLocked="true"
            android:turnScreenOn="true"

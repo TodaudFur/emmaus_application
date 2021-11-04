@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,13 +9,68 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shake/shake.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'constants.dart';
+import 'package:http/http.dart' as http;
 import 'homebgcolor.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+
+class DetailScreen extends StatefulWidget {
+  final item;
+  DetailScreen(this.item);
+  @override
+  _DetailScreenState createState() => _DetailScreenState(item);
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  _DetailScreenState(this.item);
+
+  final item;
+
+  double _scaleFactor = 1.0;
+  double _baseScaleFactor = 1.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(CupertinoIcons.arrow_left)),
+          ),
+          Expanded(
+            child: Hero(
+              tag: item,
+              child: InteractiveViewer(
+                panEnabled: true,
+                boundaryMargin: EdgeInsets.all(0),
+                minScale: 1,
+                maxScale: 4,
+                child: CachedNetworkImage(
+                  imageUrl: item,
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  width: MediaQuery.of(context).size.width + _scaleFactor,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class Home extends StatefulWidget {
   @override
@@ -27,48 +84,47 @@ class _HomeState extends State<Home> {
   Widget content = Container();
   File _image;
   final picker = ImagePicker();
+  bool isCheck = false;
 
   int _current = 0;
   final CarouselController _controller = CarouselController();
 
-  final List<Widget> newsSliders = VarData()
-      .getNewsContents()
-      .map((item) => Container(
-            child: Stack(
-              children: <Widget>[
-                Text(
-                  item,
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontFamily: 'Noto',
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
-          ))
-      .toList();
+  @override
+  void initState() {
+    super.initState();
+    ShakeDetector.autoStart(onPhoneShake: () {
+      print("shake!!!!");
+      getImage();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     _checkVersion();
     setState(() {
-      name = VarData().getName();
-      content = CarouselSlider(
-        items: newsSliders,
-        carouselController: _controller,
-        options: CarouselOptions(
-            height: MediaQuery.of(context).size.height / 35,
-            autoPlay: true,
-            enlargeCenterPage: true,
-            aspectRatio: 2.0,
-            onPageChanged: (index, reason) {
-              setState(() {
-                _current = index;
-              });
-            }),
-      );
+      isCheck = VarData().getCheck();
+      print(isCheck);
     });
+
+    final List<Widget> newsSliders = homeList
+        .map(
+          (item) => GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return DetailScreen(item);
+              }));
+            },
+            child: Hero(
+              tag: item,
+              child: CachedNetworkImage(
+                imageUrl: item,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
+            ),
+          ),
+        )
+        .toList();
     return SafeArea(
       child: Container(
         height: MediaQuery.of(context).size.height,
@@ -183,7 +239,75 @@ class _HomeState extends State<Home> {
                   ],
                 ),
                 child: Center(
-                  child: content,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Container(),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: FittedBox(
+                          child: Text(
+                            "오늘의 큐티 출석",
+                            style: TextStyle(
+                              fontFamily: 'Noto',
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: (VarData().getCheck())
+                                    ? Colors.grey
+                                    : kSelectColor,
+                              ),
+                              onPressed: (VarData().getCheck())
+                                  ? null
+                                  : () {
+                                      if (VarData().getLogin()) {
+                                        qtCheck();
+                                        showDialog(
+                                            context: context,
+                                            builder: (_) => AlertDialog(
+                                                  backgroundColor: Colors.white
+                                                      .withOpacity(0.1),
+                                                  content: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      SizedBox(
+                                                        width: 150,
+                                                        height: 150,
+                                                        child:
+                                                            CircularProgressIndicator(),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ));
+                                      } else {
+                                        Fluttertoast.showToast(
+                                            msg: "로그인을 해주세요",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            timeInSecForIosWeb: 1,
+                                            fontSize: 16.0);
+                                      }
+                                    },
+                              child: FittedBox(
+                                  child: Text((VarData().getCheck())
+                                      ? "출석완료"
+                                      : "출석하기")))),
+                      Expanded(
+                        child: Container(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -206,43 +330,20 @@ class _HomeState extends State<Home> {
                   ],
                 ),
                 child: Center(
-                  child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      // child: SfCalendar(
-                      //   view: CalendarView.month,
-                      //   dataSource: _getCalendarDataSource(),
-                      //   headerStyle: CalendarHeaderStyle(
-                      //     textStyle: TextStyle(
-                      //         fontFamily: 'Noto', fontWeight: FontWeight.w900),
-                      //   ),
-                      //   viewHeaderStyle: ViewHeaderStyle(
-                      //       dayTextStyle: TextStyle(
-                      //     fontFamily: 'Noto',
-                      //     fontWeight: FontWeight.w900,
-                      //     color: Colors.black,
-                      //   )),
-                      //   monthViewSettings: MonthViewSettings(
-                      //     showAgenda: false,
-                      //     monthCellStyle: MonthCellStyle(
-                      //       textStyle: TextStyle(color: Color(0xFF111111)),
-                      //       leadingDatesTextStyle:
-                      //           TextStyle(color: Color(0x15111111)),
-                      //       trailingDatesTextStyle:
-                      //           TextStyle(color: Color(0x15111111)),
-                      //     ),
-                      //     appointmentDisplayMode:
-                      //         MonthAppointmentDisplayMode.appointment,
-                      //   ),
-                      //   cellBorderColor: Colors.white,
-                      //   todayHighlightColor: kSelectColor,
-                      //   selectionDecoration: BoxDecoration(
-                      //     border: Border.all(color: kSelectColor, width: 1),
-                      //     shape: BoxShape.rectangle,
-                      //   ),
-                      // ),
-                      child: WebView(
-                        initialUrl: 'https://official-emmaus.com/loveis.php',
-                      )),
+                  child: CarouselSlider(
+                    items: newsSliders,
+                    carouselController: _controller,
+                    options: CarouselOptions(
+                        height: MediaQuery.of(context).size.height,
+                        autoPlay: false,
+                        enlargeCenterPage: true,
+                        aspectRatio: 2.0,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            _current = index;
+                          });
+                        }),
+                  ),
                 ),
               ),
             ),
@@ -429,6 +530,19 @@ class _HomeState extends State<Home> {
           timeInSecForIosWeb: 1,
           fontSize: 16.0);
     }
+  }
+
+  qtCheck() async {
+    print(VarData().getId());
+    var url = Uri.parse('https://www.official-emmaus.com/g5/bbs/emmaus_qt.php');
+    var result = await http.post(url, body: {"mb_id": VarData().getId()});
+
+    print(result.body);
+    if (result.body == "true") {
+      isCheck = true;
+    }
+    Navigator.of(context).pop();
+    setState(() {});
   }
 }
 

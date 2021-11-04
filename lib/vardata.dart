@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emmaus/ereward.dart';
+import 'package:emmaus/home.dart';
 import 'package:emmaus/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,15 +13,18 @@ import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
 List<String> imgList = [];
+List<String> homeList = [];
 
 bool _isLogin = false;
 bool _autoLogin = false;
 
+String _id = "";
 String _name = "엠마오";
 String _cell;
 String _team = "엠마오";
 String _term = "1";
 String _first = "False";
+bool _isCheck = false;
 
 List<dynamic> news = [""];
 int newsNum = 0;
@@ -47,6 +51,39 @@ List<Widget> _iconList = [
 ];
 
 class VarData {
+  getCheck() {
+    return _isCheck;
+  }
+
+  Future<List<dynamic>> getAllQt() async {
+    var url = Uri.parse(
+        'https://www.official-emmaus.com/g5/bbs/emmaus_qt_all_init.php');
+    print(_id);
+    var result = await http.post(url, body: {"mb_id": _id});
+
+    print(result.body);
+    Map<String, dynamic> body = json.decode(result.body);
+    List<dynamic> list = body['date'];
+
+    return list;
+  }
+
+  getQt(String mbId) async {
+    var url =
+        Uri.parse('https://www.official-emmaus.com/g5/bbs/emmaus_qt_init.php');
+    var result = await http.post(url, body: {"mb_id": mbId});
+
+    print(result.body);
+
+    if (result.body != null) {
+      _isCheck = true;
+    }
+  }
+
+  getId() {
+    return _id;
+  }
+
   showBulletin() {
     getBulletin().then((value) {
       String date = bulletinDate;
@@ -59,6 +96,14 @@ class VarData {
         imgList.add(url);
       }
     });
+  }
+
+  getHomeImage() {
+    for (int i = 1; i < 7; i++) {
+      String url = "https://www.official-emmaus.com/news/00$i.png";
+
+      homeList.add(url);
+    }
   }
 
   List<dynamic> getNewsContents() {
@@ -393,7 +438,12 @@ class VarData {
     _first = body["isFirst"];
     specialNum = int.parse(body["special"]);
     normalNum = (int.parse(body["normal"]) + 3);
-    if (_cell != null) _isLogin = true;
+    if (_cell != null) {
+      _isLogin = true;
+      _id = id;
+      print("_id : $_id");
+      getQt(_id);
+    }
 
     for (int i = 0; i < 3; i++) {
       if (i < specialNum)

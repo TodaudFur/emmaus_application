@@ -126,6 +126,7 @@ class _MyAppState extends State<MyApp> {
     autoLogin();
     VarData().getNews();
     VarData().showBulletin();
+    VarData().getHomeImage();
     if (routeFromMessage != "") {}
     return MaterialApp(
         title: 'Emmaus',
@@ -135,7 +136,7 @@ class _MyAppState extends State<MyApp> {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: AnimatedSplashScreen(
-          duration: 1000,
+          duration: 500,
           splash: Image(
             image: AssetImage('images/logo_em2_txt.png'),
           ),

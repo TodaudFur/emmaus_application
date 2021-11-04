@@ -411,34 +411,7 @@ class Emmaus extends StatelessWidget {
                                             child: FittedBox(
                                               fit: BoxFit.fitWidth,
                                               child: Text(
-                                                '김찬희 ',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: 'Noto',
-                                                  color: Colors.grey[700],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 4,
-                                            child: FittedBox(
-                                              fit: BoxFit.fitWidth,
-                                              child: Text(
-                                                '예배R&D ',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontFamily: 'Noto',
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 3,
-                                            child: FittedBox(
-                                              fit: BoxFit.fitWidth,
-                                              child: Text(
-                                                '김주훈 ',
+                                                '송태정 ',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   fontFamily: 'Noto',
@@ -477,7 +450,7 @@ class Emmaus extends StatelessWidget {
                                         ],
                                       )),
                                   Expanded(
-                                    flex: 1,
+                                    flex: 2,
                                     child: Container(),
                                   ),
                                 ],
@@ -497,7 +470,7 @@ class Emmaus extends StatelessWidget {
                                             child: FittedBox(
                                               fit: BoxFit.fitWidth,
                                               child: Text(
-                                                '셀총무 ',
+                                                '  R&D ',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w800,
                                                   fontFamily: 'Noto',
@@ -511,33 +484,6 @@ class Emmaus extends StatelessWidget {
                                               fit: BoxFit.fitWidth,
                                               child: Text(
                                                 '김도형 ',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: 'Noto',
-                                                  color: Colors.grey[700],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 4,
-                                            child: FittedBox(
-                                              fit: BoxFit.fitWidth,
-                                              child: Text(
-                                                '교육R&D ',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontFamily: 'Noto',
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 3,
-                                            child: FittedBox(
-                                              fit: BoxFit.fitWidth,
-                                              child: Text(
-                                                '진보배 ',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   fontFamily: 'Noto',
@@ -576,7 +522,7 @@ class Emmaus extends StatelessWidget {
                                         ],
                                       )),
                                   Expanded(
-                                    flex: 2,
+                                    flex: 6,
                                     child: Container(),
                                   ),
                                 ],
@@ -765,7 +711,7 @@ class Emmaus extends StatelessWidget {
                                           child: FittedBox(
                                             fit: BoxFit.fitWidth,
                                             child: Text(
-                                              '박재민 ',
+                                              '한수지 ',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w500,
                                                 fontFamily: 'Noto',
@@ -829,7 +775,7 @@ class Emmaus extends StatelessWidget {
                                           child: FittedBox(
                                             fit: BoxFit.fitWidth,
                                             child: Text(
-                                              '참.미.콘 ',
+                                              'Makers ',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w800,
                                                 fontFamily: 'Noto',

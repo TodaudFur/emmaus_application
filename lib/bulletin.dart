@@ -40,10 +40,10 @@ class _DetailScreenState extends State<DetailScreen> {
             child: Hero(
               tag: item,
               child: InteractiveViewer(
-                panEnabled: false,
+                panEnabled: true,
                 boundaryMargin: EdgeInsets.all(0),
                 minScale: 1,
-                maxScale: 3,
+                maxScale: 4,
                 child: CachedNetworkImage(
                   imageUrl: item,
                   placeholder: (context, url) => CircularProgressIndicator(),

@@ -2,6 +2,7 @@ import 'package:emmaus/bulletin.dart';
 import 'package:emmaus/constants.dart';
 import 'package:emmaus/contents.dart';
 import 'package:emmaus/game.dart';
+import 'package:emmaus/qtall.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:emmaus/versedata.dart';
 import 'package:flutter/cupertino.dart';
@@ -325,8 +326,54 @@ class _SettingsState extends State<Settings> {
                               ),
                             ),
                           ),
-                          Expanded(child: Container()),
-                          Expanded(child: Container()),
+                          Expanded(
+                              child: FlatButton(
+                            onPressed: _launchHomepage,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  CupertinoIcons.home,
+                                  size: 40.0,
+                                ),
+                                Text(
+                                  '홈페이지',
+                                  style: TextStyle(
+                                    fontFamily: 'Noto',
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 15.0,
+                                  ),
+                                )
+                              ],
+                            ),
+                          )),
+                          Expanded(
+                              child: FlatButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => QtAll()),
+                              );
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  CupertinoIcons.checkmark_rectangle,
+                                  size: 40.0,
+                                ),
+                                Text(
+                                  '큐티 현황',
+                                  style: TextStyle(
+                                    fontFamily: 'Noto',
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 15.0,
+                                  ),
+                                )
+                              ],
+                            ),
+                          )),
                         ],
                       ),
                     ),
