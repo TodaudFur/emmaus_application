@@ -43,10 +43,7 @@ class _QtAllState extends State<QtAll> {
                 child: IconButton(
                   icon: Icon(CupertinoIcons.arrow_left),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyHomePage()),
-                    );
+                    Navigator.pop(context);
                   },
                 ),
               ),

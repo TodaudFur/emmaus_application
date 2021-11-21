@@ -9,12 +9,12 @@ import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Contents extends StatefulWidget {
+class Winter extends StatefulWidget {
   @override
-  _Contents createState() => _Contents();
+  _Winter createState() => _Winter();
 }
 
-class _Contents extends State<Contents> {
+class _Winter extends State<Winter> {
   final textController = TextEditingController();
   int tryTime = 2;
 
@@ -379,6 +379,18 @@ class _Contents extends State<Contents> {
                       ),
                       Divider(
                         color: Colors.white,
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        width: 300,
+                        height: 20,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          child: LinearProgressIndicator(
+                            value: 0.45,
+                            backgroundColor: Colors.grey,
+                          ),
+                        ),
                       ),
                       Expanded(
                         flex: 2,

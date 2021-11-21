@@ -39,16 +39,21 @@ class _DetailScreenState extends State<DetailScreen> {
           Expanded(
             child: Hero(
               tag: item,
-              child: InteractiveViewer(
-                panEnabled: true,
-                boundaryMargin: EdgeInsets.all(0),
-                minScale: 1,
-                maxScale: 4,
-                child: CachedNetworkImage(
-                  imageUrl: item,
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                  width: MediaQuery.of(context).size.width + _scaleFactor,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: InteractiveViewer(
+                  panEnabled: true,
+                  boundaryMargin: EdgeInsets.all(0),
+                  minScale: 1,
+                  maxScale: 4,
+                  child: CachedNetworkImage(
+                    imageUrl: item,
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    width: MediaQuery.of(context).size.width + _scaleFactor,
+                  ),
                 ),
               ),
             ),
@@ -127,10 +132,11 @@ class _BulletinState extends State<Bulletin> {
                   items: newsSliders,
                   carouselController: _controller,
                   options: CarouselOptions(
-                      height: MediaQuery.of(context).size.height,
+                      height: double.infinity,
                       autoPlay: false,
                       enlargeCenterPage: true,
-                      aspectRatio: 2.0,
+                      aspectRatio: 1 / 1,
+                      viewportFraction: 1,
                       onPageChanged: (index, reason) {
                         setState(() {
                           _current = index;

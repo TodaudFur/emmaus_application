@@ -1,12 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:emmaus/contents.dart';
+import 'package:emmaus/qtall.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shake/shake.dart';
@@ -16,8 +20,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'constants.dart';
 import 'package:http/http.dart' as http;
+import 'creeds.dart';
 import 'homebgcolor.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+
+import 'package:intl/intl.dart';
+
+import 'winter.dart';
 
 class DetailScreen extends StatefulWidget {
   final item;
@@ -36,41 +45,50 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(CupertinoIcons.arrow_left)),
-          ),
-          Expanded(
-            child: Hero(
-              tag: item,
-              child: InteractiveViewer(
-                panEnabled: true,
-                boundaryMargin: EdgeInsets.all(0),
-                minScale: 1,
-                maxScale: 4,
-                child: CachedNetworkImage(
-                  imageUrl: item,
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                  width: MediaQuery.of(context).size.width + _scaleFactor,
+    return GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(CupertinoIcons.arrow_left)),
+            ),
+            Expanded(
+              child: Hero(
+                tag: item,
+                child: InteractiveViewer(
+                  panEnabled: true,
+                  boundaryMargin: EdgeInsets.all(0),
+                  minScale: 1,
+                  maxScale: 4,
+                  child: CachedNetworkImage(
+                    imageUrl: item,
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    width: MediaQuery.of(context).size.width + _scaleFactor,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
+
+List<dynamic> eventFile = [];
+List<dynamic> eventName = [];
+List<dynamic> eventUrl = [];
 
 class Home extends StatefulWidget {
   @override
@@ -85,22 +103,84 @@ class _HomeState extends State<Home> {
   File _image;
   final picker = ImagePicker();
   bool isCheck = false;
+  bool isOpen = false;
 
   int _current = 0;
   final CarouselController _controller = CarouselController();
 
   @override
   void initState() {
+    if (eventName.isEmpty) {
+      VarData().getEvents().then((value) {
+        setState(() {
+          eventFile = VarData().getEventFile();
+          eventName = VarData().getEventName();
+          eventUrl = VarData().getEventUrl();
+        });
+      });
+    }
     super.initState();
-    ShakeDetector.autoStart(onPhoneShake: () {
-      print("shake!!!!");
-      getImage();
-    });
+  }
+
+  void flutterDialog() {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: Text(
+              '주기도문과 사도신경',
+              style: TextStyle(
+                fontFamily: 'Noto',
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: kSelectColor,
+                    ),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) {
+                        return Creeds("주기도문");
+                      }));
+                    },
+                    child: Text(
+                      "주기도문",
+                      style: TextStyle(
+                        fontFamily: 'Noto',
+                        fontWeight: FontWeight.w700,
+                      ),
+                    )),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: kSelectColor,
+                    ),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) {
+                        return Creeds("사도신경");
+                      }));
+                    },
+                    child: Text(
+                      "사도신경",
+                      style: TextStyle(
+                        fontFamily: 'Noto',
+                        fontWeight: FontWeight.w700,
+                      ),
+                    )),
+              ],
+            ),
+          );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
-    _checkVersion();
     setState(() {
       isCheck = VarData().getCheck();
       print(isCheck);
@@ -174,7 +254,7 @@ class _HomeState extends State<Home> {
                         child: FittedBox(
                           fit: BoxFit.fitWidth,
                           child: Text(
-                            name,
+                            VarData().getName(),
                             style: TextStyle(
                               fontFamily: 'Noto',
                               fontWeight: FontWeight.w900,
@@ -209,6 +289,15 @@ class _HomeState extends State<Home> {
                       Expanded(
                         flex: 7,
                         child: Container(),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: IconButton(
+                          onPressed: () {
+                            flutterDialog();
+                          },
+                          icon: Icon(CupertinoIcons.doc_text_search),
+                        ),
                       ),
                       Expanded(
                         flex: 2,
@@ -317,103 +406,160 @@ class _HomeState extends State<Home> {
             ),
             Expanded(
               flex: 8,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      spreadRadius: 0,
-                      blurRadius: 10,
+              child: Column(
+                children: [
+                  Align(
+                    child: Stack(
+                      children: [
+                        Text(
+                          '엠마오 뉴스 ',
+                          style: TextStyle(
+                            fontFamily: 'Noto',
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        Positioned(
+                            bottom: 0,
+                            child: Container(
+                              height: 10,
+                              width: MediaQuery.of(context).size.width,
+                              color: kSelectColor.withOpacity(0.2),
+                            )),
+                      ],
                     ),
-                  ],
-                ),
-                child: Center(
-                  child: CarouselSlider(
-                    items: newsSliders,
-                    carouselController: _controller,
-                    options: CarouselOptions(
-                        height: MediaQuery.of(context).size.height,
-                        autoPlay: false,
-                        enlargeCenterPage: true,
-                        aspectRatio: 2.0,
-                        onPageChanged: (index, reason) {
-                          setState(() {
-                            _current = index;
-                          });
-                        }),
+                    alignment: Alignment.centerLeft,
                   ),
-                ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            spreadRadius: 0,
+                            blurRadius: 10,
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                          child: CarouselSlider(
+                        items: newsSliders,
+                        carouselController: _controller,
+                        options: CarouselOptions(
+                            autoPlay: true,
+                            autoPlayAnimationDuration: Duration(seconds: 2),
+                            enlargeCenterPage: true,
+                            aspectRatio: 2.0,
+                            onPageChanged: (index, reason) {
+                              setState(() {
+                                _current = index;
+                              });
+                            }),
+                      )),
+                    ),
+                  ),
+                  Divider(
+                    color: getColor(),
+                  ),
+                  Align(
+                    child: Stack(
+                      children: [
+                        Text(
+                          '엠마오 이벤트 ',
+                          style: TextStyle(
+                            fontFamily: 'Noto',
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        Positioned(
+                            bottom: 0,
+                            child: Container(
+                              height: 10,
+                              width: MediaQuery.of(context).size.width,
+                              color: kSelectColor.withOpacity(0.2),
+                            )),
+                      ],
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Expanded(
+                    child: eventName.length == 0
+                        ? Text("이벤트가 없습니다")
+                        : ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: eventName.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return TextButton(
+                                onPressed: () {
+                                  if (eventName[index] == "WinterE") {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Winter()),
+                                    );
+                                  } else if (eventName[index] == "AllQT") {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => QtAll()),
+                                    );
+                                  } else if (eventName[index] == "award") {
+                                    if (int.parse(DateFormat('MMdd')
+                                                .format(DateTime.now())) >=
+                                            1201 &&
+                                        int.parse(DateFormat('MMdd')
+                                                .format(DateTime.now())) <
+                                            1225) {
+                                      _launchURL(eventUrl[index]);
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          msg: "투표 기간이 아닙니다.",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          fontSize: 16.0);
+                                    }
+                                  } else {
+                                    _launchURL(eventUrl[index]);
+                                  }
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.only(right: 12),
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        spreadRadius: 0,
+                                        blurRadius: 10,
+                                      ),
+                                    ],
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    child: Image.network(
+                                      "https://www.official-emmaus.com/events/${eventFile[index]}",
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
     );
-  }
-
-  _checkVersion() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String version = packageInfo.version;
-    //print("version : $version");
-    VarData().compVersion().then((value) {
-      if (version != value) {
-        print('version not correct!');
-        showDialog(
-            context: context,
-            builder: (_) => GestureDetector(
-                  onTap: () {
-                    FocusScope.of(context).unfocus();
-                    SystemChrome.setEnabledSystemUIOverlays([]);
-                  },
-                  child: new AlertDialog(
-                    title: new Text(
-                      "업데이트",
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w900,
-                        fontFamily: 'Noto',
-                      ),
-                    ),
-                    content: Text(
-                      '새로운 업데이트가 있습니다.',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                        fontFamily: 'Noto',
-                      ),
-                    ),
-                    actions: <Widget>[
-                      Row(
-                        children: [
-                          FlatButton(
-                            child: Text('업데이트'),
-                            onPressed: () {
-                              setState(() {
-                                _launchURL(
-                                    'https://play.google.com/store/apps/details?id=com.songpa.emmaus');
-                                SystemChrome.setEnabledSystemUIOverlays([]);
-                                Navigator.of(context).pop();
-                              });
-                            },
-                          ),
-                          FlatButton(
-                            child: Text('닫기'),
-                            onPressed: () {
-                              setState(() {
-                                Navigator.of(context).pop();
-                              });
-                            },
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ));
-      }
-    }).catchError((onError) {});
   }
 
   _launchURL(String url) async {
@@ -424,6 +570,7 @@ class _HomeState extends State<Home> {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String path = appDocDir.path;
     File mainImage = File('$path/qrcode.png');
+    isOpen = true;
 
     if (await File('$path/qrcode.png').exists()) {
       showDialog(
@@ -492,6 +639,7 @@ class _HomeState extends State<Home> {
                             borderRadius: BorderRadius.circular(10.0)),
                         color: kBodyColor,
                         onPressed: () {
+                          isOpen = false;
                           Navigator.of(context).pop();
                         },
                         child: Text(
@@ -537,9 +685,10 @@ class _HomeState extends State<Home> {
     var url = Uri.parse('https://www.official-emmaus.com/g5/bbs/emmaus_qt.php');
     var result = await http.post(url, body: {"mb_id": VarData().getId()});
 
+    print("reuslt");
     print(result.body);
     if (result.body == "true") {
-      isCheck = true;
+      VarData().setCheck();
     }
     Navigator.of(context).pop();
     setState(() {});

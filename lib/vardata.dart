@@ -15,6 +15,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 List<String> imgList = [];
 List<String> homeList = [];
 
+List<dynamic> _eventFile = [];
+List<dynamic> _eventName = [];
+List<dynamic> _eventUrl = [];
+
 bool _isLogin = false;
 bool _autoLogin = false;
 
@@ -51,6 +55,14 @@ List<Widget> _iconList = [
 ];
 
 class VarData {
+  getEventFile() => _eventFile;
+  getEventName() => _eventName;
+  getEventUrl() => _eventUrl;
+
+  setCheck() {
+    _isCheck = true;
+  }
+
   getCheck() {
     return _isCheck;
   }
@@ -69,13 +81,16 @@ class VarData {
   }
 
   getQt(String mbId) async {
+    print(mbId);
     var url =
         Uri.parse('https://www.official-emmaus.com/g5/bbs/emmaus_qt_init.php');
     var result = await http.post(url, body: {"mb_id": mbId});
 
+    print("getQt");
     print(result.body);
 
-    if (result.body != null) {
+    if (result.body != "null") {
+      print("check");
       _isCheck = true;
     }
   }
@@ -98,12 +113,30 @@ class VarData {
     });
   }
 
-  getHomeImage() {
-    for (int i = 1; i < 7; i++) {
+  getHomeImage() async {
+    var url =
+        Uri.parse('https://www.official-emmaus.com/emmaus_news_count.php');
+    var result = await http.post(url);
+    print("count : ${result.body}");
+    int count = int.parse(result.body);
+    for (int i = 1; i < count; i++) {
       String url = "https://www.official-emmaus.com/news/00$i.png";
 
       homeList.add(url);
     }
+  }
+
+  Future getEvents() async {
+    var url = Uri.parse(
+        'https://www.official-emmaus.com/g5/bbs/emmaus_event_init.php');
+    var result = await http.post(url);
+    print("event : ${result.body}");
+    Map<String, dynamic> body = json.decode(result.body);
+
+    _eventFile = body['file'];
+    _eventName = body['name'];
+    _eventUrl = body['url'];
+    return true;
   }
 
   List<dynamic> getNewsContents() {
@@ -152,14 +185,17 @@ class VarData {
         child: ChooseReward(),
       );
     } else {
-      return Column(
+      return Row(
         children: [
+          Expanded(
+            child: Container(),
+          ),
           Expanded(
             flex: 2,
             child: FittedBox(
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.fitWidth,
               child: Text(
-                "SHOW\nYOUR WORSHIP!",
+                "오늘의 큐티 출석 현황 45%",
                 style: TextStyle(
                   fontFamily: 'Noto',
                   fontWeight: FontWeight.w900,
@@ -169,18 +205,7 @@ class VarData {
             ),
           ),
           Expanded(
-            flex: 1,
-            child: FittedBox(
-              fit: BoxFit.fitHeight,
-              child: Text(
-                "6/13 ~ 7/9",
-                style: TextStyle(
-                  fontFamily: 'Noto',
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
+            child: Container(),
           ),
         ],
       );
@@ -423,6 +448,7 @@ class VarData {
   }
 
   Future<bool> post(String id, String password) async {
+    _isCheck = false;
     var url =
         Uri.parse('https://www.official-emmaus.com/g5/bbs/app_login_check.php');
     var result =

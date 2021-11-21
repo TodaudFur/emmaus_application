@@ -493,11 +493,11 @@ class Emmaus extends StatelessWidget {
                                             ),
                                           ),
                                           Expanded(
-                                            flex: 2,
+                                            flex: 3,
                                             child: FittedBox(
                                               fit: BoxFit.fitWidth,
                                               child: Text(
-                                                '서기 ',
+                                                '셀총무 ',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w800,
                                                   fontFamily: 'Noto',

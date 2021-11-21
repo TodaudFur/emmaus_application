@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shake/shake.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,16 +28,149 @@ class _MyHomePageState extends State<MyHomePage> {
     Home(),
     Bulletin(),
     Text(
-      '',
+      'MADE BY 404',
+      style: TextStyle(
+        color: Colors.black26,
+        fontSize: 50,
+      ),
     ),
     TodayVerse(),
     Settings(),
   ];
 
+  File _image;
+  final picker = ImagePicker();
+  bool isOpen = false;
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Future getImage() async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String path = appDocDir.path;
+    File mainImage = File('$path/qrcode.png');
+    isOpen = true;
+
+    if (await File('$path/qrcode.png').exists()) {
+      showDialog(
+        context: context,
+        builder: (context) => Scaffold(
+          backgroundColor: Colors.white,
+          body: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.file(mainImage),
+                  Divider(
+                    color: Colors.white,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RaisedButton(
+                        padding: EdgeInsets.all(5.0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        color: kBodyColor,
+                        onPressed: () async {
+                          final pickedFile = await picker.getImage(
+                              source: ImageSource.gallery);
+                          setState(() {
+                            if (pickedFile != null) {
+                              _image = File(pickedFile.path);
+                            } else {
+                              print('No image selected.');
+                            }
+                          });
+
+                          imageCache.clear();
+                          final File newImage =
+                              await _image.copy('$path/qrcode.png');
+
+                          setState(() {
+                            mainImage = newImage;
+                          });
+
+                          Fluttertoast.showToast(
+                              msg: "QR코드가 저장이 되었습니다!",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              fontSize: 16.0);
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          "수정",
+                          style: TextStyle(
+                            fontFamily: 'Noto',
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                      VerticalDivider(
+                        color: Colors.white,
+                      ),
+                      RaisedButton(
+                        padding: EdgeInsets.all(5.0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        color: kBodyColor,
+                        onPressed: () {
+                          isOpen = false;
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          "돌아가기",
+                          style: TextStyle(
+                            fontFamily: 'Noto',
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      final pickedFile = await picker.getImage(source: ImageSource.gallery);
+      setState(() {
+        if (pickedFile != null) {
+          _image = File(pickedFile.path);
+        } else {
+          print('No image selected.');
+        }
+      });
+
+      final File newImage = await _image.copy('$path/qrcode.png');
+
+      Fluttertoast.showToast(
+          msg: "QR코드가 저장이 되었습니다!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          fontSize: 16.0);
+    }
+  }
+
+  @override
+  void initState() {
+    ShakeDetector.autoStart(onPhoneShake: () {
+      if (!isOpen) {
+        print("shake!!!!");
+        getImage();
+      }
+    });
+    super.initState();
   }
 
   @override

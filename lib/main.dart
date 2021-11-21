@@ -127,6 +127,7 @@ class _MyAppState extends State<MyApp> {
     VarData().getNews();
     VarData().showBulletin();
     VarData().getHomeImage();
+
     if (routeFromMessage != "") {}
     return MaterialApp(
         title: 'Emmaus',
