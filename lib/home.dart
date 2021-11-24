@@ -131,7 +131,7 @@ class _HomeState extends State<Home> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0)),
             title: Text(
-              '주기도문과 사도신경',
+              'EMMAUS',
               style: TextStyle(
                 fontFamily: 'Noto',
                 fontWeight: FontWeight.w700,
@@ -168,6 +168,38 @@ class _HomeState extends State<Home> {
                     },
                     child: Text(
                       "사도신경",
+                      style: TextStyle(
+                        fontFamily: 'Noto',
+                        fontWeight: FontWeight.w700,
+                      ),
+                    )),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: kSelectColor,
+                    ),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) {
+                        return Creeds("대표기도");
+                      }));
+                    },
+                    child: Text(
+                      "대표기도",
+                      style: TextStyle(
+                        fontFamily: 'Noto',
+                        fontWeight: FontWeight.w700,
+                      ),
+                    )),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: kSelectColor,
+                    ),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) {
+                        return Creeds("헌금기도");
+                      }));
+                    },
+                    child: Text(
+                      "헌금기도",
                       style: TextStyle(
                         fontFamily: 'Noto',
                         fontWeight: FontWeight.w700,
@@ -500,11 +532,34 @@ class _HomeState extends State<Home> {
                               return TextButton(
                                 onPressed: () {
                                   if (eventName[index] == "WinterE") {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Winter()),
-                                    );
+                                    if (int.parse(DateFormat('MMdd')
+                                                .format(DateTime.now())) >=
+                                            1205 &&
+                                        int.parse(DateFormat('MMdd')
+                                                .format(DateTime.now())) <
+                                            1225) {
+                                      if (VarData().getLogin()) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Winter()),
+                                        );
+                                      } else {
+                                        Fluttertoast.showToast(
+                                            msg: "로그인 후 이용 가능합니다",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            timeInSecForIosWeb: 1,
+                                            fontSize: 16.0);
+                                      }
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          msg: "e-프리퀀시 기간이 아닙니다",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          fontSize: 16.0);
+                                    }
                                   } else if (eventName[index] == "AllQT") {
                                     Navigator.push(
                                       context,

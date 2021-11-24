@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:intl/intl.dart';
 
 List<String> _englishVerse = [
   'For this is the reason\nthe gospel was preached even to\nthose who are now dead,\nso that they might be judged\naccording to men in regard to the body,\nbut live according to God\nin regard to the spirit.\n\n1 Peter 4:6',
@@ -423,9 +424,10 @@ List<String> qtList = [
 ];
 
 int verseNum = 0;
+int seed = int.parse(DateFormat('MMdd').format(DateTime.now()));
 
 class VerseData {
-  var rng = new Random();
+  var rng = new Random(seed);
 
   int getNum() {
     return verseNum;
@@ -436,15 +438,19 @@ class VerseData {
   }
 
   String getEnglish() {
+    print(verseNum);
+    print(_englishVerse[verseNum]);
     return _englishVerse[verseNum];
   }
 
   String getKorean() {
+    print(verseNum);
     return _koreanVerse[verseNum];
   }
 
   void renew() {
     verseNum = rng.nextInt(_englishVerse.length);
+    print(verseNum);
   }
 
   void putNum(int num) {

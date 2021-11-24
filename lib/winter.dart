@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -9,27 +11,33 @@ import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:http/http.dart' as http;
+
 class Winter extends StatefulWidget {
   @override
   _Winter createState() => _Winter();
 }
 
-class _Winter extends State<Winter> {
+class _Winter extends State<Winter> with TickerProviderStateMixin {
   final textController = TextEditingController();
   int tryTime = 2;
+  double progressValue = 0;
+  Color progressColor = Colors.red[300];
+  AnimationController controller;
+  String question = "";
 
   _getTryTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String toDayDate = DateFormat('MMdd').format(DateTime.now());
-    String lastVisitDate = prefs.get("tryTimeDate");
+    String lastVisitDate = prefs.get("tryTimeDateWinter");
 
     if (toDayDate != lastVisitDate) {
-      await prefs.setString('tryTimeDate', toDayDate);
+      await prefs.setString('tryTimeDateWinter', toDayDate);
       tryTime = 2;
     } else {
-      if (tryTime != prefs.getInt("tryTime")) {
+      if (tryTime != prefs.getInt("tryTimeWinter")) {
         setState(() {
-          tryTime = prefs.getInt("tryTime");
+          tryTime = prefs.getInt("tryTimeWinter");
           if (tryTime == null) tryTime = 2;
         });
       }
@@ -38,14 +46,15 @@ class _Winter extends State<Winter> {
 
   void _checkAnswer(String s) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String lastVisitDate = prefs.get("specialDateKey");
+    String lastVisitDate = prefs.get("specialDateKeyWinter");
 
     String toDayDate = DateFormat('MMdd').format(DateTime.now());
 
     if (lastVisitDate != toDayDate) {
       VarData().check(s).then((value) async {
+        Navigator.pop(context);
         if (value) {
-          await prefs.setString('specialDateKey', toDayDate);
+          await prefs.setString('specialDateKeyWinter', toDayDate);
           Fluttertoast.showToast(
               msg: "정답입니다.",
               toastLength: Toast.LENGTH_SHORT,
@@ -53,9 +62,6 @@ class _Winter extends State<Winter> {
               timeInSecForIosWeb: 1,
               fontSize: 16.0);
           SystemChrome.setEnabledSystemUIOverlays([]);
-          setState(() {
-            Navigator.of(context).pop();
-          });
         } else {
           if (tryTime == 0) {
             Fluttertoast.showToast(
@@ -82,7 +88,7 @@ class _Winter extends State<Winter> {
       });
     } else {
       Fluttertoast.showToast(
-          msg: "오늘의 미션 출석되었습니다!",
+          msg: "오늘의 미션은 이미 출석되었습니다!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
@@ -96,23 +102,23 @@ class _Winter extends State<Winter> {
 
     bool check = false;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String lastVisitDate = prefs.get("mDateKey");
+    String lastVisitDate = prefs.get("mDateKeyWinter");
 
     String toDayDate = DateFormat('MMdd').format(DateTime.now());
 
     int endDate = int.parse(DateFormat('yyyyMMdd').format(DateTime.now()));
     print(endDate);
 
-    if (endDate > 20210709) {
+    if (endDate > 20211225) {
       Fluttertoast.showToast(
-          msg: "21 서머 e-프리퀀시 기간이 끝났습니다.",
+          msg: "21 윈터 e-프리퀀시 기간이 끝났습니다.",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
           fontSize: 16.0);
     } else {
       if (VarData().isLogin()) {
-        if (VarData().getNormal() == 6) {
+        if (VarData().getNormal(false) == 6) {
           Fluttertoast.showToast(
               msg: "예배 출석을 모두 성공하셨습니다!",
               toastLength: Toast.LENGTH_SHORT,
@@ -125,20 +131,20 @@ class _Winter extends State<Winter> {
               if (nowTime <= 1700 && nowTime >= 1400) {
                 setState(() {
                   check = true;
-                  VarData().setNormal();
+                  VarData().setNormal(false);
                   VarData().insertFre();
                 });
               }
-              if (check) await prefs.setString('mDateKey', toDayDate);
+              if (check) await prefs.setString('mDateKeyWinter', toDayDate);
             } else if (nowDay == "Friday") {
               if (nowTime <= 2359 && nowTime >= 2100) {
                 setState(() {
                   check = true;
-                  VarData().setNormal();
+                  VarData().setNormal(false);
                   VarData().insertFre();
                 });
               }
-              if (check) await prefs.setString('mDateKey', toDayDate);
+              if (check) await prefs.setString('mDateKeyWinter', toDayDate);
             } else {
               Fluttertoast.showToast(
                   msg: "예배 출석 시간이 아닙니다!",
@@ -171,16 +177,16 @@ class _Winter extends State<Winter> {
     int endDate = int.parse(DateFormat('yyyyMMdd').format(DateTime.now()));
     print(endDate);
 
-    if (endDate > 20210709) {
+    if (endDate > 20211225) {
       Fluttertoast.showToast(
-          msg: "21 서머 e-프리퀀시 기간이 끝났습니다.",
+          msg: "22 윈터 e-프리퀀시 기간이 끝났습니다.",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
           fontSize: 16.0);
     } else {
       if (VarData().isLogin()) {
-        if (VarData().getSpecial() == 3) {
+        if (VarData().getSpecial(false) == 3) {
           Fluttertoast.showToast(
               msg: "미션을 모두 성공하셨습니다!",
               toastLength: Toast.LENGTH_SHORT,
@@ -199,19 +205,27 @@ class _Winter extends State<Winter> {
                       },
                       child: new AlertDialog(
                         title: new Text(
-                          "정답",
+                          "스페셜미션",
                           style: TextStyle(
                             fontSize: 15.0,
                             fontWeight: FontWeight.w900,
                             fontFamily: 'Noto',
                           ),
                         ),
-                        content: Container(
-                          height: 130,
+                        content: SingleChildScrollView(
                           child: Column(
                             children: [
                               Text(
-                                '아래에 정답을 입력해주세요.\n(입력 기회 : $tryTime/2)',
+                                '문제 : $question',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                  fontFamily: 'Noto',
+                                ),
+                              ),
+                              Text(
+                                '(입력 기회 : $tryTime/2)',
                                 style: TextStyle(
                                   fontSize: 15.0,
                                   fontWeight: FontWeight.w500,
@@ -271,6 +285,57 @@ class _Winter extends State<Winter> {
             fontSize: 16.0);
       }
     }
+  }
+
+  getQTCount() async {
+    print(VarData().getId());
+    var url = Uri.parse(
+        'https://www.official-emmaus.com/g5/bbs/emmaus_winter_qt.php');
+    var result = await http.post(url, body: {
+      "mb_id": VarData().getId(),
+    });
+    print(result.body);
+    Map<String, dynamic> body = json.decode(result.body);
+    setState(() {
+      int count = int.parse(body['count'].toString());
+      progressValue = (count / 24);
+      print("count : $count / progressValue : $progressValue");
+      if (progressValue < 0.4) {
+        progressColor = Colors.red[300];
+      } else if (progressValue < 0.7) {
+        progressColor = Colors.orange[300];
+      } else {
+        progressColor = Colors.green[300];
+      }
+    });
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+      upperBound: progressValue,
+    )..addListener(() {
+        setState(() {});
+      });
+    controller.forward();
+  }
+
+  getQuestion() async {
+    String date = DateFormat("MMdd").format(DateTime.now()).toString();
+    print(date);
+    var url = Uri.parse(
+        'https://www.official-emmaus.com/g5/bbs/emmaus_fre_question.php');
+    var result = await http.post(url, body: {
+      "date": date,
+    });
+    print(result.body);
+    Map<String, dynamic> body = json.decode(result.body);
+    question = body['question'];
+  }
+
+  @override
+  void initState() {
+    getQuestion();
+    getQTCount();
+    super.initState();
   }
 
   @override
@@ -387,14 +452,15 @@ class _Winter extends State<Winter> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           child: LinearProgressIndicator(
-                            value: 0.45,
+                            value: controller == null ? 0 : controller.value,
+                            color: progressColor,
                             backgroundColor: Colors.grey,
                           ),
                         ),
                       ),
                       Expanded(
                         flex: 2,
-                        child: VarData().checkESuccess(),
+                        child: VarData().checkQt((progressValue * 100).toInt()),
                       ),
                       Divider(
                         color: Colors.white,
@@ -416,7 +482,7 @@ class _Winter extends State<Winter> {
                                           fit: BoxFit.fitWidth,
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: VarData().getData(0),
+                                            child: VarData().getData(0, false),
                                           ))),
                                   Expanded(
                                       flex: 2,
@@ -424,7 +490,7 @@ class _Winter extends State<Winter> {
                                           fit: BoxFit.fitHeight,
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: VarData().getData(1),
+                                            child: VarData().getData(1, false),
                                           ))),
                                   Expanded(
                                       flex: 2,
@@ -432,7 +498,7 @@ class _Winter extends State<Winter> {
                                           fit: BoxFit.fitHeight,
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: VarData().getData(2),
+                                            child: VarData().getData(2, false),
                                           ))),
                                   Expanded(
                                     flex: 1,
@@ -449,7 +515,7 @@ class _Winter extends State<Winter> {
                                         fit: BoxFit.fitHeight,
                                         child: Padding(
                                           padding: const EdgeInsets.all(16.0),
-                                          child: VarData().getData(3),
+                                          child: VarData().getData(3, false),
                                         )),
                                   ),
                                   Expanded(
@@ -457,14 +523,14 @@ class _Winter extends State<Winter> {
                                           fit: BoxFit.fitHeight,
                                           child: Padding(
                                             padding: const EdgeInsets.all(16.0),
-                                            child: VarData().getData(4),
+                                            child: VarData().getData(4, false),
                                           ))),
                                   Expanded(
                                       child: FittedBox(
                                           fit: BoxFit.fitHeight,
                                           child: Padding(
                                             padding: const EdgeInsets.all(16.0),
-                                            child: VarData().getData(5),
+                                            child: VarData().getData(5, false),
                                           ))),
                                 ],
                               ),
@@ -477,21 +543,21 @@ class _Winter extends State<Winter> {
                                           fit: BoxFit.fitHeight,
                                           child: Padding(
                                             padding: const EdgeInsets.all(16.0),
-                                            child: VarData().getData(6),
+                                            child: VarData().getData(6, false),
                                           ))),
                                   Expanded(
                                       child: FittedBox(
                                           fit: BoxFit.fitHeight,
                                           child: Padding(
                                             padding: const EdgeInsets.all(16.0),
-                                            child: VarData().getData(7),
+                                            child: VarData().getData(7, false),
                                           ))),
                                   Expanded(
                                       child: FittedBox(
                                     fit: BoxFit.fitHeight,
                                     child: Padding(
                                       padding: const EdgeInsets.all(16.0),
-                                      child: VarData().getData(8),
+                                      child: VarData().getData(8, false),
                                     ),
                                   )),
                                 ],

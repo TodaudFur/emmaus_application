@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:emmaus/constants.dart';
@@ -12,6 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class Creeds extends StatefulWidget {
   Creeds(this.title);
@@ -39,6 +41,16 @@ class _CreedsState extends State<Creeds> {
       "성령을 믿사오며\n거룩한 공회와 성도가\n서로 교통하는 것과\n"
       "죄를 사하여 주시는 것과\n몸이 다시 사는 것과\n영원히 사는 것을 믿사옵나이다. 아멘\n";
 
+  String pray = "";
+
+  @override
+  void initState() {
+    if (widget.title == "대표기도" || widget.title == "헌금기도") {
+      getPray(widget.title);
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +67,11 @@ class _CreedsState extends State<Creeds> {
             child: Stack(
               children: [
                 Text(
-                  widget.title == "주기도문" ? lord : apostle,
+                  widget.title == "주기도문"
+                      ? lord
+                      : widget.title == "사도신경"
+                          ? apostle
+                          : pray,
                   style: TextStyle(fontFamily: 'Noto', fontSize: 20),
                   textAlign: TextAlign.left,
                 ),
@@ -65,7 +81,9 @@ class _CreedsState extends State<Creeds> {
                     child: Text(
                       widget.title == "주기도문"
                           ? "Lord's\nPrayer"
-                          : "Apostle's\nCreed",
+                          : widget.title == "사도신경"
+                              ? "Apostle's\nCreed"
+                              : "Prayer",
                       style: TextStyle(
                           fontSize: 70, color: Colors.black.withOpacity(0.07)),
                     )),
@@ -73,5 +91,19 @@ class _CreedsState extends State<Creeds> {
             )),
       ),
     );
+  }
+
+  Future getPray(String isPray) async {
+    var url = Uri.parse('https://www.official-emmaus.com/emmaus_pray.php');
+    var result = await http.post(
+      url,
+      body: {
+        "pray": isPray,
+      },
+    );
+    print(result.body);
+    setState(() {
+      pray = result.body;
+    });
   }
 }

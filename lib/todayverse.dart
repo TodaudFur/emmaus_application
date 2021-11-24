@@ -34,12 +34,14 @@ class _TodayVerseState extends State<TodayVerse> {
 
   @override
   void initState() {
+    VerseData().renew();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    _reloadVerse();
+    //_reloadVerse();
+
     return SafeArea(
       child: Column(
         children: [

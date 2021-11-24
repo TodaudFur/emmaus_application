@@ -112,7 +112,7 @@ class _Contents extends State<Contents> {
           fontSize: 16.0);
     } else {
       if (VarData().isLogin()) {
-        if (VarData().getNormal() == 6) {
+        if (VarData().getNormal(true) == 6) {
           Fluttertoast.showToast(
               msg: "예배 출석을 모두 성공하셨습니다!",
               toastLength: Toast.LENGTH_SHORT,
@@ -125,7 +125,7 @@ class _Contents extends State<Contents> {
               if (nowTime <= 1700 && nowTime >= 1400) {
                 setState(() {
                   check = true;
-                  VarData().setNormal();
+                  VarData().setNormal(true);
                   VarData().insertFre();
                 });
               }
@@ -134,7 +134,7 @@ class _Contents extends State<Contents> {
               if (nowTime <= 2359 && nowTime >= 2100) {
                 setState(() {
                   check = true;
-                  VarData().setNormal();
+                  VarData().setNormal(true);
                   VarData().insertFre();
                 });
               }
@@ -180,7 +180,7 @@ class _Contents extends State<Contents> {
           fontSize: 16.0);
     } else {
       if (VarData().isLogin()) {
-        if (VarData().getSpecial() == 3) {
+        if (VarData().getSpecial(true) == 3) {
           Fluttertoast.showToast(
               msg: "미션을 모두 성공하셨습니다!",
               toastLength: Toast.LENGTH_SHORT,
@@ -404,7 +404,7 @@ class _Contents extends State<Contents> {
                                           fit: BoxFit.fitWidth,
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: VarData().getData(0),
+                                            child: VarData().getData(0, true),
                                           ))),
                                   Expanded(
                                       flex: 2,
@@ -412,7 +412,7 @@ class _Contents extends State<Contents> {
                                           fit: BoxFit.fitHeight,
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: VarData().getData(1),
+                                            child: VarData().getData(1, true),
                                           ))),
                                   Expanded(
                                       flex: 2,
@@ -420,7 +420,7 @@ class _Contents extends State<Contents> {
                                           fit: BoxFit.fitHeight,
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: VarData().getData(2),
+                                            child: VarData().getData(2, true),
                                           ))),
                                   Expanded(
                                     flex: 1,
@@ -437,7 +437,7 @@ class _Contents extends State<Contents> {
                                         fit: BoxFit.fitHeight,
                                         child: Padding(
                                           padding: const EdgeInsets.all(16.0),
-                                          child: VarData().getData(3),
+                                          child: VarData().getData(3, true),
                                         )),
                                   ),
                                   Expanded(
@@ -445,14 +445,14 @@ class _Contents extends State<Contents> {
                                           fit: BoxFit.fitHeight,
                                           child: Padding(
                                             padding: const EdgeInsets.all(16.0),
-                                            child: VarData().getData(4),
+                                            child: VarData().getData(4, true),
                                           ))),
                                   Expanded(
                                       child: FittedBox(
                                           fit: BoxFit.fitHeight,
                                           child: Padding(
                                             padding: const EdgeInsets.all(16.0),
-                                            child: VarData().getData(5),
+                                            child: VarData().getData(5, true),
                                           ))),
                                 ],
                               ),
@@ -465,21 +465,21 @@ class _Contents extends State<Contents> {
                                           fit: BoxFit.fitHeight,
                                           child: Padding(
                                             padding: const EdgeInsets.all(16.0),
-                                            child: VarData().getData(6),
+                                            child: VarData().getData(6, true),
                                           ))),
                                   Expanded(
                                       child: FittedBox(
                                           fit: BoxFit.fitHeight,
                                           child: Padding(
                                             padding: const EdgeInsets.all(16.0),
-                                            child: VarData().getData(7),
+                                            child: VarData().getData(7, true),
                                           ))),
                                   Expanded(
                                       child: FittedBox(
                                     fit: BoxFit.fitHeight,
                                     child: Padding(
                                       padding: const EdgeInsets.all(16.0),
-                                      child: VarData().getData(8),
+                                      child: VarData().getData(8, true),
                                     ),
                                   )),
                                 ],

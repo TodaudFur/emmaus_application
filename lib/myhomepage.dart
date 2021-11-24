@@ -28,7 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Home(),
     Bulletin(),
     Text(
-      'MADE BY 404',
+      'Oops!\nMADE BY 404',
       style: TextStyle(
         color: Colors.black26,
         fontSize: 50,

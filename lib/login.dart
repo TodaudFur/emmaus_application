@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'find.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -91,20 +93,53 @@ class _LoginPageState extends State<LoginPage> {
                             color: Colors.white,
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Switch(
-                                  value: autoLogin,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      autoLogin = value;
-                                    });
-                                  }),
-                              Text(
-                                "자동로그인",
-                                style: TextStyle(
-                                  fontFamily: 'Noto',
-                                  fontWeight: FontWeight.w500,
-                                ),
+                              Row(
+                                children: [
+                                  Switch(
+                                      value: autoLogin,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          autoLogin = value;
+                                        });
+                                      }),
+                                  Text(
+                                    "자동로그인",
+                                    style: TextStyle(
+                                      fontFamily: 'Noto',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (_) {
+                                        return Find("id");
+                                      }));
+                                    },
+                                    child: Text("아이디 찾기"),
+                                    style: TextButton.styleFrom(
+                                      primary: Colors.black,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (_) {
+                                        return Find("pwd");
+                                      }));
+                                    },
+                                    child: Text("비밀번호 초기화"),
+                                    style: TextButton.styleFrom(
+                                      primary: Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
