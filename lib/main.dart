@@ -1,19 +1,21 @@
 import 'dart:io';
 
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:emmaus/vardata.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import 'constants.dart';
-import 'myhomepage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
+import 'constants.dart';
+import 'myhomepage.dart';
 
 Future onSelectNotification(String payload) async {
   const url = 'https://youtube.com/channel/UChKWnwNuFsgzZ1pIwVnPCvA';
@@ -124,12 +126,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     autoLogin();
-    VarData().getNews();
+    // VarData().getNews();
     VarData().showBulletin();
     VarData().getHomeImage();
 
     if (routeFromMessage != "") {}
-    return MaterialApp(
+    return GetMaterialApp(
         title: 'Emmaus',
         theme: ThemeData(
           primaryColor: kBodyColor,

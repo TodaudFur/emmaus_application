@@ -1,16 +1,14 @@
 import 'dart:convert';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:emmaus/ereward.dart';
-import 'package:emmaus/home.dart';
+
 import 'package:emmaus/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'constants.dart';
-import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'constants.dart';
 
 List<String> imgList = [];
 List<String> homeList = [];
@@ -31,7 +29,7 @@ String _first = "False";
 bool _isCheck = false;
 
 List<dynamic> news = [""];
-int newsNum = 0;
+// int newsNum = 0;
 
 String bulletinDate = "";
 int bulletinNum = 0;
@@ -227,7 +225,44 @@ class VarData {
     return isFirst ? _iconList[i] : _dynamicIconList[i];
   }
 
+  getWinter() async {
+    print(_id);
+    var url = Uri.parse(
+        'https://www.official-emmaus.com/g5/bbs/emmaus_winter_fre_init.php');
+    var result = await http.post(url, body: {"mb_id": _id});
+
+    print("getQt");
+    print(result.body);
+
+    Map<String, dynamic> body = json.decode(result.body);
+
+    _dynamicSpecialNum = int.parse(body['special']);
+    _dynamicNormalNum = int.parse(body['normal']);
+
+    for (int i = 0; i < 3; i++) {
+      if (i < _dynamicSpecialNum)
+        _dynamicIconList[i] = kTrueSpecial;
+      else
+        _dynamicIconList[i] = kFalseSpecial;
+    }
+    for (int i = 3; i < 9; i++) {
+      if (i < _dynamicNormalNum)
+        _dynamicIconList[i] = kTrueNormal;
+      else
+        _dynamicIconList[i] = kFalseNormal;
+    }
+  }
+
   ////////////////////////////////////e-frequency
+
+  Future sendQuestion(String content) async {
+    var url =
+        Uri.parse('https://www.official-emmaus.com/g5/bbs/emmaus_question.php');
+    var result = await http.post(url, body: {
+      "content": content,
+    });
+    return result.body;
+  }
 
   getEventFile() => _eventFile;
   getEventName() => _eventName;
@@ -288,13 +323,16 @@ class VarData {
   }
 
   getHomeImage() async {
-    var url =
-        Uri.parse('https://www.official-emmaus.com/emmaus_news_count.php');
+    var url = Uri.parse(
+        'https://www.official-emmaus.com/g5/bbs/emmaus_news_init.php');
     var result = await http.post(url);
     print("count : ${result.body}");
-    int count = int.parse(result.body);
+    Map<String, dynamic> body = json.decode(result.body);
+
+    String name = body['name'];
+    int count = int.parse(body['count']);
     for (int i = 1; i < count; i++) {
-      String url = "https://www.official-emmaus.com/news/00$i.png";
+      String url = "https://www.official-emmaus.com/g5/bbs/news/${name}_$i.png";
 
       homeList.add(url);
     }
@@ -313,9 +351,9 @@ class VarData {
     return true;
   }
 
-  List<dynamic> getNewsContents() {
-    return news;
-  }
+  // List<dynamic> getNewsContents() {
+  //   return news;
+  // }
 
   String getBulletinDate() {
     return bulletinDate;
@@ -407,63 +445,51 @@ class VarData {
     return _name;
   }
 
-  getNews() async {
-    var url = Uri.parse(
-        'https://www.official-emmaus.com/g5/bbs/emmaus_news_json.php');
-    var result = await http.post(url, body: {});
-
-    print(result.body);
-
-    Map<String, dynamic> body = json.decode(result.body);
-
-    news = body['contents'];
-  }
-
-  Widget getContent() {
-    if (_isLogin) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: Icon(FontAwesomeIcons.angleDoubleLeft),
-                  onPressed: () {
-                    if (newsNum > 0) {
-                      newsNum--;
-                    }
-                  },
-                ),
-                FittedBox(
-                  fit: BoxFit.fitHeight,
-                  child: Text(
-                    news[newsNum],
-                    style: TextStyle(
-                      fontFamily: 'Noto',
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(FontAwesomeIcons.angleDoubleRight),
-                  onPressed: () {
-                    if (newsNum < news.length - 1) {
-                      newsNum++;
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-        ],
-      );
-    } else {
-      return LoginWidget();
-    }
-  }
+  // Widget getContent() {
+  //   if (_isLogin) {
+  //     return Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Expanded(
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             crossAxisAlignment: CrossAxisAlignment.center,
+  //             children: [
+  //               IconButton(
+  //                 icon: Icon(FontAwesomeIcons.angleDoubleLeft),
+  //                 onPressed: () {
+  //                   if (newsNum > 0) {
+  //                     newsNum--;
+  //                   }
+  //                 },
+  //               ),
+  //               FittedBox(
+  //                 fit: BoxFit.fitHeight,
+  //                 child: Text(
+  //                   news[newsNum],
+  //                   style: TextStyle(
+  //                     fontFamily: 'Noto',
+  //                     fontWeight: FontWeight.w700,
+  //                   ),
+  //                 ),
+  //               ),
+  //               IconButton(
+  //                 icon: Icon(FontAwesomeIcons.angleDoubleRight),
+  //                 onPressed: () {
+  //                   if (newsNum < news.length - 1) {
+  //                     newsNum++;
+  //                   }
+  //                 },
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     );
+  //   } else {
+  //     return LoginWidget();
+  //   }
+  // }
 
   Widget getSetting(Function onpress) {
     if (_isLogin) {

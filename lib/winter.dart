@@ -4,14 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'vardata.dart';
-import 'constants.dart';
-import 'homebgcolor.dart';
-import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:http/http.dart' as http;
+import 'homebgcolor.dart';
+import 'vardata.dart';
 
 class Winter extends StatefulWidget {
   @override
@@ -25,6 +24,8 @@ class _Winter extends State<Winter> with TickerProviderStateMixin {
   Color progressColor = Colors.red[300];
   AnimationController controller;
   String question = "";
+  int special = 0;
+  int normal = 0;
 
   _getTryTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -136,8 +137,17 @@ class _Winter extends State<Winter> with TickerProviderStateMixin {
                 });
               }
               if (check) await prefs.setString('mDateKeyWinter', toDayDate);
-            } else if (nowDay == "Friday") {
+            } else if (nowDay == "Friday" && toDayDate != "1224") {
               if (nowTime <= 2359 && nowTime >= 2100) {
+                setState(() {
+                  check = true;
+                  VarData().setNormal(false);
+                  VarData().insertFre();
+                });
+              }
+              if (check) await prefs.setString('mDateKeyWinter', toDayDate);
+            } else if (nowDay == "Saturday" && toDayDate == "1225") {
+              if (nowTime <= 1300 && nowTime >= 0700) {
                 setState(() {
                   check = true;
                   VarData().setNormal(false);
@@ -335,6 +345,7 @@ class _Winter extends State<Winter> with TickerProviderStateMixin {
   void initState() {
     getQuestion();
     getQTCount();
+    VarData().getWinter();
     super.initState();
   }
 

@@ -1,18 +1,9 @@
-import 'dart:convert';
-import 'dart:typed_data';
 import 'dart:ui';
+
 import 'package:emmaus/constants.dart';
-import 'package:emmaus/vardata.dart';
-import 'package:emmaus/versedata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:screenshot/screenshot.dart';
-// import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class Creeds extends StatefulWidget {
@@ -61,34 +52,38 @@ class _CreedsState extends State<Creeds> {
         title: Text(widget.title),
       ),
       body: SafeArea(
-        child: Container(
-            padding: EdgeInsets.all(30.0),
-            color: kBodyColor,
-            child: Stack(
-              children: [
-                Text(
-                  widget.title == "주기도문"
-                      ? lord
-                      : widget.title == "사도신경"
-                          ? apostle
-                          : pray,
-                  style: TextStyle(fontFamily: 'Noto', fontSize: 20),
-                  textAlign: TextAlign.left,
-                ),
-                Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Text(
-                      widget.title == "주기도문"
-                          ? "Lord's\nPrayer"
-                          : widget.title == "사도신경"
-                              ? "Apostle's\nCreed"
-                              : "Prayer",
-                      style: TextStyle(
-                          fontSize: 70, color: Colors.black.withOpacity(0.07)),
-                    )),
-              ],
-            )),
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Container(
+              padding: EdgeInsets.all(30.0),
+              color: kBodyColor,
+              child: Stack(
+                children: [
+                  Text(
+                    widget.title == "주기도문"
+                        ? lord
+                        : widget.title == "사도신경"
+                            ? apostle
+                            : pray,
+                    style: TextStyle(fontFamily: 'Noto', fontSize: 20),
+                    textAlign: TextAlign.left,
+                  ),
+                  Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Text(
+                        widget.title == "주기도문"
+                            ? "Lord's\nPrayer"
+                            : widget.title == "사도신경"
+                                ? "Apostle's\nCreed"
+                                : "Prayer",
+                        style: TextStyle(
+                            fontSize: 70,
+                            color: Colors.black.withOpacity(0.07)),
+                      )),
+                ],
+              )),
+        ),
       ),
     );
   }

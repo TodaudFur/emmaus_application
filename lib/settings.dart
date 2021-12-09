@@ -1,18 +1,16 @@
-import 'package:emmaus/bulletin.dart';
 import 'package:emmaus/constants.dart';
 import 'package:emmaus/contents.dart';
 import 'package:emmaus/game.dart';
 import 'package:emmaus/qtall.dart';
 import 'package:emmaus/vardata.dart';
-import 'package:emmaus/versedata.dart';
+import 'package:emmaus/winter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
+import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'emmaus.dart';
 
@@ -31,7 +29,7 @@ class _SettingsState extends State<Settings> {
         child: Column(
           children: [
             Expanded(
-              flex: 6,
+              flex: 5,
               child: Container(
                 alignment: Alignment.center,
                 width: double.infinity,
@@ -163,6 +161,7 @@ class _SettingsState extends State<Settings> {
                                 ));
                       });
                     }),
+
                     /*Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -238,11 +237,28 @@ class _SettingsState extends State<Settings> {
                           Expanded(
                             child: FlatButton(
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Contents()),
-                                );
+                                Get.defaultDialog(
+                                    title: "e=프리퀀시",
+                                    content: Column(
+                                      children: [
+                                        ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              primary: kSelectColor,
+                                            ),
+                                            onPressed: () {
+                                              Get.to(Contents());
+                                            },
+                                            child: Text("2021 하계")),
+                                        ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              primary: kSelectColor,
+                                            ),
+                                            onPressed: () {
+                                              Get.to(Winter());
+                                            },
+                                            child: Text("2021 동계")),
+                                      ],
+                                    ));
                               },
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -374,6 +390,93 @@ class _SettingsState extends State<Settings> {
                               ],
                             ),
                           )),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(),
+                          ),
+                          Expanded(
+                              child: FlatButton(
+                            onPressed: () {
+                              TextEditingController controller =
+                                  TextEditingController();
+                              Get.defaultDialog(
+                                title: "문의하기",
+                                content: Column(
+                                  children: [
+                                    Text(
+                                      "버그나 수정사항 또는 개선사항을 자유롭게 적어주세요",
+                                      style: TextStyle(
+                                        fontFamily: "Noto",
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: kBodyColor,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        padding: EdgeInsets.all(10),
+                                        child: TextField(
+                                          decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                              hintStyle:
+                                                  TextStyle(fontSize: 12),
+                                              hintText: "여기에 입력해주세요"),
+                                          controller: controller,
+                                          maxLines: 8,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                confirm: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: kSelectColor,
+                                    ),
+                                    onPressed: () {
+                                      VarData()
+                                          .sendQuestion(controller.text)
+                                          .then((value) {
+                                        if (value == "true") {
+                                          Get.back();
+                                          Get.snackbar(
+                                              "성공", "문의가 성공적으로 전송되었습니다");
+                                        }
+                                      });
+                                    },
+                                    child: Text("전송")),
+                              );
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  CupertinoIcons.speaker_3,
+                                  size: 40.0,
+                                ),
+                                Text(
+                                  '문의하기',
+                                  style: TextStyle(
+                                    fontFamily: 'Noto',
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 15.0,
+                                  ),
+                                )
+                              ],
+                            ),
+                          )),
+                          Expanded(child: Container()),
                         ],
                       ),
                     ),
