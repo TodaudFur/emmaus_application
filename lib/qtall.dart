@@ -52,27 +52,36 @@ class _QtAllState extends State<QtAll> {
                   ? Container(
                       child: Text("큐티 기록 없음"),
                     )
-                  : GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                        childAspectRatio: 3 / 2,
-                        crossAxisSpacing: 4,
-                        mainAxisSpacing: 40,
-                        maxCrossAxisExtent: 100,
-                      ),
-                      itemCount: list.length,
-                      itemBuilder: (BuildContext ctx, index) {
-                        String s =
-                            "${list[index].toString().substring(4, 6)}/${list[index].toString().substring(6, 8)}";
-
-                        return CircleAvatar(
-                          radius: MediaQuery.of(context).size.width / 2,
-                          child: Text(
-                            "$s\n큐티출석 완료!",
-                            textAlign: TextAlign.center,
+                  : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                            childAspectRatio: 3 / 2,
+                            crossAxisSpacing: 4,
+                            mainAxisSpacing: 40,
+                            maxCrossAxisExtent: 100,
                           ),
-                        );
-                      }),
+                          itemCount: list.length,
+                          itemBuilder: (BuildContext ctx, index) {
+                            String s =
+                                "${list[index].toString().substring(4, 6)}/${list[index].toString().substring(6, 8)}";
+
+                            return Container(
+                              decoration: BoxDecoration(
+                                  color: kSelectColor.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(15)),
+                              alignment: Alignment.center,
+                              child: Text(
+                                "$s\n큐티출석 완료!",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            );
+                          }),
+                    ),
             ),
           ],
         ),
