@@ -118,37 +118,30 @@ class VarData {
   }
 
   Widget checkQt(int progress) {
-    if (_dynamicSpecialNum == 3 && _dynamicNormalNum == 9) {
-      return FittedBox(
-        fit: BoxFit.fitHeight,
-        child: ChooseReward(),
-      );
-    } else {
-      return Row(
-        children: [
-          Expanded(
-            child: Container(),
-          ),
-          Expanded(
-            flex: 2,
-            child: FittedBox(
-              fit: BoxFit.fitWidth,
-              child: Text(
-                "오늘의 큐티 출석 현황 $progress%",
-                style: TextStyle(
-                  fontFamily: 'Noto',
-                  fontWeight: FontWeight.w900,
-                ),
-                textAlign: TextAlign.center,
+    return Row(
+      children: [
+        Expanded(
+          child: Container(),
+        ),
+        Expanded(
+          flex: 2,
+          child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text(
+              "오늘의 큐티 출석 현황 $progress%",
+              style: TextStyle(
+                fontFamily: 'Noto',
+                fontWeight: FontWeight.w900,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
-          Expanded(
-            child: Container(),
-          ),
-        ],
-      );
-    }
+        ),
+        Expanded(
+          child: Container(),
+        ),
+      ],
+    );
   }
 
   void setNormal(bool isFirst) {
@@ -237,7 +230,7 @@ class VarData {
     Map<String, dynamic> body = json.decode(result.body);
 
     _dynamicSpecialNum = int.parse(body['special']);
-    _dynamicNormalNum = int.parse(body['normal']);
+    _dynamicNormalNum = int.parse(body['normal']) + 3;
 
     for (int i = 0; i < 3; i++) {
       if (i < _dynamicSpecialNum)
@@ -254,6 +247,59 @@ class VarData {
   }
 
   ////////////////////////////////////e-frequency
+
+  Future<bool> setBible() async {
+    var url =
+        Uri.parse('https://www.official-emmaus.com/g5/bbs/emmaus_bible.php');
+    var result = await http.post(url, body: {"mb_id": _id});
+
+    if (result.body != "false") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<List<String>> getBible() async {
+    if (DateTime.now().year == 2022) {
+      var url = Uri.parse(
+          'https://www.official-emmaus.com/g5/bbs/emmaus_bible_init.php');
+      var result = await http.post(url, body: {"mb_id": _id});
+
+      print(result.body);
+      if (result.body == null) {
+        return ["통독", null];
+      }
+      Map<String, dynamic> body = json.decode(result.body);
+      var chapter = body['chapter'];
+      var count = body['count'];
+      String bible = chapter + count;
+
+      return [bible, body['id']];
+    } else {
+      return [
+        "D${(DateTime.now().difference(DateTime(2022, 01, 01)).inHours / 24).round()}",
+        null
+      ];
+    }
+  }
+
+  Future<Map<String, List<dynamic>>> getAllBible() async {
+    var url = Uri.parse(
+        'https://www.official-emmaus.com/g5/bbs/emmaus_bible_all_init.php');
+    print(_id);
+    var result = await http.post(url, body: {"mb_id": _id});
+
+    print(result.body);
+    Map<String, dynamic> body = json.decode(result.body);
+
+    return {
+      "date": body['date'],
+      "chapter": body['chapter'],
+      "count": body['count'],
+      "isCheck": body['isCheck']
+    };
+  }
 
   Future sendQuestion(String content) async {
     var url =
@@ -331,7 +377,7 @@ class VarData {
 
     String name = body['name'];
     int count = int.parse(body['count']);
-    for (int i = 1; i < count; i++) {
+    for (int i = 0; i < count; i++) {
       String url = "https://www.official-emmaus.com/g5/bbs/news/${name}_$i.png";
 
       homeList.add(url);

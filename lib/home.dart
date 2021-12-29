@@ -1,31 +1,25 @@
-import 'dart:convert';
 import 'dart:io';
-import 'package:animate_do/animate_do.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:emmaus/contents.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:emmaus/bible_all.dart';
 import 'package:emmaus/qtall.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:package_info/package_info.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:shake/shake.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import 'constants.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'constants.dart';
 import 'creeds.dart';
 import 'homebgcolor.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-
-import 'package:intl/intl.dart';
-
 import 'winter.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -104,6 +98,8 @@ class _HomeState extends State<Home> {
   final picker = ImagePicker();
   bool isCheck = false;
   bool isOpen = false;
+  bool isTong = false;
+  String bible = "통독";
 
   int _current = 0;
   final CarouselController _controller = CarouselController();
@@ -119,6 +115,15 @@ class _HomeState extends State<Home> {
         });
       });
     }
+    VarData().getBible().then((value) {
+      print(value);
+      setState(() {
+        bible = value[0];
+        if (value[1] != null) {
+          isTong = true;
+        }
+      });
+    });
     super.initState();
   }
 
@@ -347,89 +352,202 @@ class _HomeState extends State<Home> {
             ),
             Expanded(
               flex: 2,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      spreadRadius: 0,
-                      blurRadius: 10,
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Container(),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: FittedBox(
-                          child: Text(
-                            "오늘의 큐티 출석",
-                            style: TextStyle(
-                              fontFamily: 'Noto',
-                              fontWeight: FontWeight.w700,
-                            ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            spreadRadius: 0,
+                            blurRadius: 10,
                           ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Container(),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: isTong
+                                    ? ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          primary: kSelectColor,
+                                        ),
+                                        onPressed: () {
+                                          Get.to(BibleAll());
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(2.0),
+                                          child: FittedBox(child: Text("통독현황")),
+                                        ))
+                                    : FittedBox(
+                                        child: Text(
+                                          "오늘의 통독",
+                                          style: TextStyle(
+                                            fontFamily: 'Noto',
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                              ),
+                            ),
+                            Expanded(
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: kSelectColor,
+                                    ),
+                                    onPressed: isTong
+                                        ? null
+                                        : () {
+                                            if (DateTime.now().year == 2022) {
+                                              if (VarData().getLogin()) {
+                                                Get.dialog(
+                                                    Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    ),
+                                                    barrierDismissible: false);
+                                                VarData()
+                                                    .setBible()
+                                                    .then((value) {
+                                                  if (value) {
+                                                    setState(() {
+                                                      isTong = true;
+                                                    });
+                                                    Get.back();
+                                                  } else {
+                                                    Fluttertoast.showToast(
+                                                        msg: "입력 실패",
+                                                        toastLength:
+                                                            Toast.LENGTH_SHORT,
+                                                        gravity:
+                                                            ToastGravity.BOTTOM,
+                                                        timeInSecForIosWeb: 1,
+                                                        fontSize: 16.0);
+                                                  }
+                                                });
+                                              }
+                                            }
+                                          },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: FittedBox(
+                                          child: Text(isTong ? "통독완료" : bible)),
+                                    ))),
+                            Expanded(
+                              child: Container(),
+                            ),
+                          ],
                         ),
                       ),
-                      Expanded(
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: (VarData().getCheck())
-                                    ? Colors.grey
-                                    : kSelectColor,
-                              ),
-                              onPressed: (VarData().getCheck())
-                                  ? null
-                                  : () {
-                                      if (VarData().getLogin()) {
-                                        qtCheck();
-                                        showDialog(
-                                            context: context,
-                                            builder: (_) => AlertDialog(
-                                                  backgroundColor: Colors.white
-                                                      .withOpacity(0.1),
-                                                  content: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      SizedBox(
-                                                        width: 150,
-                                                        height: 150,
-                                                        child:
-                                                            CircularProgressIndicator(),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ));
-                                      } else {
-                                        Fluttertoast.showToast(
-                                            msg: "로그인을 해주세요",
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            gravity: ToastGravity.BOTTOM,
-                                            timeInSecForIosWeb: 1,
-                                            fontSize: 16.0);
-                                      }
-                                    },
-                              child: FittedBox(
-                                  child: Text((VarData().getCheck())
-                                      ? "출석완료"
-                                      : "출석하기")))),
-                      Expanded(
-                        child: Container(),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            spreadRadius: 0,
+                            blurRadius: 10,
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Container(),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: FittedBox(
+                                  child: Text(
+                                    "오늘의 큐티 출석",
+                                    style: TextStyle(
+                                      fontFamily: 'Noto',
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: kSelectColor,
+                                    ),
+                                    onPressed: (VarData().getCheck())
+                                        ? null
+                                        : () {
+                                            if (VarData().getLogin()) {
+                                              qtCheck();
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (_) => AlertDialog(
+                                                        backgroundColor: Colors
+                                                            .white
+                                                            .withOpacity(0.1),
+                                                        content: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: <Widget>[
+                                                            SizedBox(
+                                                              width: 150,
+                                                              height: 150,
+                                                              child:
+                                                                  CircularProgressIndicator(),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ));
+                                            } else {
+                                              Fluttertoast.showToast(
+                                                  msg: "로그인을 해주세요",
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  fontSize: 16.0);
+                                            }
+                                          },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: FittedBox(
+                                          child: Text((VarData().getCheck())
+                                              ? "출석완료"
+                                              : "출석하기")),
+                                    ))),
+                            Expanded(
+                              child: Container(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Divider(
@@ -533,11 +651,8 @@ class _HomeState extends State<Home> {
                                 onPressed: () {
                                   if (eventName[index] == "WinterE") {
                                     if (int.parse(DateFormat('MMdd')
-                                                .format(DateTime.now())) >=
-                                            1205 &&
-                                        int.parse(DateFormat('MMdd')
-                                                .format(DateTime.now())) <
-                                            1225) {
+                                            .format(DateTime.now())) >=
+                                        1205) {
                                       if (VarData().getLogin()) {
                                         Navigator.push(
                                           context,

@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:emmaus/constants.dart';
+import 'package:emmaus/winter_reward.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,8 +27,265 @@ class _Winter extends State<Winter> with TickerProviderStateMixin {
   Color progressColor = Colors.red[300];
   AnimationController controller;
   String question = "";
-  int special = 0;
-  int normal = 0;
+  bool isReward = false;
+  //int special = 0;
+  //int normal = 0;
+
+  @override
+  void initState() {
+    getQuestion();
+    getQTCount();
+    VarData().getWinter();
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _getTryTime();
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          color: getColor(),
+          padding:
+              EdgeInsets.only(top: 25.0, left: 30.0, right: 30.0, bottom: 30.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: 7.0, bottom: 12.0, left: 9.0, right: 9.0),
+                  child: FittedBox(
+                    fit: BoxFit.fitHeight,
+                    child: Image.asset("images/logo_ema.png"),
+                  ),
+                ),
+              ),
+              Expanded(flex: 1, child: Container()),
+              Expanded(
+                flex: 8,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        spreadRadius: 0,
+                        blurRadius: 10,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: isReward
+                              ? ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: kSelectColor),
+                                  onPressed: () {
+                                    Get.to(WinterReward());
+                                  },
+                                  child: Text("경품선택"))
+                              : Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 4,
+                                      child: Center(
+                                        child: FlatButton(
+                                          shape: RoundedRectangleBorder(
+                                              side: BorderSide(
+                                                  color: Colors.black,
+                                                  width: 2,
+                                                  style: BorderStyle.solid),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          onPressed: _check,
+                                          child: FittedBox(
+                                            fit: BoxFit.fitHeight,
+                                            child: Text(
+                                              "스페셜미션",
+                                              style: TextStyle(
+                                                fontFamily: 'Noto',
+                                                fontWeight: FontWeight.w900,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Container(),
+                                    ),
+                                    Expanded(
+                                      flex: 4,
+                                      child: Center(
+                                        child: FlatButton(
+                                          shape: RoundedRectangleBorder(
+                                              side: BorderSide(
+                                                  color: Colors.black,
+                                                  width: 2,
+                                                  style: BorderStyle.solid),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          onPressed: _worshipCheck,
+                                          child: FittedBox(
+                                            fit: BoxFit.fitHeight,
+                                            child: Text(
+                                              "예배 출석",
+                                              style: TextStyle(
+                                                fontFamily: 'Noto',
+                                                fontWeight: FontWeight.w900,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      ),
+                      Divider(
+                        color: Colors.white,
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        width: 300,
+                        height: 20,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          child: LinearProgressIndicator(
+                            value: controller == null ? 0 : controller.value,
+                            color: progressColor,
+                            backgroundColor: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: VarData().checkQt((progressValue * 100).toInt()),
+                      ),
+                      Divider(
+                        color: Colors.white,
+                      ),
+                      Expanded(
+                        flex: 7,
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(),
+                                  ),
+                                  Expanded(
+                                      flex: 2,
+                                      child: FittedBox(
+                                          fit: BoxFit.fitWidth,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: VarData().getData(0, false),
+                                          ))),
+                                  Expanded(
+                                      flex: 2,
+                                      child: FittedBox(
+                                          fit: BoxFit.fitHeight,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: VarData().getData(1, false),
+                                          ))),
+                                  Expanded(
+                                      flex: 2,
+                                      child: FittedBox(
+                                          fit: BoxFit.fitHeight,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: VarData().getData(2, false),
+                                          ))),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: FittedBox(
+                                        fit: BoxFit.fitHeight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: VarData().getData(3, false),
+                                        )),
+                                  ),
+                                  Expanded(
+                                      child: FittedBox(
+                                          fit: BoxFit.fitHeight,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: VarData().getData(4, false),
+                                          ))),
+                                  Expanded(
+                                      child: FittedBox(
+                                          fit: BoxFit.fitHeight,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: VarData().getData(5, false),
+                                          ))),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      child: FittedBox(
+                                          fit: BoxFit.fitHeight,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: VarData().getData(6, false),
+                                          ))),
+                                  Expanded(
+                                      child: FittedBox(
+                                          fit: BoxFit.fitHeight,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: VarData().getData(7, false),
+                                          ))),
+                                  Expanded(
+                                      child: FittedBox(
+                                    fit: BoxFit.fitHeight,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: VarData().getData(8, false),
+                                    ),
+                                  )),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   _getTryTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -317,7 +577,13 @@ class _Winter extends State<Winter> with TickerProviderStateMixin {
       } else {
         progressColor = Colors.green[300];
       }
+      if (VarData().getSpecial(false) == 3 &&
+          VarData().getNormal(false) == 6 &&
+          (progressValue * 100) >= 70) {
+        isReward = true;
+      }
     });
+
     controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
@@ -339,252 +605,5 @@ class _Winter extends State<Winter> with TickerProviderStateMixin {
     print(result.body);
     Map<String, dynamic> body = json.decode(result.body);
     question = body['question'];
-  }
-
-  @override
-  void initState() {
-    getQuestion();
-    getQTCount();
-    VarData().getWinter();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _getTryTime();
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          color: getColor(),
-          padding:
-              EdgeInsets.only(top: 25.0, left: 30.0, right: 30.0, bottom: 30.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 7.0, bottom: 12.0, left: 9.0, right: 9.0),
-                  child: FittedBox(
-                    fit: BoxFit.fitHeight,
-                    child: Image.asset("images/logo_ema.png"),
-                  ),
-                ),
-              ),
-              Expanded(flex: 1, child: Container()),
-              Expanded(
-                flex: 8,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        spreadRadius: 0,
-                        blurRadius: 10,
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          alignment: Alignment.center,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 4,
-                                child: Center(
-                                  child: FlatButton(
-                                    shape: RoundedRectangleBorder(
-                                        side: BorderSide(
-                                            color: Colors.black,
-                                            width: 2,
-                                            style: BorderStyle.solid),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    onPressed: _check,
-                                    child: FittedBox(
-                                      fit: BoxFit.fitHeight,
-                                      child: Text(
-                                        "스페셜미션",
-                                        style: TextStyle(
-                                          fontFamily: 'Noto',
-                                          fontWeight: FontWeight.w900,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Container(),
-                              ),
-                              Expanded(
-                                flex: 4,
-                                child: Center(
-                                  child: FlatButton(
-                                    shape: RoundedRectangleBorder(
-                                        side: BorderSide(
-                                            color: Colors.black,
-                                            width: 2,
-                                            style: BorderStyle.solid),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    onPressed: _worshipCheck,
-                                    child: FittedBox(
-                                      fit: BoxFit.fitHeight,
-                                      child: Text(
-                                        "예배 출석",
-                                        style: TextStyle(
-                                          fontFamily: 'Noto',
-                                          fontWeight: FontWeight.w900,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Divider(
-                        color: Colors.white,
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 5),
-                        width: 300,
-                        height: 20,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          child: LinearProgressIndicator(
-                            value: controller == null ? 0 : controller.value,
-                            color: progressColor,
-                            backgroundColor: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: VarData().checkQt((progressValue * 100).toInt()),
-                      ),
-                      Divider(
-                        color: Colors.white,
-                      ),
-                      Expanded(
-                        flex: 7,
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(),
-                                  ),
-                                  Expanded(
-                                      flex: 2,
-                                      child: FittedBox(
-                                          fit: BoxFit.fitWidth,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: VarData().getData(0, false),
-                                          ))),
-                                  Expanded(
-                                      flex: 2,
-                                      child: FittedBox(
-                                          fit: BoxFit.fitHeight,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: VarData().getData(1, false),
-                                          ))),
-                                  Expanded(
-                                      flex: 2,
-                                      child: FittedBox(
-                                          fit: BoxFit.fitHeight,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: VarData().getData(2, false),
-                                          ))),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: FittedBox(
-                                        fit: BoxFit.fitHeight,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: VarData().getData(3, false),
-                                        )),
-                                  ),
-                                  Expanded(
-                                      child: FittedBox(
-                                          fit: BoxFit.fitHeight,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: VarData().getData(4, false),
-                                          ))),
-                                  Expanded(
-                                      child: FittedBox(
-                                          fit: BoxFit.fitHeight,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: VarData().getData(5, false),
-                                          ))),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                      child: FittedBox(
-                                          fit: BoxFit.fitHeight,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: VarData().getData(6, false),
-                                          ))),
-                                  Expanded(
-                                      child: FittedBox(
-                                          fit: BoxFit.fitHeight,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: VarData().getData(7, false),
-                                          ))),
-                                  Expanded(
-                                      child: FittedBox(
-                                    fit: BoxFit.fitHeight,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: VarData().getData(8, false),
-                                    ),
-                                  )),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

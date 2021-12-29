@@ -254,7 +254,8 @@ class _SettingsState extends State<Settings> {
                                               primary: kSelectColor,
                                             ),
                                             onPressed: () {
-                                              Get.to(Winter());
+                                              if (VarData().getLogin())
+                                                Get.to(Winter());
                                             },
                                             child: Text("2021 동계")),
                                       ],
