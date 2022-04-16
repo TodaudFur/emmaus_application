@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:emmaus/bulletin.dart';
-import 'package:emmaus/contents.dart';
-import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,8 +8,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shake/shake.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import 'constants.dart';
 import 'home.dart';
 import 'settings.dart';
@@ -38,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Settings(),
   ];
 
-  File _image;
+  late File _image;
   final picker = ImagePicker();
   bool isOpen = false;
 
@@ -87,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             }
                           });
 
-                          imageCache.clear();
+                          imageCache?.clear();
                           final File newImage =
                               await _image.copy('$path/qrcode.png');
 
@@ -207,8 +205,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     shape: BoxShape.circle,
                     color: kSelectColor),
                 child: Center(
-                  child: new Tab(
-                      icon: new Image.asset(
+                  child: Tab(
+                      icon: Image.asset(
                     "images/logo_em_3.png",
                     scale: 4.0,
                   )),

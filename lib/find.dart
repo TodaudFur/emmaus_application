@@ -18,7 +18,7 @@ class _FindState extends State<Find> {
   final nameController = TextEditingController();
   bool isLoading = true;
   bool isResult = false;
-  Widget resultValue;
+  late Widget resultValue;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

@@ -12,7 +12,7 @@ class WinterReward extends StatefulWidget {
 }
 
 class _WinterRewardState extends State<WinterReward> {
-  String reward;
+  late String reward;
   String size = "";
   final wirelessController = TextEditingController();
   final phoneController = TextEditingController();
@@ -102,7 +102,7 @@ class _WinterRewardState extends State<WinterReward> {
                                 groupValue: reward,
                                 onChanged: (value) {
                                   setState(() {
-                                    reward = value;
+                                    reward = value.toString();
                                   });
                                 },
                               ),
@@ -118,7 +118,7 @@ class _WinterRewardState extends State<WinterReward> {
                                 groupValue: reward,
                                 onChanged: (value) {
                                   setState(() {
-                                    reward = value;
+                                    reward = value.toString();
                                   });
                                 },
                               ),
@@ -134,7 +134,7 @@ class _WinterRewardState extends State<WinterReward> {
                                 groupValue: reward,
                                 onChanged: (value) {
                                   setState(() {
-                                    reward = value;
+                                    reward = value.toString();
                                   });
                                 },
                               ),
@@ -150,7 +150,7 @@ class _WinterRewardState extends State<WinterReward> {
                                 groupValue: reward,
                                 onChanged: (value) {
                                   setState(() {
-                                    reward = value;
+                                    reward = value.toString();
                                   });
                                 },
                               ),
@@ -301,7 +301,7 @@ class _WinterRewardState extends State<WinterReward> {
                     groupValue: size,
                     onChanged: (value) {
                       setState(() {
-                        size = value;
+                        size = value.toString();
                       });
                     },
                   ),
@@ -317,7 +317,7 @@ class _WinterRewardState extends State<WinterReward> {
                     groupValue: size,
                     onChanged: (value) {
                       setState(() {
-                        size = value;
+                        size = value.toString();
                       });
                     },
                   ),
@@ -333,7 +333,7 @@ class _WinterRewardState extends State<WinterReward> {
                     groupValue: size,
                     onChanged: (value) {
                       setState(() {
-                        size = value;
+                        size = value.toString();
                       });
                     },
                   ),
@@ -349,7 +349,7 @@ class _WinterRewardState extends State<WinterReward> {
                     groupValue: size,
                     onChanged: (value) {
                       setState(() {
-                        size = value;
+                        size = value.toString();
                       });
                     },
                   ),
@@ -365,7 +365,7 @@ class _WinterRewardState extends State<WinterReward> {
                     groupValue: size,
                     onChanged: (value) {
                       setState(() {
-                        size = value;
+                        size = value.toString();
                       });
                     },
                   ),

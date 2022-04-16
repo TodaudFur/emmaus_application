@@ -22,7 +22,7 @@ bool _autoLogin = false;
 
 String _id = "";
 String _name = "엠마오";
-String _cell;
+String _cell = "";
 String _team = "엠마오";
 String _term = "1";
 String _first = "False";
@@ -268,7 +268,7 @@ class VarData {
 
       print(result.body);
       if (result.body == null) {
-        return ["통독", null];
+        return ["통독", "null"];
       }
       Map<String, dynamic> body = json.decode(result.body);
       var chapter = body['chapter'];
@@ -279,7 +279,7 @@ class VarData {
     } else {
       return [
         "D${(DateTime.now().difference(DateTime(2022, 01, 01)).inHours / 24).round()}",
-        null
+        "null"
       ];
     }
   }
@@ -537,7 +537,7 @@ class VarData {
   //   }
   // }
 
-  Widget getSetting(Function onpress) {
+  Widget getSetting(Function()? onpress) {
     if (_isLogin) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -630,7 +630,7 @@ class VarData {
 
 class ChooseReward extends StatelessWidget {
   const ChooseReward({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -666,7 +666,7 @@ class ChooseReward extends StatelessWidget {
 
 class LoginWidget extends StatelessWidget {
   const LoginWidget({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

@@ -240,7 +240,7 @@ class _EscapeRoomSasunState extends State<EscapeRoomSasun> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (roomNum != prefs.getInt("roomNum")) {
       setState(() {
-        roomNum = prefs.getInt("roomNum");
+        roomNum = prefs.getInt("roomNum")!;
         if (roomNum == null) roomNum = 1;
       });
     }

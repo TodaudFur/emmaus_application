@@ -1,16 +1,15 @@
 import 'dart:typed_data';
 import 'dart:ui';
+
 import 'package:emmaus/constants.dart';
-import 'package:emmaus/vardata.dart';
 import 'package:emmaus/versedata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:screenshot/screenshot.dart';
+import 'package:intl/intl.dart';
 // import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TodayVerse extends StatefulWidget {
@@ -19,7 +18,7 @@ class TodayVerse extends StatefulWidget {
 }
 
 class _TodayVerseState extends State<TodayVerse> {
-  Uint8List _imageFile;
+  late Uint8List _imageFile;
   final _screenshotController = ScreenshotController();
 
   Future<bool> _requestPermission() async {
@@ -144,7 +143,7 @@ class _TodayVerseState extends State<TodayVerse> {
 
   Future _reloadVerse() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String lastVisitDate = prefs.get("verseDateKey");
+    String lastVisitDate = prefs.getString("verseDateKey")!;
 
     String toDayDate = DateFormat('MMdd').format(DateTime.now());
 
@@ -156,7 +155,7 @@ class _TodayVerseState extends State<TodayVerse> {
       await prefs.setInt('verseNum', VerseData().getNum());
     } else {
       setState(() {
-        VerseData().putNum(prefs.getInt('verseNum'));
+        VerseData().putNum(prefs.getInt('verseNum')!);
       });
     }
   }

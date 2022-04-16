@@ -19,10 +19,10 @@ class _BibleAllState extends State<BibleAll> {
     VarData().getAllBible().then((value) {
       print(value['isCheck']);
       setState(() {
-        date = value['date'];
-        chapter = value['chapter'];
-        count = value['count'];
-        isCheck = value['isCheck'];
+        date = value['date']!;
+        chapter = value['chapter']!;
+        count = value['count']!;
+        isCheck = value['isCheck']!;
       });
     });
     super.initState();
@@ -89,7 +89,7 @@ class _BibleAllState extends State<BibleAll> {
                               ),
                             ),
                             Checkbox(
-                              onChanged: (bool value) {},
+                              onChanged: (bool? value) {},
                               value: isCheck[index] == null ? false : true,
                               activeColor: kSelectColor,
                             ),

@@ -4,17 +4,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:emmaus/bible_all.dart';
 import 'package:emmaus/qtall.dart';
+import 'package:emmaus/ui/mdrive.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'constants.dart';
@@ -90,11 +89,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  DataSource calendarData = _getCalendarDataSource();
   String agendaText = "엠마오 일정";
   String name = "엠마오";
   Widget content = Container();
-  File _image;
+  late File _image;
   final picker = ImagePicker();
   bool isCheck = false;
   bool isOpen = false;
@@ -220,7 +218,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     setState(() {
       isCheck = VarData().getCheck();
-      print(isCheck);
+      //print(isCheck);
     });
 
     final List<Widget> newsSliders = homeList
@@ -324,8 +322,17 @@ class _HomeState extends State<Home> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Expanded(
-                        flex: 7,
+                        flex: 6,
                         child: Container(),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: IconButton(
+                          onPressed: () {
+                            Get.to(() => const MDrive());
+                          },
+                          icon: Icon(CupertinoIcons.cloud_download),
+                        ),
                       ),
                       Expanded(
                         flex: 2,
@@ -775,7 +782,7 @@ class _HomeState extends State<Home> {
                             }
                           });
 
-                          imageCache.clear();
+                          imageCache?.clear();
                           final File newImage =
                               await _image.copy('$path/qrcode.png');
 
@@ -865,37 +872,6 @@ class _HomeState extends State<Home> {
   }
 }
 
-class DataSource extends CalendarDataSource {
-  DataSource(List<Appointment> source) {
-    appointments = source;
-  }
-}
-
-DataSource _getCalendarDataSource() {
-  List<Appointment> appointments = <Appointment>[];
-  final DateTime day = DateTime(DateTime.now().year, 5, 20, 9);
-  /*appointments.add(Appointment(
-    startTime: day,
-    endTime: day.add(Duration(hours: 2)),
-    isAllDay: true,
-    subject: 'Meeting',
-    color: Colors.blue,
-    startTimeZone: '',
-    endTimeZone: '',
-  ));
-  appointments.add(Appointment(
-    startTime: DateTime(DateTime.now().year, 4, 28, 9),
-    endTime: DateTime(DateTime.now().year, 4, 28, 9).add(Duration(hours: 2)),
-    isAllDay: true,
-    subject: 'Meeting',
-    color: Colors.blue,
-    startTimeZone: '',
-    endTimeZone: '',
-  ));*/
-
-  return DataSource(appointments);
-}
-
 class Meeting {
   Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
 
@@ -908,8 +884,8 @@ class Meeting {
 
 class CalendarText extends StatelessWidget {
   const CalendarText({
-    Key key,
-    this.text,
+    Key? key,
+    required this.text,
   }) : super(key: key);
 
   final String text;

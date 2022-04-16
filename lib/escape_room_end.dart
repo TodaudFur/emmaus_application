@@ -1,8 +1,7 @@
+import 'package:confetti/confetti.dart';
 import 'package:emmaus/constants.dart';
 import 'package:emmaus/game.dart';
-import 'package:emmaus/myhomepage.dart';
 import 'package:flutter/material.dart';
-import 'package:confetti/confetti.dart';
 
 class EscapeRoomEnd extends StatefulWidget {
   @override
@@ -10,7 +9,7 @@ class EscapeRoomEnd extends StatefulWidget {
 }
 
 class _EscapeRoomEndState extends State<EscapeRoomEnd> {
-  ConfettiController _controllerCenter;
+  late ConfettiController _controllerCenter;
 
   @override
   void initState() {

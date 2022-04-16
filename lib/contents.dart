@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'vardata.dart';
-import 'constants.dart';
-import 'homebgcolor.dart';
-import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'homebgcolor.dart';
+import 'vardata.dart';
 
 class Contents extends StatefulWidget {
   @override
@@ -21,7 +21,7 @@ class _Contents extends State<Contents> {
   _getTryTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String toDayDate = DateFormat('MMdd').format(DateTime.now());
-    String lastVisitDate = prefs.get("tryTimeDate");
+    String lastVisitDate = prefs.getString("tryTimeDate")!;
 
     if (toDayDate != lastVisitDate) {
       await prefs.setString('tryTimeDate', toDayDate);
@@ -29,7 +29,7 @@ class _Contents extends State<Contents> {
     } else {
       if (tryTime != prefs.getInt("tryTime")) {
         setState(() {
-          tryTime = prefs.getInt("tryTime");
+          tryTime = prefs.getInt("tryTime")!;
           if (tryTime == null) tryTime = 2;
         });
       }
@@ -38,7 +38,7 @@ class _Contents extends State<Contents> {
 
   void _checkAnswer(String s) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String lastVisitDate = prefs.get("specialDateKey");
+    String lastVisitDate = prefs.getString("specialDateKey")!;
 
     String toDayDate = DateFormat('MMdd').format(DateTime.now());
 
@@ -96,7 +96,7 @@ class _Contents extends State<Contents> {
 
     bool check = false;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String lastVisitDate = prefs.get("mDateKey");
+    String lastVisitDate = prefs.getString("mDateKey")!;
 
     String toDayDate = DateFormat('MMdd').format(DateTime.now());
 

@@ -24,8 +24,8 @@ class _Winter extends State<Winter> with TickerProviderStateMixin {
   final textController = TextEditingController();
   int tryTime = 2;
   double progressValue = 0;
-  Color progressColor = Colors.red[300];
-  AnimationController controller;
+  Color? progressColor = Colors.red[300];
+  late AnimationController controller;
   String question = "";
   bool isReward = false;
   //int special = 0;
@@ -290,7 +290,7 @@ class _Winter extends State<Winter> with TickerProviderStateMixin {
   _getTryTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String toDayDate = DateFormat('MMdd').format(DateTime.now());
-    String lastVisitDate = prefs.get("tryTimeDateWinter");
+    String lastVisitDate = prefs.getString("tryTimeDateWinter")!;
 
     if (toDayDate != lastVisitDate) {
       await prefs.setString('tryTimeDateWinter', toDayDate);
@@ -298,7 +298,7 @@ class _Winter extends State<Winter> with TickerProviderStateMixin {
     } else {
       if (tryTime != prefs.getInt("tryTimeWinter")) {
         setState(() {
-          tryTime = prefs.getInt("tryTimeWinter");
+          tryTime = prefs.getInt("tryTimeWinter")!;
           if (tryTime == null) tryTime = 2;
         });
       }
@@ -307,7 +307,7 @@ class _Winter extends State<Winter> with TickerProviderStateMixin {
 
   void _checkAnswer(String s) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String lastVisitDate = prefs.get("specialDateKeyWinter");
+    String lastVisitDate = prefs.getString("specialDateKeyWinter")!;
 
     String toDayDate = DateFormat('MMdd').format(DateTime.now());
 
@@ -363,7 +363,7 @@ class _Winter extends State<Winter> with TickerProviderStateMixin {
 
     bool check = false;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String lastVisitDate = prefs.get("mDateKeyWinter");
+    String lastVisitDate = prefs.getString("mDateKeyWinter")!;
 
     String toDayDate = DateFormat('MMdd').format(DateTime.now());
 

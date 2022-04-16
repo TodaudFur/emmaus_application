@@ -12,7 +12,7 @@ final List<Message> message = [
 
 class Alarm extends StatelessWidget {
   const Alarm({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

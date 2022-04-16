@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,12 +10,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import 'constants.dart';
 import 'myhomepage.dart';
 
-Future onSelectNotification(String payload) async {
+Future onSelectNotification(String? payload) async {
   const url = 'https://youtube.com/channel/UChKWnwNuFsgzZ1pIwVnPCvA';
   if (await canLaunch(url)) {
     await launch(url);
@@ -31,7 +28,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 Future<void> backgroundHandler(RemoteMessage message) async {
   print(message.data.toString());
-  print(message.notification.title);
+  print(message.notification?.title);
 }
 
 Future<void> main() async {
@@ -85,7 +82,6 @@ class _MyAppState extends State<MyApp> {
     _configureLocalTimeZone();
 
     super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     _scheduleWeeklyMondayTenAMNotification();
     _scheduleWeeklyFridayTenAMNotification();
 
@@ -93,8 +89,8 @@ class _MyAppState extends State<MyApp> {
 
     FirebaseMessaging.onMessage.listen((message) {
       if (message.notification != null) {
-        print(message.notification.body);
-        print(message.notification.title);
+        print(message.notification?.body);
+        print(message.notification?.title);
       }
     });
 
@@ -132,6 +128,7 @@ class _MyAppState extends State<MyApp> {
 
     if (routeFromMessage != "") {}
     return GetMaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Emmaus',
         theme: ThemeData(
           primaryColor: kBodyColor,
@@ -242,11 +239,11 @@ class _MyAppState extends State<MyApp> {
 
   autoLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool al = prefs.get("autologin");
+    bool al = prefs.getBool("autologin")!;
     print(al);
     if (al && VarData().getLogin() == false) {
-      String id = prefs.get("autoid");
-      String pwd = prefs.get("autopwd");
+      String id = prefs.getString("autoid")!;
+      String pwd = prefs.getString("autopwd")!;
       VarData().post(id, pwd).then((value) {
         if (value) {
           Navigator.of(context)
