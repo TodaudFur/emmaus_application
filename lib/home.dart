@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:emmaus/bible_all.dart';
-import 'package:emmaus/qtall.dart';
 import 'package:emmaus/ui/mdrive.dart';
+import 'package:emmaus/ui/summer_fre/summer_fre.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,78 +12,79 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'constants.dart';
 import 'creeds.dart';
+import 'detail_screen.dart';
 import 'homebgcolor.dart';
-import 'winter.dart';
 
-class DetailScreen extends StatefulWidget {
-  final item;
-  DetailScreen(this.item);
-  @override
-  _DetailScreenState createState() => _DetailScreenState(item);
-}
-
-class _DetailScreenState extends State<DetailScreen> {
-  _DetailScreenState(this.item);
-
-  final item;
-
-  double _scaleFactor = 1.0;
-  double _baseScaleFactor = 1.0;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(CupertinoIcons.arrow_left)),
-            ),
-            Expanded(
-              child: Hero(
-                tag: item,
-                child: InteractiveViewer(
-                  panEnabled: true,
-                  boundaryMargin: EdgeInsets.all(0),
-                  minScale: 1,
-                  maxScale: 4,
-                  child: CachedNetworkImage(
-                    imageUrl: item,
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
-                    width: MediaQuery.of(context).size.width + _scaleFactor,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// class DetailScreen extends StatefulWidget {
+//   final item;
+//   DetailScreen(this.item);
+//   @override
+//   _DetailScreenState createState() => _DetailScreenState(item);
+// }
+//
+// class _DetailScreenState extends State<DetailScreen> {
+//   _DetailScreenState(this.item);
+//
+//   final item;
+//
+//   double _scaleFactor = 1.0;
+//   double _baseScaleFactor = 1.0;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onTap: () {
+//         Navigator.pop(context);
+//       },
+//       child: Scaffold(
+//         backgroundColor: Colors.white,
+//         body: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Padding(
+//               padding: const EdgeInsets.all(15.0),
+//               child: IconButton(
+//                   onPressed: () {
+//                     Navigator.pop(context);
+//                   },
+//                   icon: Icon(CupertinoIcons.arrow_left)),
+//             ),
+//             Expanded(
+//               child: Hero(
+//                 tag: item,
+//                 child: InteractiveViewer(
+//                   panEnabled: true,
+//                   boundaryMargin: EdgeInsets.all(0),
+//                   minScale: 1,
+//                   maxScale: 4,
+//                   child: CachedNetworkImage(
+//                     imageUrl: item,
+//                     placeholder: (context, url) => CircularProgressIndicator(),
+//                     errorWidget: (context, url, error) => Icon(Icons.error),
+//                     width: MediaQuery.of(context).size.width + _scaleFactor,
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 List<dynamic> eventFile = [];
 List<dynamic> eventName = [];
 List<dynamic> eventUrl = [];
 
 class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -102,8 +103,32 @@ class _HomeState extends State<Home> {
   int _current = 0;
   final CarouselController _controller = CarouselController();
 
+  List<Widget> newsSliders = [];
+
   @override
   void initState() {
+    newsSliders = imgList
+        .map(
+          (item) => GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return DetailScreen(
+                  item: item,
+                );
+              }));
+            },
+            child: Hero(
+              tag: item,
+              child: CachedNetworkImage(
+                imageUrl: item,
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
+            ),
+          ),
+        )
+        .toList();
     if (eventName.isEmpty) {
       VarData().getEvents().then((value) {
         setState(() {
@@ -220,26 +245,6 @@ class _HomeState extends State<Home> {
       isCheck = VarData().getCheck();
       //print(isCheck);
     });
-
-    final List<Widget> newsSliders = homeList
-        .map(
-          (item) => GestureDetector(
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) {
-                return DetailScreen(item);
-              }));
-            },
-            child: Hero(
-              tag: item,
-              child: CachedNetworkImage(
-                imageUrl: item,
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-              ),
-            ),
-          ),
-        )
-        .toList();
     return SafeArea(
       child: Container(
         height: MediaQuery.of(context).size.height,
@@ -329,9 +334,10 @@ class _HomeState extends State<Home> {
                         flex: 2,
                         child: IconButton(
                           onPressed: () {
-                            Get.to(() => const MDrive());
+                            //Get.to(() => const MDrive());
                           },
-                          icon: Icon(CupertinoIcons.cloud_download),
+                          //icon: Icon(CupertinoIcons.cloud_download),
+                          icon: Container(),
                         ),
                       ),
                       Expanded(
@@ -569,7 +575,7 @@ class _HomeState extends State<Home> {
                     child: Stack(
                       children: [
                         Text(
-                          '엠마오 뉴스 ',
+                          '엠마오 주보 ',
                           style: TextStyle(
                             fontFamily: 'Noto',
                             fontWeight: FontWeight.w900,
@@ -647,88 +653,17 @@ class _HomeState extends State<Home> {
                     height: 10,
                   ),
                   Expanded(
-                    child: eventName.length == 0
-                        ? Text("이벤트가 없습니다")
-                        : ListView.builder(
-                            physics: BouncingScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            itemCount: eventName.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return TextButton(
-                                onPressed: () {
-                                  if (eventName[index] == "WinterE") {
-                                    if (int.parse(DateFormat('MMdd')
-                                            .format(DateTime.now())) >=
-                                        1205) {
-                                      if (VarData().getLogin()) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => Winter()),
-                                        );
-                                      } else {
-                                        Fluttertoast.showToast(
-                                            msg: "로그인 후 이용 가능합니다",
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            gravity: ToastGravity.BOTTOM,
-                                            timeInSecForIosWeb: 1,
-                                            fontSize: 16.0);
-                                      }
-                                    } else {
-                                      Fluttertoast.showToast(
-                                          msg: "e-프리퀀시 기간이 아닙니다",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 1,
-                                          fontSize: 16.0);
-                                    }
-                                  } else if (eventName[index] == "AllQT") {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => QtAll()),
-                                    );
-                                  } else if (eventName[index] == "award") {
-                                    if (int.parse(DateFormat('MMdd')
-                                                .format(DateTime.now())) >=
-                                            1201 &&
-                                        int.parse(DateFormat('MMdd')
-                                                .format(DateTime.now())) <
-                                            1225) {
-                                      _launchURL(eventUrl[index]);
-                                    } else {
-                                      Fluttertoast.showToast(
-                                          msg: "투표 기간이 아닙니다.",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 1,
-                                          fontSize: 16.0);
-                                    }
-                                  } else {
-                                    _launchURL(eventUrl[index]);
-                                  }
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.only(right: 12),
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black12,
-                                        spreadRadius: 0,
-                                        blurRadius: 10,
-                                      ),
-                                    ],
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    child: Image.network(
-                                      "https://www.official-emmaus.com/events/${eventFile[index]}",
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: kSelectColor,
+                          ),
+                          onPressed: () {
+                            if (VarData().getLogin()) Get.to(SummerFre());
+                          },
+                          child: Text("2022 Summer E-프리퀀시")),
+                    ),
                   ),
                 ],
               ),

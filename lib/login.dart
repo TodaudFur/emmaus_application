@@ -1,12 +1,12 @@
 import 'package:emmaus/constants.dart';
 import 'package:emmaus/firstlogin.dart';
-import 'package:emmaus/home.dart';
 import 'package:emmaus/myhomepage.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
 import 'find.dart';
 
@@ -149,6 +149,9 @@ class _LoginPageState extends State<LoginPage> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0)),
                             onPressed: () {
+                              Get.dialog(const Center(
+                                child: CircularProgressIndicator(),
+                              ));
                               setState(() {
                                 VarData()
                                     .post(idController.text, psController.text)
@@ -162,6 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                                             (route) => false)
                                         .then((value) => setState(() {}));
                                   } else {
+                                    Get.back();
                                     if (autoLogin)
                                       VarData().trueAutoLogin(
                                           idController.text, psController.text);

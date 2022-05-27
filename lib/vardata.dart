@@ -453,10 +453,11 @@ class VarData {
   }
 
   bool getFirst() {
-    if (_first == "False")
+    if (_first == "False") {
       return true;
-    else
+    } else {
       return false;
+    }
   }
 
   firstChange(String password, String email) async {

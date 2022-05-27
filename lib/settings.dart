@@ -2,6 +2,7 @@ import 'package:emmaus/constants.dart';
 import 'package:emmaus/contents.dart';
 import 'package:emmaus/game.dart';
 import 'package:emmaus/qtall.dart';
+import 'package:emmaus/ui/summer_fre/summer_fre.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:emmaus/winter.dart';
 import 'package:flutter/cupertino.dart';
@@ -258,6 +259,15 @@ class _SettingsState extends State<Settings> {
                                                 Get.to(Winter());
                                             },
                                             child: Text("2021 동계")),
+                                        ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              primary: kSelectColor,
+                                            ),
+                                            onPressed: () {
+                                              if (VarData().getLogin())
+                                                Get.to(SummerFre());
+                                            },
+                                            child: Text("2022 하계")),
                                       ],
                                     ));
                               },
