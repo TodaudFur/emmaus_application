@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:emmaus/constants.dart';
 import 'package:emmaus/controller/fre_controller.dart';
+import 'package:emmaus/vardata.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
@@ -21,6 +23,22 @@ class _DrawWidgetState extends State<DrawWidget> {
   );
 
   final freController = Get.find<FreController>();
+
+  final sendFCM = FirebaseFunctions.instance.httpsCallable('sendFCM');
+
+  void sendFCMAllDevice() async {
+    await freController.getFirebaseToken();
+    print(freController.tokenList);
+    if (freController.tokenList.isEmpty) return;
+    final HttpsCallableResult result = await sendFCM.call(
+      <String, dynamic>{
+        "token": freController.tokenList,
+        "title": "WOW",
+        "body": "${VarData().getName()}님이 잭팟에 당첨됐습니다!!"
+      },
+    );
+    print(result.data);
+  }
 
   @override
   void initState() {
@@ -44,6 +62,7 @@ class _DrawWidgetState extends State<DrawWidget> {
             ),
           );
           freController.increaseTicket();
+          sendFCMAllDevice();
         } else {
           drawContent = const Text(
             "꽝!",

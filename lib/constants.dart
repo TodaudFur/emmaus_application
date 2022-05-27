@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+const kBaseUrl = 'https://official-emmaus.com/g5/bbs';
+
 const kBodyColor = Color(0xFFF1F1F1);
 const kUserBodyColor = Color(0xFFFFCDD2);
 const kUserBoxColor = Color(0x33FFCDD2);

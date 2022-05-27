@@ -39,7 +39,8 @@ class FolderUploadDialog extends StatelessWidget {
                     fileType: "folder",
                     directory: "$directory/",
                     id: 0,
-                    createAt: DateTime.now());
+                    createAt: DateTime.now(),
+                    totalDirectory: '');
               },
               style: TextStyle(
                 fontSize: 14,

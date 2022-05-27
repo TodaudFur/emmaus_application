@@ -61,6 +61,25 @@ class FreController extends GetxController {
         .toList();
   }
 
+  final _tokenList = <dynamic>[].obs;
+  List<dynamic> get tokenList => _tokenList;
+  set tokenList(val) => _tokenList.value = val;
+
+  getFirebaseToken() async {
+    try {
+      final response = await http.post(
+          Uri.parse('$baseUrl/emmaus_firebase_token_select.php'),
+          body: {});
+      print("Get Firebase Token Response : ${response.body}");
+      if (response.statusCode == 200) {
+        Map<String, dynamic> body = json.decode(response.body);
+        tokenList = body['token'];
+      }
+    } catch (e) {
+      print("exception : $e");
+    }
+  }
+
   increaseCount() async {
     print(checkCount);
     if (checkCount < 17) {

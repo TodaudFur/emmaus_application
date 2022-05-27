@@ -1,19 +1,18 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:typed_data';
 
-import 'package:emmaus/data/model/drive_model.dart';
-import 'package:emmaus/ui/drive_detail/widget/folder_upload_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../constants.dart';
+import '../data/model/drive_model.dart';
 import '../ui/drive_detail/widget/file_upload_dialog.dart';
-
-const baseUrl = 'https://official-emmaus.com/g5/bbs';
+import '../ui/drive_detail/widget/folder_upload_dialog.dart';
 
 class DriveController extends GetxController {
   final _driveModel = DriveModel(
@@ -21,22 +20,78 @@ class DriveController extends GetxController {
           fileName: "",
           fileType: "",
           id: 0,
-          createAt: DateTime.now())
+          createAt: DateTime.now(),
+          totalDirectory: '')
       .obs;
-  set driveModel(value) => _driveModel.value = value;
-  get driveModel => _driveModel.value;
 
-  final _file = File("").obs;
-  set file(value) => _file.value = value;
-  get file => _file.value;
+  set driveModel(value) => _driveModel.value = value;
+
+  DriveModel get driveModel => _driveModel.value;
 
   final _driveList = <DriveModel>[].obs;
+
   List<DriveModel> get driveList => _driveList;
+
   set driveList(val) => _driveList.value = val;
 
   final _isLoading = false.obs;
+
   get isLoading => _isLoading.value;
+
   set isLoading(val) => _isLoading.value = val;
+
+  final _directoryList = <String>[].obs;
+  List<String> get directoryList => _directoryList;
+  set directoryList(val) => _directoryList.value = val;
+
+  final _directoryName = "".obs;
+  get directoryName => _directoryName.value;
+  set directoryName(val) => _directoryName.value = val;
+
+  Future<bool> removeFile(int index) async {
+    String path = directoryList.join("/");
+    print(path);
+    try {
+      print(
+          "./drive/$path/${driveList[index].fileName}.${driveList[index].fileType}");
+      print(driveList[index].id);
+      var url = Uri.parse('$kBaseUrl/emmaus_drive_remove.php');
+      var result = await http.post(url, body: {
+        "path": "./drive/$path/${driveList[index].fileName}",
+        "type": driveList[index].fileType,
+        "id": driveList[index].id.toString(),
+      });
+
+      print(result.body);
+      if (result.body == "true") {
+        Get.back();
+        print("directory : ${directoryList.last}");
+        getDriveList(directoryList.last);
+        return true;
+      }
+    } catch (_) {
+      print('exception : $_');
+      return false;
+    }
+    return false;
+  }
+
+  addDirectory(String directory) {
+    directoryList.add(directory);
+    print(directoryList);
+  }
+
+  deleteDirectory() {
+    directoryList.removeLast();
+    _directoryList.refresh();
+    print("list : $directoryList");
+
+    if (directoryList.isNotEmpty) {
+      print("fileName : ${directoryList.last}");
+      directoryName = directoryList.last;
+      getDriveList(directoryList.last);
+    }
+  }
 
   Widget getFileImage(String fileType) {
     if (fileType == 'folder') {
@@ -45,7 +100,7 @@ class DriveController extends GetxController {
         width: 30,
       );
     } else {
-      final mimeType = lookupMimeType(fileType);
+      final mimeType = lookupMimeType(".$fileType");
       print(mimeType);
       switch (mimeType!.split("/").first) {
         case "image":
@@ -68,6 +123,7 @@ class DriveController extends GetxController {
         case "application":
           switch (mimeType.split("/").last) {
             case "vnd.ms-excel":
+            case "vnd.openxmlformats-officedocument.spreadsheetml.sheet":
               return const Text(
                 "XLS",
                 style: TextStyle(color: Color(0xFF0A783F)),
@@ -92,14 +148,15 @@ class DriveController extends GetxController {
   }
 
   getDriveList(String directory) async {
+    print(directory);
+    directory = directory.replaceAll("/", "");
     driveList.clear();
     isLoading = false;
     try {
       var map = <String, dynamic>{};
       map['directory'] = "$directory/";
-      final response = await http.post(
-          Uri.parse('https://official-emmaus.com/g5/bbs/emmaus_drive_list.php'),
-          body: map);
+      final response = await http
+          .post(Uri.parse('$kBaseUrl/emmaus_drive_list.php'), body: map);
       print("Get Drive List Response : ${response.body}");
       if (response.statusCode == 200) {
         driveList = parseResponse(response.body);
@@ -117,24 +174,35 @@ class DriveController extends GetxController {
     return parsed.map<DriveModel>((json) => DriveModel.fromJson(json)).toList();
   }
 
-  add() async {
+  add(
+    Uint8List ufile,
+  ) async {
     print(driveModel.fileName);
     print(driveModel.fileType);
     print(driveModel.directory);
-    print(file);
+    Get.dialog(
+        const Center(
+          child: CircularProgressIndicator(),
+        ),
+        barrierDismissible: false);
+    print(directoryList.join("/"));
     try {
       var request = http.MultipartRequest(
-          'POST',
-          Uri.parse(
-              "https://www.official-emmaus.com/g5/bbs/emmaus_drive_add.php"));
-      print("https://official-emmaus.com/g5/bbs/emmaus_drive_add.php");
+          'POST', Uri.parse("$kBaseUrl/emmaus_drive_add.php"));
+      print(directoryList.first);
+      print("$kBaseUrl/emmaus_drive_add.php");
       request.fields['fileName'] = driveModel.fileName;
       request.fields['fileType'] = driveModel.fileType;
-      request.fields['directory'] = driveModel.directory;
+      request.fields['directory'] = directoryList.join("/") + "/";
+      request.fields['currentFolder'] = driveModel.directory;
+      request.fields['mainDirectory'] = directoryList.first;
 
-      request.files
-          .add(await http.MultipartFile.fromPath("driveFile", file.path));
-
+      request.files.add(http.MultipartFile.fromBytes(
+        "driveFile",
+        ufile,
+        contentType: MediaType('application', 'octet-stream'),
+        filename: "userfile",
+      ));
       print(request);
       http.Response response =
           await http.Response.fromStream(await request.send());
@@ -142,6 +210,8 @@ class DriveController extends GetxController {
       if (response.statusCode == 200) {
         if (response.body == "true") {
           Get.back();
+          Get.back();
+          getDriveList(driveModel.directory);
           return true;
         } else {
           return false;
@@ -158,17 +228,19 @@ class DriveController extends GetxController {
 
   Future addFolder() async {
     print(driveModel.fileName);
+    print(directoryList.join("/"));
     try {
-      var url = Uri.parse(
-          'https://official-emmaus.com/g5/bbs/emmaus_drive_add_folder.php');
+      var url = Uri.parse('$kBaseUrl/emmaus_drive_add_folder.php');
       var result = await http.post(url, body: {
         "name": driveModel.fileName,
-        "directory": driveModel.directory
+        "directory": directoryList.join("/") + "/",
+        "currentFolder": driveModel.directory,
       });
 
       print(result.body);
       if (result.body == "true") {
         Get.back();
+        getDriveList(driveModel.directory);
         return true;
       }
     } catch (_) {
@@ -183,25 +255,22 @@ class DriveController extends GetxController {
           child: CircularProgressIndicator(),
         ),
         barrierDismissible: false);
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.any,
-        allowMultiple: false,
-        onFileLoading: (value) {
-          debugPrint(value.toString());
-        });
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(allowMultiple: false);
+    Uint8List mediaData = result!.files.first.bytes!;
+    //var mediaData = await ImagePickerWeb.getImageInfo;
     Get.back();
-    print(result!.names);
-    print(result.names[0]!.split(".").last);
+    print(result.files.first.name);
     TextEditingController fileNameController = TextEditingController();
-    fileNameController.text = result.names[0]!.split(".").first;
-    file = File(result.files.single.path!);
+    fileNameController.text = result.files.first.name.split(".")[0];
 
     driveModel = DriveModel(
         directory: "$directory/",
         fileName: fileNameController.text,
-        fileType: result.names[0]!.split(".").last,
+        fileType: result.files.first.name.split(".")[1],
         id: 0,
-        createAt: DateTime.now());
+        createAt: DateTime.now(),
+        totalDirectory: '');
     Get.defaultDialog(
         title: "파일 업로드",
         titleStyle: TextStyle(
@@ -211,58 +280,12 @@ class DriveController extends GetxController {
         ),
         content: FileUploadDialog(
           fileNameController: fileNameController,
-          fileType: result.names[0]!.split(".").last,
-          directory: directory,
-        ),
-        confirm: ElevatedButton(
-          onPressed: add,
-          child: Text("저장"),
-          style: ElevatedButton.styleFrom(primary: kSelectColor),
-        ),
-        cancel: OutlinedButton(
-          onPressed: () {
-            Get.back();
-          },
-          child: Text("취소"),
-          style: OutlinedButton.styleFrom(primary: kSelectColor),
-        ));
-  }
-
-  cameraSave(String directory) async {
-    print(directory);
-    Get.dialog(
-        const Center(
-          child: CircularProgressIndicator(),
-        ),
-        barrierDismissible: false);
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
-    Get.back();
-    print(pickedFile?.path);
-    TextEditingController fileNameController = TextEditingController();
-    fileNameController.text = "photo" + DateTime.now().toString();
-    file = File(pickedFile?.path ?? "");
-
-    driveModel = DriveModel(
-        directory: "$directory/",
-        fileName: fileNameController.text,
-        fileType: "jpg",
-        id: 0,
-        createAt: DateTime.now());
-    Get.defaultDialog(
-        title: "파일 업로드",
-        titleStyle: TextStyle(
-          fontSize: 12,
-          fontFamily: "Nanum",
-          fontWeight: FontWeight.w700,
-        ),
-        content: FileUploadDialog(
-          fileNameController: fileNameController,
-          fileType: "jpg",
+          fileType: driveModel.fileType,
           directory: directory,
         ),
         confirm: ElevatedButton(
           onPressed: () {
-            add();
+            add(mediaData);
           },
           child: Text("저장"),
           style: ElevatedButton.styleFrom(primary: kSelectColor),
@@ -283,7 +306,8 @@ class DriveController extends GetxController {
         fileName: folderNameController.text,
         fileType: 'folder',
         id: 0,
-        createAt: DateTime.now());
+        createAt: DateTime.now(),
+        totalDirectory: '');
     Get.defaultDialog(
         title: "폴더 생성",
         titleStyle: TextStyle(
@@ -307,5 +331,9 @@ class DriveController extends GetxController {
           child: Text("취소"),
           style: OutlinedButton.styleFrom(primary: kSelectColor),
         ));
+  }
+
+  void downloadFile(String url) async {
+    launch(url);
   }
 }

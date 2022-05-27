@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -264,8 +265,30 @@ class _SettingsState extends State<Settings> {
                                               primary: kSelectColor,
                                             ),
                                             onPressed: () {
-                                              if (VarData().getLogin())
-                                                Get.to(SummerFre());
+                                              if (VarData().getLogin()) {
+                                                if (DateTime.now().isAfter(
+                                                    DateTime(2022, 6, 1))) {
+                                                  Get.to(SummerFre());
+                                                } else {
+                                                  Fluttertoast.showToast(
+                                                      msg: "기간이 아닙니다.",
+                                                      toastLength:
+                                                          Toast.LENGTH_SHORT,
+                                                      gravity:
+                                                          ToastGravity.BOTTOM,
+                                                      timeInSecForIosWeb: 1,
+                                                      fontSize: 16.0);
+                                                }
+                                              } else {
+                                                Fluttertoast.showToast(
+                                                    msg: "로그인 후 이용해주세요.",
+                                                    toastLength:
+                                                        Toast.LENGTH_SHORT,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    timeInSecForIosWeb: 1,
+                                                    fontSize: 16.0);
+                                              }
                                             },
                                             child: Text("2022 하계")),
                                       ],

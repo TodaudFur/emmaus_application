@@ -41,7 +41,8 @@ class FileUploadDialog extends StatelessWidget {
                     fileType: fileType,
                     directory: "$directory/",
                     createAt: DateTime.now(),
-                    id: 0);
+                    id: 0,
+                    totalDirectory: '');
               },
               style: TextStyle(
                 fontSize: 14,

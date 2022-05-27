@@ -4,6 +4,7 @@ class DriveModel {
   String fileType;
   DateTime createAt;
   String directory;
+  String totalDirectory;
 
   DriveModel({
     required this.id,
@@ -11,6 +12,7 @@ class DriveModel {
     required this.fileType,
     required this.createAt,
     required this.directory,
+    required this.totalDirectory,
   });
 
   factory DriveModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class DriveModel {
       fileType: json['fileType'],
       createAt: DateTime.parse(json['createAt']),
       directory: json['directory'],
+      totalDirectory: json['totalDirectory'],
     );
   }
 

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:emmaus/bible_all.dart';
-import 'package:emmaus/ui/mdrive.dart';
 import 'package:emmaus/ui/summer_fre/summer_fre.dart';
 import 'package:emmaus/vardata.dart';
 import 'package:flutter/cupertino.dart';
@@ -107,28 +106,30 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    newsSliders = imgList
-        .map(
-          (item) => GestureDetector(
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) {
-                return DetailScreen(
-                  item: item,
-                );
-              }));
-            },
-            child: Hero(
-              tag: item,
-              child: CachedNetworkImage(
-                imageUrl: item,
-                placeholder: (context, url) =>
-                    const CircularProgressIndicator(),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
+    setState(() {
+      newsSliders = imgList
+          .map(
+            (item) => GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) {
+                  return DetailScreen(
+                    item: item,
+                  );
+                }));
+              },
+              child: Hero(
+                tag: item,
+                child: CachedNetworkImage(
+                  imageUrl: item,
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
               ),
             ),
-          ),
-        )
-        .toList();
+          )
+          .toList();
+    });
     if (eventName.isEmpty) {
       VarData().getEvents().then((value) {
         setState(() {
@@ -660,7 +661,26 @@ class _HomeState extends State<Home> {
                             primary: kSelectColor,
                           ),
                           onPressed: () {
-                            if (VarData().getLogin()) Get.to(SummerFre());
+                            if (VarData().getLogin()) {
+                              if (DateTime.now()
+                                  .isAfter(DateTime(2022, 6, 1))) {
+                                Get.to(SummerFre());
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: "기간이 아닙니다.",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    fontSize: 16.0);
+                              }
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "로그인 후 이용해주세요.",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  fontSize: 16.0);
+                            }
                           },
                           child: Text("2022 Summer E-프리퀀시")),
                     ),
